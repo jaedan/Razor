@@ -8,29 +8,6 @@ namespace UOSteam
 {
     public static class Commands
     {
-        private static int DummyExpression(ref ASTNode node, bool quiet)
-        {
-            Console.WriteLine("Executing expression {0} {1}", node.Type, node.Lexeme);
-
-            while (node != null)
-            {
-                switch (node.Type)
-                {
-                    case ASTNodeType.EQUAL:
-                    case ASTNodeType.NOT_EQUAL:
-                    case ASTNodeType.LESS_THAN:
-                    case ASTNodeType.LESS_THAN_OR_EQUAL:
-                    case ASTNodeType.GREATER_THAN:
-                    case ASTNodeType.GREATER_THAN_OR_EQUAL:
-                        return 0;
-                }
-
-                node = node.Next();
-            }
-
-            return 0;
-        }
-
         private static void DummyCommand(ref ASTNode node, bool quiet, bool force)
         {
             Console.WriteLine("Executing command {0} {1}", node.Type, node.Lexeme);
@@ -114,105 +91,6 @@ namespace UOSteam
             Interpreter.RegisterCommandHandler("headmsg", DummyCommand);
             Interpreter.RegisterCommandHandler("sysmsg", DummyCommand);
 
-            // Expressions
-            Interpreter.RegisterExpressionHandler("findalias", FindAliasExpression);
-            Interpreter.RegisterExpressionHandler("contents", DummyExpression);
-            Interpreter.RegisterExpressionHandler("inregion", DummyExpression);
-            Interpreter.RegisterExpressionHandler("skill", SkillExpression);
-            Interpreter.RegisterExpressionHandler("findobject", DummyExpression);
-            Interpreter.RegisterExpressionHandler("distance", DummyExpression);
-            Interpreter.RegisterExpressionHandler("inrange", DummyExpression);
-            Interpreter.RegisterExpressionHandler("buffexists", DummyExpression);
-            Interpreter.RegisterExpressionHandler("property", DummyExpression);
-            Interpreter.RegisterExpressionHandler("findtype", DummyExpression);
-            Interpreter.RegisterExpressionHandler("findlayer", DummyExpression);
-            Interpreter.RegisterExpressionHandler("skillstate", DummyExpression);
-            Interpreter.RegisterExpressionHandler("counttype", DummyExpression);
-            Interpreter.RegisterExpressionHandler("counttypeground", DummyExpression);
-            Interpreter.RegisterExpressionHandler("findwand", DummyExpression);
-            Interpreter.RegisterExpressionHandler("inparty", DummyExpression);
-            Interpreter.RegisterExpressionHandler("infriendslist", DummyExpression);
-            Interpreter.RegisterExpressionHandler("war", DummyExpression);
-            Interpreter.RegisterExpressionHandler("ingump", DummyExpression);
-            Interpreter.RegisterExpressionHandler("gumpexists", DummyExpression);
-            Interpreter.RegisterExpressionHandler("injournal", DummyExpression);
-            Interpreter.RegisterExpressionHandler("listexists", DummyExpression);
-            Interpreter.RegisterExpressionHandler("list", DummyExpression);
-            Interpreter.RegisterExpressionHandler("inlist", DummyExpression);
-
-            // Player Attributes
-            Interpreter.RegisterExpressionHandler("mana", ManaExpression);
-            Interpreter.RegisterExpressionHandler("x", XExpression);
-            Interpreter.RegisterExpressionHandler("y", YExpression);
-            Interpreter.RegisterExpressionHandler("z", ZExpression);
-
-            Interpreter.RegisterAliasHandler("backpack", BackpackAlias);
-            Interpreter.RegisterAliasHandler("bank", BankAlias);
-            Interpreter.RegisterAliasHandler("enemy", EnemyAlias);
-            Interpreter.RegisterAliasHandler("last", LastAlias);
-            Interpreter.RegisterAliasHandler("lasttarget", LastAlias);
-            Interpreter.RegisterAliasHandler("lastobject", LastObjectAlias);
-            Interpreter.RegisterAliasHandler("lefthand", LeftHandAlias);
-            Interpreter.RegisterAliasHandler("mount", MountAlias);
-            Interpreter.RegisterAliasHandler("righthand", RightHandAlias);
-            Interpreter.RegisterAliasHandler("self", SelfAlias);
-        }
-
-        private static int BackpackAlias(ref ASTNode node)
-        {
-            return World.Player.Backpack.Serial;
-        }
-        private static int BankAlias(ref ASTNode node)
-        {
-            // unsupported?  I can't find a reference to the bankbox in the player
-            return -1;
-        }
-
-        private static int EnemyAlias(ref ASTNode node)
-        {
-            // we will need to modify the PlayerData class to keep track of the current enemy to make this work
-            return -1;
-        }
-        private static int FriendAlias(ref ASTNode node)
-        {
-            // we will need to modify the PlayerData class to keep track of the current enemy to make this work
-            return -1;
-        }
-        private static int GroundAlias(ref ASTNode node)
-        {
-            // not sure how to return the serial of the ground at your current position
-            return -1;
-        }
-
-        private static int LastAlias(ref ASTNode node)
-        {
-            return Targeting.LastTargetInfo.Serial;
-        }
-
-        private static int LastObjectAlias(ref ASTNode node)
-        {
-            return World.Player.LastObject;
-        }
-
-        private static int LeftHandAlias(ref ASTNode node)
-        {
-            return World.Player.GetItemOnLayer(Layer.LeftHand).Serial;
-        }
-
-        private static int MountAlias(ref ASTNode node)
-        {
-            // not sure how to support this
-            return -1;
-        }
-
-        private static int RightHandAlias(ref ASTNode node)
-        {
-            return World.Player.GetItemOnLayer(Layer.RightHand).Serial;
-        }
-
-        private static int SelfAlias(ref ASTNode node)
-        {
-            return World.Player.Serial;
         }
 
         private static string[] abilities = new string[4] { "primary", "secondary", "stun", "disarm" };
@@ -469,71 +347,6 @@ namespace UOSteam
                 obj = Convert.ToInt32(value.Lexeme);
 
             Interpreter.SetAlias(alias.Lexeme, obj);
-        }
-
-        private static int FindAliasExpression(ref ASTNode node, bool quiet)
-        {
-            node.Next();
-
-            ASTNode alias = node.Next();
-
-            if (alias == null)
-                throw new ArgumentException("Usage: findalias (string)");
-
-            return Interpreter.GetAlias(ref alias);
-        }
-
-        private static int ManaExpression(ref ASTNode node, bool quiet)
-        {
-            node.Next();
-
-            if (World.Player == null)
-                return 0;
-
-            return World.Player.Mana;
-        }
-        private static int XExpression(ref ASTNode node, bool quiet)
-        {
-            node.Next();
-
-            if (World.Player == null)
-                return 0;
-
-            return World.Player.Position.X;
-        }
-        private static int YExpression(ref ASTNode node, bool quiet)
-        {
-            node.Next();
-
-            if (World.Player == null)
-                return 0;
-
-            return World.Player.Position.Y;
-        }
-        private static int ZExpression(ref ASTNode node, bool quiet)
-        {
-            node.Next();
-
-            if (World.Player == null)
-                return 0;
-
-            return World.Player.Position.Z;
-        }
-        
-        // WIP
-        private static int SkillExpression(ref ASTNode node, bool quiet)
-        {
-            node.Next();
-
-            ASTNode skillName = node.Next();
-
-            if (skillName == null)
-                throw new ArgumentException("Usage: skill (name)");
-
-            if (World.Player == null)
-                return 0;
-
-            return 0;
         }
     }
 }

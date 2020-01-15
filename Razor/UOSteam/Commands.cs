@@ -18,18 +18,18 @@ namespace UOSteam
         static Commands()
         {
             // Commands. From UOSteam Documentation
-            Interpreter.RegisterCommandHandler("fly", DummyCommand);
-            Interpreter.RegisterCommandHandler("land", DummyCommand);
+            Interpreter.RegisterCommandHandler("fly", Fly);
+            Interpreter.RegisterCommandHandler("land", Land);
             Interpreter.RegisterCommandHandler("setability", SetAbility);
-            Interpreter.RegisterCommandHandler("attack", DummyCommand);
+            Interpreter.RegisterCommandHandler("attack", Attack);
             Interpreter.RegisterCommandHandler("clearhands", ClearHands);
             Interpreter.RegisterCommandHandler("clickobject", ClickObject);
             Interpreter.RegisterCommandHandler("bandageself", BandageSelf);
             Interpreter.RegisterCommandHandler("usetype", UseType);
             Interpreter.RegisterCommandHandler("useobject", UseObject);
-            Interpreter.RegisterCommandHandler("useonce", DummyCommand);
-            Interpreter.RegisterCommandHandler("cleanusequeue", DummyCommand);
-            Interpreter.RegisterCommandHandler("moveitem", DummyCommand);
+            Interpreter.RegisterCommandHandler("useonce", UseOnce);
+            Interpreter.RegisterCommandHandler("cleanusequeue", CleanUseQueue);
+            Interpreter.RegisterCommandHandler("moveitem", MoveItem);
             Interpreter.RegisterCommandHandler("moveitemoffset", DummyCommand);
             Interpreter.RegisterCommandHandler("movetype", DummyCommand);
             Interpreter.RegisterCommandHandler("movetypeoffset", DummyCommand);
@@ -37,9 +37,9 @@ namespace UOSteam
             Interpreter.RegisterCommandHandler("turn", Turn);
             Interpreter.RegisterCommandHandler("run", Run);
             Interpreter.RegisterCommandHandler("useskill", UseSkill);
-            Interpreter.RegisterCommandHandler("feed", DummyCommand);
-            Interpreter.RegisterCommandHandler("rename", DummyCommand);
-            Interpreter.RegisterCommandHandler("shownames", DummyCommand);
+            Interpreter.RegisterCommandHandler("feed", Feed);
+            Interpreter.RegisterCommandHandler("rename", Rename);
+            Interpreter.RegisterCommandHandler("shownames", ShowNames);
             Interpreter.RegisterCommandHandler("togglehands", DummyCommand);
             Interpreter.RegisterCommandHandler("equipitem", DummyCommand);
             Interpreter.RegisterCommandHandler("togglemounted", DummyCommand);
@@ -56,7 +56,7 @@ namespace UOSteam
             Interpreter.RegisterCommandHandler("toggleautoloot", DummyCommand);
             Interpreter.RegisterCommandHandler("togglescavenger", DummyCommand);
             Interpreter.RegisterCommandHandler("counter", DummyCommand);
-            Interpreter.RegisterCommandHandler("unsetalias", DummyCommand);
+            Interpreter.RegisterCommandHandler("unsetalias", UnsetAlias);
             Interpreter.RegisterCommandHandler("setalias", SetAlias);
             Interpreter.RegisterCommandHandler("promptalias", DummyCommand);
             Interpreter.RegisterCommandHandler("waitforgump", DummyCommand);
@@ -71,14 +71,14 @@ namespace UOSteam
             Interpreter.RegisterCommandHandler("clearlist", DummyCommand);
             Interpreter.RegisterCommandHandler("info", DummyCommand);
             Interpreter.RegisterCommandHandler("pause", DummyCommand);
-            Interpreter.RegisterCommandHandler("ping", DummyCommand);
+            Interpreter.RegisterCommandHandler("ping", Ping);
             Interpreter.RegisterCommandHandler("playmacro", DummyCommand);
             Interpreter.RegisterCommandHandler("playsound", DummyCommand);
-            Interpreter.RegisterCommandHandler("resync", DummyCommand);
+            Interpreter.RegisterCommandHandler("resync", Resync);
             Interpreter.RegisterCommandHandler("snapshot", DummyCommand);
             Interpreter.RegisterCommandHandler("hotkeys", DummyCommand);
             Interpreter.RegisterCommandHandler("where", DummyCommand);
-            Interpreter.RegisterCommandHandler("messagebox", DummyCommand);
+            Interpreter.RegisterCommandHandler("messagebox", MessageBox);
             Interpreter.RegisterCommandHandler("mapuo", DummyCommand);
             Interpreter.RegisterCommandHandler("clickscreen", DummyCommand);
             Interpreter.RegisterCommandHandler("paperdoll", DummyCommand);
@@ -92,7 +92,14 @@ namespace UOSteam
             Interpreter.RegisterCommandHandler("sysmsg", DummyCommand);
 
         }
-
+        public static void Fly(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+        }
+        public static void Land(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+        }
         private static string[] abilities = new string[4] { "primary", "secondary", "stun", "disarm" };
         private static void SetAbility(ref ASTNode node, bool quiet, bool force)
         {
@@ -138,7 +145,12 @@ namespace UOSteam
                 }
             }
         }
+        private static void Attack(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next(); // walk past COMMAND
 
+            node.Next(); // walk past argument
+        }
         private static string[] hands = new string[3] { "left", "right", "both" };
         private static void ClearHands(ref ASTNode node, bool quiet, bool force)
         {
@@ -176,7 +188,6 @@ namespace UOSteam
                     break;
             }
         }
-
         private static void ClickObject(ref ASTNode node, bool quiet, bool force)
         {
             node.Next(); // walk past COMMAND
@@ -218,7 +229,6 @@ namespace UOSteam
 
             return false;
         }
-
         private static void BandageSelf(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -245,15 +255,12 @@ namespace UOSteam
                 }
             }
         }
-
         private static void UseType(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
             // variable args here
-                
         }
-
         private static void UseObject(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -272,7 +279,26 @@ namespace UOSteam
 
             Client.Instance.SendToServer(new DoubleClick(serial));
         }
+        private static void UseOnce(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
 
+            node.Next(); // item ID
+            node.Next(); // ?color
+        }
+        private static void CleanUseQueue(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+        }
+        private static void MoveItem(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            node.Next(); // item alias or serial
+            node.Next(); // target alias or serial
+            node.Next(); // (x, y, z)?
+            node.Next(); // amount?
+        }
         private static void Walk(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -312,7 +338,6 @@ namespace UOSteam
             { "stealth", 47 }, // Stealth
             { "removetrap", 48 } // RemoveTrap
         };
-
         private static void UseSkill(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -328,7 +353,34 @@ namespace UOSteam
                 Client.Instance.SendToServer(new UseSkill(skillId));
             }
         }
+        private static void Feed(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
 
+            node.Next(); // target alias or serial
+            node.Next(); // food string
+            node.Next(); // ?color
+            node.Next(); // ?amount
+        }
+        public static void Rename(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            ASTNode target = node.Next(); // target alias or serial
+            ASTNode name = node.Next(); // new name
+
+            if (target == null || name == null)
+                throw new ArgumentException("Usage: rename (serial) ('name')");
+
+            int targetSerial = 0;
+            if (target.Type == ASTNodeType.STRING)
+                targetSerial = Interpreter.GetAlias(ref target);
+            else
+                targetSerial = Convert.ToInt32(target.Lexeme, 16);
+
+            if (Client.Instance.ClientRunning)
+                Client.Instance.SendToServer(new RenameReq((uint)targetSerial, name.Lexeme));
+        }
         private static void SetAlias(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -344,9 +396,76 @@ namespace UOSteam
             if (value.Type == ASTNodeType.STRING)
                 obj = Interpreter.GetAlias(ref value);
             else
-                obj = Convert.ToInt32(value.Lexeme);
+                obj = Convert.ToInt32(value.Lexeme, 16);
 
             Interpreter.SetAlias(alias.Lexeme, obj);
+        }
+        private static void UnsetAlias(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            ASTNode alias = node.Next();
+
+            if (alias == null)
+                throw new ArgumentException("Usage: unsetalias (string)");
+
+            Interpreter.SetAlias(alias.Lexeme, 0);
+        }
+
+        private static void ShowNames(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            ASTNode type = node.Next();
+
+            if (type == null)
+                throw new ArgumentException("Usage: shownames ['mobiles'/'corpses']");
+
+            if (World.Player == null)
+                return;
+
+            if (type.Lexeme == "mobiles")
+            {
+                foreach (Mobile m in World.MobilesInRange())
+                {
+                    if (m != World.Player)
+                        Client.Instance.SendToServer(new SingleClick(m));
+                }
+            }
+            else if (type.Lexeme == "corpses")
+            {
+                foreach (Item i in World.Items.Values)
+                {
+                    if (i.IsCorpse)
+                        Client.Instance.SendToServer(new SingleClick(i));
+                }
+            }
+        }
+        public static void Ping(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            Assistant.Ping.StartPing(5);
+        }
+        public static void Resync(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            if (Client.Instance.ClientRunning)
+                Client.Instance.SendToServer(new ResyncReq());
+        }
+
+        public static void MessageBox(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            ASTNode title = node.Next();
+            ASTNode body = node.Next();
+
+            if (title == null || body == null)
+                throw new ArgumentException("Usage: messagebox ('title') ('body')");
+
+            System.Windows.Forms.MessageBox.Show(body.Lexeme, title.Lexeme);
         }
     }
 }

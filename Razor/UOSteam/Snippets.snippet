@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Steam Command Handler</Title>
+      <Shortcut>steam_command_handler</Shortcut>
+    </Header>
+    <Snippet>
+      <Code
+        Language="CSharp"
+        Kind="method decl" 
+      >
+        public static void $Name$(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+            
+            $Body$
+        }
+
+      </Code>
+      <Declarations>
+        <Literal>
+          <ID>Name</ID>
+          <ToolTip>Enter the handler name.</ToolTip>
+          <Default>Name</Default>
+        </Literal>
+        <Literal>
+          <ID>Body</ID>
+        </Literal>
+      </Declarations>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Steam Expression Handler</Title>
+      <Shortcut>steam_expression_handler</Shortcut>
+    </Header>
+    <Snippet>
+      <Code
+        Language="CSharp"
+        Kind="method decl"
+      >
+        public static int $Name$(ref ASTNode node, bool quiet)
+        {
+            node.Next();
+
+            $Body$
+        }
+
+      </Code>
+      <Declarations>
+        <Literal>
+          <ID>Name</ID>
+          <ToolTip>Enter the handler name.</ToolTip>
+          <Default>Name</Default>
+        </Literal>
+        <Literal>
+          <ID>Body</ID>
+        </Literal>
+      </Declarations>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Steam Alias Handler</Title>
+      <Shortcut>steam_alias_handler</Shortcut>
+    </Header>
+    <Snippet>
+      <Code
+        Language="CSharp"
+        Kind="method decl"
+      >
+        public static int $Name$(ref ASTNode node)
+        {
+            node.Next();
+            
+            $Body$
+        }
+
+      </Code>
+      <Declarations>
+        <Literal>
+          <ID>Name</ID>
+          <ToolTip>Enter the handler name.</ToolTip>
+          <Default>Name</Default>
+        </Literal>
+        <Literal>
+          <ID>Body</ID>
+        </Literal>
+      </Declarations>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

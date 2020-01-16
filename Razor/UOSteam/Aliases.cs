@@ -22,7 +22,6 @@ namespace UOSteam
             Interpreter.RegisterAliasHandler("righthand", RightHand);
             Interpreter.RegisterAliasHandler("self", Self);
         }
-
         private static int Backpack(ref ASTNode node)
         {
             if (World.Player == null || World.Player.Backpack == null)
@@ -35,7 +34,6 @@ namespace UOSteam
             // unsupported?  I can't find a reference to the bankbox in the player
             return -1;
         }
-
         private static int Enemy(ref ASTNode node)
         {
             // we will need to modify the PlayerData class to keep track of the current enemy to make this work
@@ -51,7 +49,6 @@ namespace UOSteam
             // not sure how to return the serial of the ground at your current position
             return -1;
         }
-
         private static int Last(ref ASTNode node)
         {
             if (Targeting.LastTargetInfo == null)
@@ -59,7 +56,6 @@ namespace UOSteam
 
             return Targeting.LastTargetInfo.Serial;
         }
-
         private static int LastObject(ref ASTNode node)
         {
             if (World.Player.LastObject != null)
@@ -67,7 +63,6 @@ namespace UOSteam
 
             return 0;
         }
-
         private static int LeftHand(ref ASTNode node)
         {
             if (World.Player == null)
@@ -80,13 +75,11 @@ namespace UOSteam
 
             return i.Serial;
         }
-
         private static int Mount(ref ASTNode node)
         {
             // not sure how to support this
             return -1;
         }
-
         private static int RightHand(ref ASTNode node)
         {
             if (World.Player == null)
@@ -99,7 +92,6 @@ namespace UOSteam
 
             return i.Serial;
         }
-
         private static int Self(ref ASTNode node)
         {
             if (World.Player == null)

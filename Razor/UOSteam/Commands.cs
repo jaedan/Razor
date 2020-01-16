@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assistant;
+using Assistant.HotKeys;
 
 namespace UOSteam
 {
@@ -81,7 +82,7 @@ namespace UOSteam
             Interpreter.RegisterCommandHandler("feed", Feed);
             Interpreter.RegisterCommandHandler("rename", Rename);
             Interpreter.RegisterCommandHandler("shownames", ShowNames);
-            Interpreter.RegisterCommandHandler("togglehands", DummyCommand);
+            Interpreter.RegisterCommandHandler("togglehands", ToggleHands);
             Interpreter.RegisterCommandHandler("equipitem", DummyCommand);
             Interpreter.RegisterCommandHandler("togglemounted", DummyCommand);
             Interpreter.RegisterCommandHandler("equipwand", DummyCommand);
@@ -95,7 +96,7 @@ namespace UOSteam
             Interpreter.RegisterCommandHandler("undress", DummyCommand);
             Interpreter.RegisterCommandHandler("dressconfig", DummyCommand);
             Interpreter.RegisterCommandHandler("toggleautoloot", DummyCommand);
-            Interpreter.RegisterCommandHandler("togglescavenger", DummyCommand);
+            Interpreter.RegisterCommandHandler("togglescavenger", ToggleScavenger);
             Interpreter.RegisterCommandHandler("counter", DummyCommand);
             Interpreter.RegisterCommandHandler("unsetalias", UnsetAlias);
             Interpreter.RegisterCommandHandler("setalias", SetAlias);
@@ -128,9 +129,9 @@ namespace UOSteam
             Interpreter.RegisterCommandHandler("questsbutton", DummyCommand);
             Interpreter.RegisterCommandHandler("logoutbutton", DummyCommand);
             Interpreter.RegisterCommandHandler("virtue", DummyCommand);
-            Interpreter.RegisterCommandHandler("msg", DummyCommand);
-            Interpreter.RegisterCommandHandler("headmsg", DummyCommand);
-            Interpreter.RegisterCommandHandler("sysmsg", DummyCommand);
+            Interpreter.RegisterCommandHandler("msg", Msg);
+            Interpreter.RegisterCommandHandler("headmsg", HeadMsg);
+            Interpreter.RegisterCommandHandler("sysmsg", SysMsg);
 
         }
         private static bool Fly(ref ASTNode node, bool quiet, bool force)
@@ -209,25 +210,17 @@ namespace UOSteam
             if (!hands.Contains(hand.Lexeme))
                 throw new ArgumentException("Usage: clearhands ('left'/'right'/'both')");
 
-
-            Item leftHand = World.Player.GetItemOnLayer(Layer.LeftHand);
-            Item rightHand = World.Player.GetItemOnLayer(Layer.RightHand);
-
             switch (hand.Lexeme)
             {
                 case "left":
-                    if (leftHand != null)
-                        DragDropManager.DragDrop(leftHand, World.Player.Backpack);
+                    UndressHotKeys.Unequip(Layer.LeftHand);
                     break;
                 case "right":
-                    if (rightHand != null)
-                        DragDropManager.DragDrop(rightHand, World.Player.Backpack);
+                    UndressHotKeys.Unequip(Layer.RightHand);
                     break;
                 default:
-                    if (leftHand != null)
-                        DragDropManager.DragDrop(leftHand, World.Player.Backpack);
-                    if (rightHand != null)
-                        DragDropManager.DragDrop(rightHand, World.Player.Backpack);
+                    UndressHotKeys.Unequip(Layer.LeftHand);
+                    UndressHotKeys.Unequip(Layer.RightHand);
                     break;
             }
 
@@ -488,6 +481,30 @@ namespace UOSteam
 
             return true;
         }
+        public static bool ToggleHands(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            ASTNode hand = node.Next();
+
+            if (hand == null)
+                throw new ArgumentException("Usage: togglehands ('left'/'right')");
+
+            if (hand.Lexeme == "left")
+                UndressHotKeys.ToggleLeft();
+            else
+                UndressHotKeys.ToggleRight();
+
+            return true;
+        }
+        public static bool ToggleScavenger(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            ScavengerAgent.Instance.ToggleEnabled();
+
+            return true;
+        }
         private static bool Ping(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -505,7 +522,6 @@ namespace UOSteam
 
             return true;
         }
-
         private static bool MessageBox(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -516,6 +532,78 @@ namespace UOSteam
                 throw new ArgumentException("Usage: messagebox ('title') ('body')");
 
             System.Windows.Forms.MessageBox.Show(args[0].Lexeme, args[1].Lexeme);
+
+            return true;
+        }
+        public static bool Msg(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            List<ASTNode> args = ParseArguments(ref node);
+
+            if (args.Count == 0)
+                throw new ArgumentException("Usage: msg ('text') [color]");
+
+            if (!Client.Instance.ClientRunning)
+                return true;
+
+            if (args.Count == 1)
+                World.Player.Say(Config.GetInt("SysColor"), args[0].Lexeme);
+            else
+                World.Player.Say(Convert.ToInt32(args[1].Lexeme, 10), args[0].Lexeme);
+
+            return true;
+        }
+        public static bool HeadMsg(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            List<ASTNode> args = ParseArguments(ref node);
+
+            if (args.Count == 0)
+                throw new ArgumentException("Usage: headmsg ('text') [color] [serial]");
+
+            if (!Client.Instance.ClientRunning)
+                return true;
+
+            if (args.Count == 1)
+                World.Player.OverheadMessage(Config.GetInt("SysColor"), args[0].Lexeme);
+            else
+            {
+                int hue = Convert.ToInt32(args[1].Lexeme, 10);
+
+                if (args.Count == 3)
+                {
+                    ASTNode target = args[2];
+                    int serial = GetSerial(ref target);
+
+                    Mobile m = World.FindMobile((uint)serial);
+
+                    if (m != null)
+                        m.OverheadMessage(hue, args[0].Lexeme);
+                }
+                else
+                    World.Player.OverheadMessage(hue, args[0].Lexeme);
+            }
+
+            return true;
+        }
+        public static bool SysMsg(ref ASTNode node, bool quiet, bool force)
+        {
+            node.Next();
+
+            List<ASTNode> args = ParseArguments(ref node);
+
+            if (args.Count == 0)
+                throw new ArgumentException("Usage: sysmsg ('text') [color]");
+
+            if (!Client.Instance.ClientRunning)
+                return true;
+
+            if (args.Count == 1)
+                World.Player.SendMessage(Config.GetInt("SysColor"), args[0].Lexeme);
+            else if (args.Count == 2)
+                World.Player.SendMessage(Convert.ToInt32(args[1].Lexeme, 10), args[0].Lexeme);
 
             return true;
         }

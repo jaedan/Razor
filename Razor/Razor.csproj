@@ -164,6 +164,7 @@
     <Compile Include="Core\BodCapture.cs" />
     <Compile Include="Core\EncodedSpeech.cs" />
     <Compile Include="Core\DamageTracker.cs" />
+    <Compile Include="Core\Journal.cs" />
     <Compile Include="Filters\SoundMusicManager.cs" />
     <Compile Include="Filters\TargetFilterManager.cs" />
     <Compile Include="Core\FriendsManager.cs" />

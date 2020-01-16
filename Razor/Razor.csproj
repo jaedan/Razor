@@ -331,6 +331,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\TargetingRandom.cs" />
+    <Compile Include="Scripts\ScriptManager.cs" />
     <Compile Include="UI\AddCounter.cs">
       <SubType>Form</SubType>
     </Compile>

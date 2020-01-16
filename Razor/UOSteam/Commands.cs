@@ -8,13 +8,54 @@ namespace UOSteam
 {
     public static class Commands
     {
-        private static void DummyCommand(ref ASTNode node, bool quiet, bool force)
+        private static List<ASTNode> ParseArguments(ref ASTNode node)
+        {
+            List<ASTNode> args = new List<ASTNode>();
+            while (node != null)
+            {
+                args.Add(node);
+                node = node.Next();
+            }
+            return args;
+        }
+        private static int GetSerial(ref ASTNode target)
+        {
+            int targetSerial = -1;
+            if (target.Type == ASTNodeType.STRING)
+                targetSerial = Interpreter.GetAlias(ref target);
+            else if (target.Type == ASTNodeType.SERIAL)
+                targetSerial = Convert.ToInt32(target.Lexeme, 16);
+
+            return targetSerial;
+        }
+        private static bool DummyCommand(ref ASTNode node, bool quiet, bool force)
         {
             Console.WriteLine("Executing command {0} {1}", node.Type, node.Lexeme);
 
             node = null;
-        }
 
+            return true;
+        }
+        private static bool UseItem(Item cont, ushort find)
+        {
+            for (int i = 0; i < cont.Contains.Count; i++)
+            {
+                Item item = cont.Contains[i];
+
+                if (item.ItemID == find)
+                {
+                    PlayerData.DoubleClick(item);
+                    return true;
+                }
+                else if (item.Contains != null && item.Contains.Count > 0)
+                {
+                    if (UseItem(item, find))
+                        return true;
+                }
+            }
+
+            return false;
+        }
         static Commands()
         {
             // Commands. From UOSteam Documentation
@@ -92,41 +133,34 @@ namespace UOSteam
             Interpreter.RegisterCommandHandler("sysmsg", DummyCommand);
 
         }
-        public static void Fly(ref ASTNode node, bool quiet, bool force)
+        private static bool Fly(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
+
+            return true;
         }
-        public static void Land(ref ASTNode node, bool quiet, bool force)
+        private static bool Land(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
+
+            return true;
         }
         private static string[] abilities = new string[4] { "primary", "secondary", "stun", "disarm" };
-        private static void SetAbility(ref ASTNode node, bool quiet, bool force)
+        private static bool SetAbility(ref ASTNode node, bool quiet, bool force)
         {
             node.Next(); // walk past COMMAND
 
-            // expect two STRING nodes
+            List<ASTNode> args = ParseArguments(ref node);
 
-            ASTNode ability = node.Next();
-            ASTNode state = node.Next();
-
-            if (ability == null || state == null)
+            if (args.Count < 1)
                 throw new ArgumentException("Usage: setability ('primary'/'secondary'/'stun'/'disarm') ['on'/'off']");
 
-            if (!abilities.Contains(ability.Lexeme))
+            if (!abilities.Contains(args[0].Lexeme))
                 throw new ArgumentException("Usage: setability ('primary'/'secondary'/'stun'/'disarm') ['on'/'off']");
 
-            if (state.Lexeme != "on" && state.Lexeme != "off")
-                throw new ArgumentException("Usage: setability ('primary'/'secondary'/'stun'/'disarm') ['on'/'off']");
-
-            if (state.Lexeme == "off")
+            if (args.Count == 2 && args[1].Lexeme == "on" || args.Count == 1)
             {
-                Client.Instance.SendToServer(new UseAbility(AOSAbility.Clear));
-                Client.Instance.SendToClient(ClearAbility.Instance);
-            }
-            else
-            {
-                switch (ability.Lexeme)
+                switch (args[0].Lexeme)
                 {
                     case "primary":
                         SpecialMoves.SetPrimaryAbility();
@@ -144,15 +178,24 @@ namespace UOSteam
                         break;
                 }
             }
+            else if (args.Count == 2 && args[1].Lexeme == "off")
+            {
+                Client.Instance.SendToServer(new UseAbility(AOSAbility.Clear));
+                Client.Instance.SendToClient(ClearAbility.Instance);
+            }
+
+            return true;
         }
-        private static void Attack(ref ASTNode node, bool quiet, bool force)
+        private static bool Attack(ref ASTNode node, bool quiet, bool force)
         {
             node.Next(); // walk past COMMAND
 
             node.Next(); // walk past argument
+
+            return true;
         }
         private static string[] hands = new string[3] { "left", "right", "both" };
-        private static void ClearHands(ref ASTNode node, bool quiet, bool force)
+        private static bool ClearHands(ref ASTNode node, bool quiet, bool force)
         {
             node.Next(); // walk past COMMAND
 
@@ -187,8 +230,10 @@ namespace UOSteam
                         DragDropManager.DragDrop(rightHand, World.Player.Backpack);
                     break;
             }
+
+            return true;
         }
-        private static void ClickObject(ref ASTNode node, bool quiet, bool force)
+        private static bool ClickObject(ref ASTNode node, bool quiet, bool force)
         {
             node.Next(); // walk past COMMAND
 
@@ -199,42 +244,21 @@ namespace UOSteam
             if (obj == null)
                 throw new ArgumentException("Usage: clickobject (serial)");
 
-            Serial serial = Serial.Parse(obj.Lexeme);
+            int serial = GetSerial(ref obj);
 
-            if (!serial.IsValid)
+            if (serial == -1)
                 throw new ArgumentException("Invalid Serial in clickobject");
 
             Client.Instance.SendToServer(new SingleClick(serial));
+
+            return true;
         }
-        private static bool UseItem(Item cont, ushort find)
-        {
-            if (!Client.Instance.AllowBit(FeatureBit.PotionHotkeys))
-                return false;
-
-            for (int i = 0; i < cont.Contains.Count; i++)
-            {
-                Item item = (Item)cont.Contains[i];
-
-                if (item.ItemID == find)
-                {
-                    PlayerData.DoubleClick(item);
-                    return true;
-                }
-                else if (item.Contains != null && item.Contains.Count > 0)
-                {
-                    if (UseItem(item, find))
-                        return true;
-                }
-            }
-
-            return false;
-        }
-        private static void BandageSelf(ref ASTNode node, bool quiet, bool force)
+        private static bool BandageSelf(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
             if (World.Player == null)
-                return;
+                return true;
 
             Item pack = World.Player.Backpack;
             if (pack != null)
@@ -254,14 +278,18 @@ namespace UOSteam
                         Targeting.TargetSelf(true);
                 }
             }
+
+            return true;
         }
-        private static void UseType(ref ASTNode node, bool quiet, bool force)
+        private static bool UseType(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
             // variable args here
+
+            return true;
         }
-        private static void UseObject(ref ASTNode node, bool quiet, bool force)
+        private static bool UseObject(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
@@ -278,19 +306,25 @@ namespace UOSteam
                 throw new ArgumentException("Invalid Serial in useobject");
 
             Client.Instance.SendToServer(new DoubleClick(serial));
+
+            return true;
         }
-        private static void UseOnce(ref ASTNode node, bool quiet, bool force)
+        private static bool UseOnce(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
             node.Next(); // item ID
             node.Next(); // ?color
+
+            return true;
         }
-        private static void CleanUseQueue(ref ASTNode node, bool quiet, bool force)
+        private static bool CleanUseQueue(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
+
+            return true;
         }
-        private static void MoveItem(ref ASTNode node, bool quiet, bool force)
+        private static bool MoveItem(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
@@ -298,18 +332,26 @@ namespace UOSteam
             node.Next(); // target alias or serial
             node.Next(); // (x, y, z)?
             node.Next(); // amount?
+
+            return true;
         }
-        private static void Walk(ref ASTNode node, bool quiet, bool force)
+        private static bool Walk(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
+
+            return true;
         }
-        private static void Turn(ref ASTNode node, bool quiet, bool force)
+        private static bool Turn(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
+
+            return true;
         }
-        private static void Run(ref ASTNode node, bool quiet, bool force)
+        private static bool Run(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
+
+            return true;
         }
 
         private static Dictionary<string, int> UsableSkills = new Dictionary<string, int>()
@@ -338,7 +380,7 @@ namespace UOSteam
             { "stealth", 47 }, // Stealth
             { "removetrap", 48 } // RemoveTrap
         };
-        private static void UseSkill(ref ASTNode node, bool quiet, bool force)
+        private static bool UseSkill(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
@@ -352,8 +394,10 @@ namespace UOSteam
             {
                 Client.Instance.SendToServer(new UseSkill(skillId));
             }
+
+            return true;
         }
-        private static void Feed(ref ASTNode node, bool quiet, bool force)
+        private static bool Feed(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
@@ -361,46 +405,48 @@ namespace UOSteam
             node.Next(); // food string
             node.Next(); // ?color
             node.Next(); // ?amount
+
+            return true;
         }
-        public static void Rename(ref ASTNode node, bool quiet, bool force)
+        private static bool Rename(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
-            ASTNode target = node.Next(); // target alias or serial
-            ASTNode name = node.Next(); // new name
+            List<ASTNode> args = ParseArguments(ref node);
 
-            if (target == null || name == null)
+            if (args.Count != 2)
                 throw new ArgumentException("Usage: rename (serial) ('name')");
 
-            int targetSerial = 0;
-            if (target.Type == ASTNodeType.STRING)
-                targetSerial = Interpreter.GetAlias(ref target);
-            else
-                targetSerial = Convert.ToInt32(target.Lexeme, 16);
+            ASTNode target = args[0];
 
-            if (Client.Instance.ClientRunning)
-                Client.Instance.SendToServer(new RenameReq((uint)targetSerial, name.Lexeme));
+            int targetSerial = GetSerial(ref target);
+
+            if (Client.Instance.ClientRunning && targetSerial != -1)
+                Client.Instance.SendToServer(new RenameReq((uint)targetSerial, args[1].Lexeme));
+
+            return true;
         }
-        private static void SetAlias(ref ASTNode node, bool quiet, bool force)
+        private static bool SetAlias(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
-            ASTNode alias = node.Next();
-            ASTNode value = node.Next();
+            List<ASTNode> args = ParseArguments(ref node);
 
-            if (alias == null || value == null)
-                throw new ArgumentException("Usage: setalias (string) (serial/string)");
+            if (args.Count != 2)
+                throw new ArgumentException("Usage: setalias ('name') [serial]");
 
-            int obj;
+            ASTNode value = args[1]; // can't pass ref to this
 
-            if (value.Type == ASTNodeType.STRING)
-                obj = Interpreter.GetAlias(ref value);
-            else
-                obj = Convert.ToInt32(value.Lexeme, 16);
+            int serial = GetSerial(ref value);
 
-            Interpreter.SetAlias(alias.Lexeme, obj);
+            if (serial == -1)
+                return true;
+
+            Interpreter.SetAlias(args[0].Lexeme, serial);
+
+            return true;
         }
-        private static void UnsetAlias(ref ASTNode node, bool quiet, bool force)
+        private static bool UnsetAlias(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
@@ -410,21 +456,20 @@ namespace UOSteam
                 throw new ArgumentException("Usage: unsetalias (string)");
 
             Interpreter.SetAlias(alias.Lexeme, 0);
+
+            return true;
         }
 
-        private static void ShowNames(ref ASTNode node, bool quiet, bool force)
+        private static bool ShowNames(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
             ASTNode type = node.Next();
 
-            if (type == null)
-                throw new ArgumentException("Usage: shownames ['mobiles'/'corpses']");
-
             if (World.Player == null)
-                return;
+                return true;
 
-            if (type.Lexeme == "mobiles")
+            if (type == null || type.Lexeme == "mobiles")
             {
                 foreach (Mobile m in World.MobilesInRange())
                 {
@@ -440,32 +485,39 @@ namespace UOSteam
                         Client.Instance.SendToServer(new SingleClick(i));
                 }
             }
+
+            return true;
         }
-        public static void Ping(ref ASTNode node, bool quiet, bool force)
+        private static bool Ping(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
             Assistant.Ping.StartPing(5);
+
+            return true;
         }
-        public static void Resync(ref ASTNode node, bool quiet, bool force)
+        private static bool Resync(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
             if (Client.Instance.ClientRunning)
                 Client.Instance.SendToServer(new ResyncReq());
+
+            return true;
         }
 
-        public static void MessageBox(ref ASTNode node, bool quiet, bool force)
+        private static bool MessageBox(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
 
-            ASTNode title = node.Next();
-            ASTNode body = node.Next();
+            List<ASTNode> args = ParseArguments(ref node);
 
-            if (title == null || body == null)
+            if (args.Count != 2)
                 throw new ArgumentException("Usage: messagebox ('title') ('body')");
 
-            System.Windows.Forms.MessageBox.Show(body.Lexeme, title.Lexeme);
+            System.Windows.Forms.MessageBox.Show(args[0].Lexeme, args[1].Lexeme);
+
+            return true;
         }
     }
 }

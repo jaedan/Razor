@@ -445,6 +445,9 @@
     <Compile Include="UltimaSDK\UnicodeFont.cs" />
     <Compile Include="UltimaSDK\Verdata.cs" />
     <Compile Include="UltimaSDK\WindowProcessStream.cs" />
+    <Compile Include="UOSteam\Aliases.cs" />
+    <Compile Include="UOSteam\Commands.cs" />
+    <Compile Include="UOSteam\Expressions.cs" />
     <None Include="UOSteam\Snippets.snippet" />
     <EmbeddedResource Include="Boat\BoatWindow.resx">
       <DependentUpon>BoatWindow.cs</DependentUpon>

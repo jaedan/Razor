@@ -20,7 +20,7 @@
 
 using System;
 using Assistant.Agents;
-using Assistant.Scripts.Engine;
+using UOScript;
 
 namespace Assistant.Scripts
 {

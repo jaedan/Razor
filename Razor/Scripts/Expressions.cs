@@ -19,199 +19,130 @@
 #endregion
 
 using System;
-using Assistant.Scripts.Engine;
-using Ultima;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using UOScript;
+using Assistant;
 
 namespace Assistant.Scripts
 {
     public static class Expressions
     {
+        private static int DummyExpression(string expression, Argument[] args, bool quiet)
+        {
+            Console.WriteLine("Executing expression {0} {1}", expression, args);
+
+            return 0;
+        }
+
         public static void Register()
         {
-            Interpreter.RegisterExpressionHandler("stam", Stam);
-            Interpreter.RegisterExpressionHandler("maxstam", MaxStam);
-            Interpreter.RegisterExpressionHandler("hp", Hp);
-            Interpreter.RegisterExpressionHandler("hits", Hp);
-            Interpreter.RegisterExpressionHandler("maxhp", MaxHp);
-            Interpreter.RegisterExpressionHandler("maxhits", MaxHp);
-            Interpreter.RegisterExpressionHandler("mana", Mana);
-            Interpreter.RegisterExpressionHandler("maxmana", MaxMana);
-            Interpreter.RegisterExpressionHandler("poisoned", Poisoned);
-
-            Interpreter.RegisterExpressionHandler("mounted", Mounted);
-            Interpreter.RegisterExpressionHandler("rhandempty", RHandEmpty);
-            Interpreter.RegisterExpressionHandler("lhandempty", LHandEmpty);
-
-            Interpreter.RegisterExpressionHandler("dead", Dead);
-
-            Interpreter.RegisterExpressionHandler("str", Str);
-            Interpreter.RegisterExpressionHandler("int", Int);
-            Interpreter.RegisterExpressionHandler("dex", Dex);
-
-            Interpreter.RegisterExpressionHandler("weight", Weight);
-
+            // Expressions
+            Interpreter.RegisterExpressionHandler("findalias", FindAlias);
+            Interpreter.RegisterExpressionHandler("contents", DummyExpression);
+            Interpreter.RegisterExpressionHandler("inregion", DummyExpression);
             Interpreter.RegisterExpressionHandler("skill", SkillExpression);
-            Interpreter.RegisterExpressionHandler("count", CountExpression);
-            Interpreter.RegisterExpressionHandler("counter", CountExpression);
+            Interpreter.RegisterExpressionHandler("findobject", DummyExpression);
+            Interpreter.RegisterExpressionHandler("distance", DummyExpression);
+            Interpreter.RegisterExpressionHandler("inrange", DummyExpression);
+            Interpreter.RegisterExpressionHandler("buffexists", DummyExpression);
+            Interpreter.RegisterExpressionHandler("property", DummyExpression);
+            Interpreter.RegisterExpressionHandler("findtype", DummyExpression);
+            Interpreter.RegisterExpressionHandler("findlayer", DummyExpression);
+            Interpreter.RegisterExpressionHandler("skillstate", DummyExpression);
+            Interpreter.RegisterExpressionHandler("counttype", DummyExpression);
+            Interpreter.RegisterExpressionHandler("counttypeground", DummyExpression);
+            Interpreter.RegisterExpressionHandler("findwand", DummyExpression);
+            Interpreter.RegisterExpressionHandler("inparty", DummyExpression);
+            Interpreter.RegisterExpressionHandler("infriendslist", DummyExpression);
+            Interpreter.RegisterExpressionHandler("war", DummyExpression);
+            Interpreter.RegisterExpressionHandler("ingump", DummyExpression);
+            Interpreter.RegisterExpressionHandler("gumpexists", DummyExpression);
+            Interpreter.RegisterExpressionHandler("injournal", InJournal);
+            Interpreter.RegisterExpressionHandler("listexists", ListExists);
+            Interpreter.RegisterExpressionHandler("list", ListLength);
+            Interpreter.RegisterExpressionHandler("inlist", InList);
+            Interpreter.RegisterExpressionHandler("timer", DummyExpression);
+            Interpreter.RegisterExpressionHandler("timerexists", DummyExpression);
 
-            Interpreter.RegisterExpressionHandler("insysmsg", InSysMessage);
-            Interpreter.RegisterExpressionHandler("insysmessage", InSysMessage);
-
-            Interpreter.RegisterExpressionHandler("findtype", FindType);
+            // Player Attributes
+            Interpreter.RegisterExpressionHandler("mana", Mana);
+            Interpreter.RegisterExpressionHandler("x", X);
+            Interpreter.RegisterExpressionHandler("y", Y);
+            Interpreter.RegisterExpressionHandler("z", Z);
         }
 
-        private static double FindType(string expression, Argument[] args, bool quiet)
+        private static int FindAlias(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length < 1)
+                ScriptManager.Error("Usage: findalias (string)");
+
+            uint serial = Interpreter.GetAlias(args[0].AsString());
+
+            if (serial == uint.MaxValue)
+                return 0;
+
+            return 1;
+        }
+
+        private static int InJournal(string expression, Argument[] args, bool quiet)
         {
             if (args.Length == 0)
             {
-                ScriptManager.Error("Usage: findtype ('name of item') OR (graphicID) [inrangecheck (true/false)]");
+                ScriptManager.Error("Usage: injournal ('text') ['author'/'system']");
                 return 0;
             }
 
-            string gfxStr = args[0].AsString();
-            Serial gfx = Utility.ToUInt16(gfxStr, 0);
+            if (args.Length == 1 && Journal.ContainsSafe(args[0].AsString()))
+                return 1;
 
-            bool inRangeCheck = false;
-
-            if (args.Length == 2)
-            {
-                inRangeCheck = args[1].AsBool();
-            }
-
-            // No graphic id, maybe searching by name?
-            if (gfx == 0)
-            {
-                foreach (Item item in World.FindItemsByName(gfxStr))
-                {
-                    if (inRangeCheck)
-                    {
-                        if (Utility.InRange(World.Player.Position, item.Position, 2))
-                        {
-                            return 1;
-                        }
-                    }
-                    else
-                    {
-                        return 1;
-                    }
-                }
-            }
-            else // Check backpack first
-            {
-                if (World.Player.Backpack != null)
-                {
-                    Item i = World.Player.Backpack.FindItemByID(Utility.ToUInt16(gfxStr, 0));
-
-                    if (i != null)
-                        return 1;
-                }
-            }
-
-            // Not in backpack? Lets check the world
-            foreach (Item i in World.Items.Values)
-            {
-                if (i.ItemID == gfx && i.RootContainer == null)
-                {
-                    if (inRangeCheck)
-                    {
-                        if (Utility.InRange(World.Player.Position, i.Position, 2))
-                            return 1;
-                    }
-                    else
-                    {
-                        return 1;
-                    }
-                }
-            }
-
-            foreach (Item i in World.Items.Values)
-            {
-                if (i.ItemID == gfx && !i.IsInBank)
-                {
-                    if (inRangeCheck)
-                    {
-                        if (Utility.InRange(World.Player.Position, i.Position, 2))
-                            return 1;
-                    }
-                    else
-                    {
-                        return 1;
-                    }
-                }
-            }
-
-            foreach (Mobile m in World.MobilesInRange())
-            {
-                if (m.Body == gfx)
-                {
-                    if (inRangeCheck)
-                    {
-                        if (Utility.InRange(World.Player.Position, m.Position, 2))
-                            return 1;
-                    }
-                    else
-                    {
-                        return 1;
-                    }
-                }
-            }
+            // TODO:
+            // handle second argument
 
             return 0;
         }
 
-        private static double Mounted(string expression, Argument[] args, bool quiet)
+        private static int ListExists(string expression, Argument[] args, bool quiet)
         {
-            return World.Player != null && World.Player.GetItemOnLayer(Layer.Mount) != null
-                ? 1
-                : 0;
-        }
-
-        private static double RHandEmpty(string expression, Argument[] args, bool quiet)
-        {
-            return World.Player != null && World.Player.GetItemOnLayer(Layer.RightHand) == null
-                ? 1
-                : 0;
-        }
-
-        private static double LHandEmpty(string expression, Argument[] args, bool quiet)
-        {
-            return World.Player != null && World.Player.GetItemOnLayer(Layer.LeftHand) == null
-                ? 1
-                : 0;
-        }
-
-        private static double Dead(string expression, Argument[] args, bool quiet)
-        {
-            return World.Player != null && World.Player.IsGhost
-                ? 1
-                : 0;
-        }
-
-        private static double InSysMessage(string expression, Argument[] args, bool quiet)
-        {
-            if (args.Length == 0)
+            if (args.Length != 1)
             {
-                ScriptManager.Error("Usage: insysmsg ('text')");
+                ScriptManager.Error("Usage: listexists ('list name')");
                 return 0;
             }
 
-            string text = args[0].AsString();
-
-            for (int i = PacketHandlers.SysMessages.Count - 1; i >= 0; i--)
-            {
-                string sys = PacketHandlers.SysMessages[i];
-
-                if (sys.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
-                {
-                    PacketHandlers.SysMessages.RemoveRange(0, i + 1);
-                    return 1;
-                }
-            }
+            if (Interpreter.ListExists(args[0].AsString()))
+                return 1;
 
             return 0;
         }
 
-        private static double Mana(string expression, Argument[] args, bool quiet)
+        private static int ListLength(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 1)
+            {
+                ScriptManager.Error("Usage: list ('list name') (operator) (value)");
+                return 0;
+            }
+
+            return Interpreter.ListLength(args[0].AsString());
+        }
+
+        private static int InList(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 1)
+            {
+                ScriptManager.Error("Usage: inlist ('list name')");
+                return 0;
+            }
+
+            if (Interpreter.ListContains(args[0].AsString(), args[1]))
+                return 1;
+
+            return 0;
+        }
+
+        private static int Mana(string expression, Argument[] args, bool quiet)
         {
             if (World.Player == null)
                 return 0;
@@ -219,120 +150,38 @@ namespace Assistant.Scripts
             return World.Player.Mana;
         }
 
-        private static double MaxMana(string expression, Argument[] args, bool quiet)
+        private static int X(string expression, Argument[] args, bool quiet)
         {
             if (World.Player == null)
                 return 0;
 
-            return World.Player.ManaMax;
+            return World.Player.Position.X;
         }
 
-        private static double Poisoned(string expression, Argument[] args, bool quiet)
-        {
-            return World.Player != null && Client.Instance.AllowBit(FeatureBit.BlockHealPoisoned) &&
-                   World.Player.Poisoned
-                ? 1
-                : 0;
-        }
-
-        private static double Hp(string expression, Argument[] args, bool quiet)
+        private static int Y(string expression, Argument[] args, bool quiet)
         {
             if (World.Player == null)
                 return 0;
 
-            return World.Player.Hits;
+            return World.Player.Position.Y;
         }
 
-        private static double MaxHp(string expression, Argument[] args, bool quiet)
+        private static int Z(string expression, Argument[] args, bool quiet)
         {
             if (World.Player == null)
                 return 0;
 
-            return World.Player.HitsMax;
+            return World.Player.Position.Z;
         }
 
-        private static double Stam(string expression, Argument[] args, bool quiet)
-        {
-            if (World.Player == null)
-                return 0;
-
-            return World.Player.Stam;
-        }
-
-        private static double MaxStam(string expression, Argument[] args, bool quiet)
-        {
-            if (World.Player == null)
-                return 0;
-
-            return World.Player.StamMax;
-        }
-
-        private static double Str(string expression, Argument[] args, bool quiet)
-        {
-            if (World.Player == null)
-                return 0;
-
-            return World.Player.Str;
-        }
-
-        private static double Dex(string expression, Argument[] args, bool quiet)
-        {
-            if (World.Player == null)
-                return 0;
-
-            return World.Player.Dex;
-        }
-
-        private static double Int(string expression, Argument[] args, bool quiet)
-        {
-            if (World.Player == null)
-                return 0;
-
-            return World.Player.Int;
-        }
-
-        private static double Weight(string expression, Argument[] args, bool quiet)
-        {
-            if (World.Player == null)
-                return 0;
-
-            return World.Player.Weight;
-        }
-
-        private static double SkillExpression(string expression, Argument[] args, bool quiet)
+        // WIP
+        private static int SkillExpression(string expression, Argument[] args, bool quiet)
         {
             if (args.Length < 1)
-                throw new ArgumentException("Usage: skill ('name of skill')");
+                throw new ArgumentException("Usage: skill (name)");
 
             if (World.Player == null)
                 return 0;
-
-            foreach (SkillInfo skill in Skills.SkillEntries)
-            {
-                if (skill.Name.IndexOf(args[0].AsString(), StringComparison.CurrentCultureIgnoreCase) != -1)
-                {
-                    return World.Player.Skills[skill.Index].Value;
-                }
-            }
-
-            return 0;
-        }
-
-        private static double CountExpression(string expression, Argument[] args, bool quiet)
-        {
-            if (args.Length < 1)
-                throw new ArgumentException("Usage: count ('name of counter item')");
-
-            if (World.Player == null)
-                return 0;
-
-            foreach (Counter c in Counter.List)
-            {
-                if (c.Name.Equals(args[0].AsString(), StringComparison.OrdinalIgnoreCase))
-                {
-                    return c.Enabled ? c.Amount : 0;
-                }
-            }
 
             return 0;
         }

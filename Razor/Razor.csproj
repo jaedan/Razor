@@ -156,6 +156,7 @@
     <Compile Include="Core\Dress.cs" />
     <Compile Include="Core\EncodedSpeech.cs" />
     <Compile Include="Core\DamageTracker.cs" />
+    <Compile Include="Core\Journal.cs" />
     <Compile Include="Filters\SoundMusicManager.cs" />
     <Compile Include="Filters\TargetFilterManager.cs" />
     <Compile Include="Core\FriendsManager.cs" />
@@ -560,7 +561,7 @@
       <Project>{db18390c-8ad4-4e69-8a5a-171260f7d74a}</Project>
       <Name>Platform</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Scripts\UOScript\UOScript.csproj">
+    <ProjectReference Include="..\UOScript\UOScript\UOScript.csproj">
       <Project>{569eabf7-8980-4a3b-bf3a-6321c4b1da78}</Project>
       <Name>UOScript</Name>
     </ProjectReference>
@@ -569,7 +570,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy /S /Q /Y $(SolutionDir)etc\* $(SolutionDir)bin\Win32\$(Configuration)\
-xcopy /S /Q /Y $(SolutionDir)etc\* $(SolutionDir)bin\x64\$(Configuration)\</PostBuildEvent>
+    <PostBuildEvent>xcopy /S /Q /Y $(SolutionDir)etc\* $(ProjectDir)$(OutDir)</PostBuildEvent>
   </PropertyGroup>
 </Project>

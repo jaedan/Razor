@@ -24,7 +24,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Assistant.Macros;
-using Assistant.Scripts.Engine;
+using UOScript;
 using Assistant.UI;
 using FastColoredTextBoxNS;
 
@@ -155,7 +155,6 @@ namespace Assistant.Scripts
 
             StopScript(); // be sure nothing is running
 
-            _startPause = DateTime.MaxValue; // reset wait timers
             SetLastTargetActive = false;
             SetVariableActive = false;
 
@@ -574,63 +573,6 @@ namespace Assistant.Scripts
 
                 s.EndUpdate();
             });
-        }
-
-
-        private static TimeSpan _pauseDuration;
-        private static DateTime _startPause = DateTime.MaxValue;
-
-        /// <summary>
-        /// Manage the state of pauses in the script engine 
-        /// </summary>
-        /// <param name="ms"></param>
-        /// <returns></returns>
-        public static bool Pause(int ms = 30000)
-        {
-            if (_startPause == DateTime.MaxValue) // no timer set
-            {
-                _startPause = DateTime.UtcNow;
-                _pauseDuration = TimeSpan.FromMilliseconds(ms);
-
-                return true; // we want to start pausing
-            }
-
-            if (_startPause + _pauseDuration < DateTime.UtcNow) // timer is set, has it elapsed?
-            {
-                _startPause = DateTime.MaxValue;
-                _pauseDuration = TimeSpan.FromMilliseconds(ms);
-                return false; //pause limit exceeded
-            }
-
-            return true; // keep on pausing
-        }
-
-        private static TimeSpan _timeoutDuration;
-        private static DateTime _startTimeout = DateTime.MaxValue;
-
-        /// <summary>
-        /// Manage the state of wait for target in the script engine
-        /// </summary>
-        /// <param name="ms"></param>
-        /// <returns></returns>
-        public static bool Timeout(int ms = 30000)
-        {
-            if (_startTimeout == DateTime.MaxValue) // no timer set
-            {
-                _startTimeout = DateTime.UtcNow;
-                _timeoutDuration = TimeSpan.FromMilliseconds(ms);
-
-                return true; // we want to start the timeout wait
-            }
-
-            if (_startTimeout + _timeoutDuration < DateTime.UtcNow) // timer is set, has it elapsed?
-            {
-                _startTimeout = DateTime.MaxValue;
-                _timeoutDuration = TimeSpan.FromMilliseconds(ms);
-                return false; // timeout exceeded
-            }
-
-            return true; // keep on pausing
         }
     }
 }

@@ -1288,7 +1288,14 @@ namespace Assistant
             Write( (int) Ultima.Map.Malas.Tiles.Patch.LandBlocks );*/
         }
     }
-
+    public sealed class RenameReq : Packet
+    {
+        public RenameReq(Serial target, string name) : base(0x75, 35)
+        {
+            Write(target);
+            WriteAsciiFixed(name, 30);
+        }
+    }
     public sealed class MobileAttributes : Packet
     {
         public MobileAttributes(PlayerData m) : base(0x2D, 17)

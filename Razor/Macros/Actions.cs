@@ -2809,18 +2809,7 @@ namespace Assistant.Macros
 
                 case IfVarType.SysMessage:
                 {
-                    string text = (string) m_Value;
-                    for (int i = PacketHandlers.SysMessages.Count - 1; i >= 0; i--)
-                    {
-                        string sys = PacketHandlers.SysMessages[i];
-                        if (sys.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1)
-                        {
-                            PacketHandlers.SysMessages.RemoveRange(0, i + 1);
-                            return true;
-                        }
-                    }
-
-                    return false;
+                    return Journal.Contains((string)m_Value, MessageType.System);
                 }
 
                 case IfVarType.Mounted:

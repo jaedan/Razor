@@ -25,7 +25,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Platform", "Platform\Platfo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastColoredTextBox", "FastColoredTextBox\FastColoredTextBox.csproj", "{6DD14A85-CCFC-4774-BD26-0F5772512319}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UOScript", "Scripts\UOScript\UOScript.csproj", "{569EABF7-8980-4A3B-BF3A-6321C4B1DA78}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UOScript", "UOScript\UOScript\UOScript.csproj", "{569EABF7-8980-4A3B-BF3A-6321C4B1DA78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

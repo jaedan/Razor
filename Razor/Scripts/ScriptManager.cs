@@ -27,9 +27,9 @@ namespace Assistant.Scripts
 
         public static void OnLogin()
         {
-            UOSteam.Commands.Register();
-            UOSteam.Aliases.Register();
-            UOSteam.Expressions.Register();
+            Assistant.Scripts.Commands.Register();
+            Assistant.Scripts.Aliases.Register();
+            Assistant.Scripts.Expressions.Register();
 
             _timer.Start();
         }

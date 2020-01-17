@@ -19,6 +19,7 @@ namespace Assistant.Scripts
             }
             return args;
         }
+
         private static int GetSerial(ref ASTNode target)
         {
             int targetSerial = -1;
@@ -29,6 +30,7 @@ namespace Assistant.Scripts
 
             return targetSerial;
         }
+
         private static bool DummyCommand(ref ASTNode node, bool quiet, bool force)
         {
             Console.WriteLine("Executing command {0} {1}", node.Type, node.Lexeme);
@@ -37,6 +39,7 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         private static bool UseItem(Item cont, ushort find)
         {
             for (int i = 0; i < cont.Contains.Count; i++)
@@ -57,6 +60,7 @@ namespace Assistant.Scripts
 
             return false;
         }
+
         public static void Register()
         {
             // Commands. From UOSteam Documentation
@@ -112,7 +116,7 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("createlist", DummyCommand);
             Interpreter.RegisterCommandHandler("clearlist", DummyCommand);
             Interpreter.RegisterCommandHandler("info", DummyCommand);
-            Interpreter.RegisterCommandHandler("pause", DummyCommand);
+            Interpreter.RegisterCommandHandler("pause", Pause);
             Interpreter.RegisterCommandHandler("ping", Ping);
             Interpreter.RegisterCommandHandler("playmacro", DummyCommand);
             Interpreter.RegisterCommandHandler("playsound", DummyCommand);
@@ -133,22 +137,25 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("headmsg", HeadMsg);
             Interpreter.RegisterCommandHandler("sysmsg", SysMsg);
         }
+
         private static bool Fly(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             return true;
         }
+
         private static bool Land(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             return true;
         }
+
         private static string[] abilities = new string[4] { "primary", "secondary", "stun", "disarm" };
         private static bool SetAbility(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next(); // walk past COMMAND
+            node = node.Next(); // walk past COMMAND
 
             List<ASTNode> args = ParseArguments(ref node);
 
@@ -186,6 +193,7 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         private static bool Attack(ref ASTNode node, bool quiet, bool force)
         {
             node.Next(); // walk past COMMAND
@@ -194,6 +202,7 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         private static string[] hands = new string[3] { "left", "right", "both" };
         private static bool ClearHands(ref ASTNode node, bool quiet, bool force)
         {
@@ -310,12 +319,14 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         private static bool CleanUseQueue(ref ASTNode node, bool quiet, bool force)
         {
             node = node.Next();
 
             return true;
         }
+
         private static bool MoveItem(ref ASTNode node, bool quiet, bool force)
         {
             node = node.Next();
@@ -327,18 +338,21 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         private static bool Walk(ref ASTNode node, bool quiet, bool force)
         {
             node = node.Next();
 
             return true;
         }
+
         private static bool Turn(ref ASTNode node, bool quiet, bool force)
         {
             node = node.Next();
 
             return true;
         }
+
         private static bool Run(ref ASTNode node, bool quiet, bool force)
         {
             node = node.Next();
@@ -480,6 +494,7 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         public static bool ToggleHands(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -496,6 +511,7 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         public static bool ToggleScavenger(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -504,6 +520,12 @@ namespace Assistant.Scripts
 
             return true;
         }
+
+        private static bool Pause(ref ASTNode node, bool quiet, bool force)
+        {
+            return true;
+        }
+
         private static bool Ping(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -512,6 +534,7 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         private static bool Resync(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -521,6 +544,7 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         private static bool MessageBox(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -534,6 +558,7 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         public static bool Msg(ref ASTNode node, bool quiet, bool force)
         {
             node = node.Next();
@@ -553,6 +578,7 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         public static bool HeadMsg(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();
@@ -587,6 +613,7 @@ namespace Assistant.Scripts
 
             return true;
         }
+
         public static bool SysMsg(ref ASTNode node, bool quiet, bool force)
         {
             node.Next();

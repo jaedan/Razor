@@ -17,6 +17,8 @@ namespace Assistant.Scripts
             {
                 switch (node.Type)
                 {
+                    case ASTNodeType.AND:
+                    case ASTNodeType.OR:
                     case ASTNodeType.EQUAL:
                     case ASTNodeType.NOT_EQUAL:
                     case ASTNodeType.LESS_THAN:

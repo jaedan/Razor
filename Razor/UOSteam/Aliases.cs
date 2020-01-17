@@ -9,7 +9,7 @@ namespace UOSteam
     public static class Aliases
     {
 
-        static Aliases()
+        public static void Register()
         {
             Interpreter.RegisterAliasHandler("backpack", Backpack);
             Interpreter.RegisterAliasHandler("bank", Bank);

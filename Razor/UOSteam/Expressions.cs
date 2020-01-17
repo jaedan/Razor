@@ -31,7 +31,7 @@ namespace UOSteam
             return 0;
         }
 
-        static Expressions()
+        public static void Register()
         {
             // Expressions
             Interpreter.RegisterExpressionHandler("findalias", FindAlias);

@@ -56,7 +56,7 @@ namespace UOSteam
 
             return false;
         }
-        static Commands()
+        public static void Register()
         {
             // Commands. From UOSteam Documentation
             Interpreter.RegisterCommandHandler("fly", Fly);
@@ -246,7 +246,7 @@ namespace UOSteam
         }
         private static bool BandageSelf(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             if (World.Player == null)
                 return true;
@@ -274,7 +274,7 @@ namespace UOSteam
         }
         private static bool UseType(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             // variable args here
 
@@ -282,7 +282,7 @@ namespace UOSteam
         }
         private static bool UseObject(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             // expect a SERIAL node
 
@@ -302,45 +302,45 @@ namespace UOSteam
         }
         private static bool UseOnce(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
-            node.Next(); // item ID
-            node.Next(); // ?color
+            node = node.Next(); // item ID
+            node = node.Next(); // ?color
 
             return true;
         }
         private static bool CleanUseQueue(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             return true;
         }
         private static bool MoveItem(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
-            node.Next(); // item alias or serial
-            node.Next(); // target alias or serial
-            node.Next(); // (x, y, z)?
-            node.Next(); // amount?
+            node = node.Next(); // item alias or serial
+            node = node.Next(); // target alias or serial
+            node = node.Next(); // (x, y, z)?
+            node = node.Next(); // amount?
 
             return true;
         }
         private static bool Walk(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             return true;
         }
         private static bool Turn(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             return true;
         }
         private static bool Run(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             return true;
         }
@@ -373,11 +373,11 @@ namespace UOSteam
         };
         private static bool UseSkill(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             // expect one string node or "last"
 
-            ASTNode skill = node.Next();
+            ASTNode skill = node;
 
             if (node.Lexeme == "last")
                 Client.Instance.SendToServer(new UseSkill(World.Player.LastSkill));
@@ -390,12 +390,12 @@ namespace UOSteam
         }
         private static bool Feed(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
-            node.Next(); // target alias or serial
-            node.Next(); // food string
-            node.Next(); // ?color
-            node.Next(); // ?amount
+            node = node.Next(); // target alias or serial
+            node = node.Next(); // food string
+            node = node.Next(); // ?color
+            node = node.Next(); // ?amount
 
             return true;
         }
@@ -535,7 +535,7 @@ namespace UOSteam
         }
         public static bool Msg(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             List<ASTNode> args = ParseArguments(ref node);
 

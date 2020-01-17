@@ -26,16 +26,9 @@ namespace Assistant
                     if (conflict != null && (conflict.IsTwoHanded || m_Right.IsTwoHanded))
                     {
                         Unequip(DressList.GetLayerFor(conflict));
-                        /*
-                        Item ub = DressList.FindUndressBag(conflict);
-                        if (ub != null)
-                            DragDropManager.DragDrop(conflict, ub);
-                        */
                     }
 
                     Equip(m_Right, DressList.GetLayerFor(m_Right));
-
-                    // DragDropManager.DragDrop(m_Right, World.Player, DressList.GetLayerFor(m_Right));
                 }
                 else
                 {
@@ -44,12 +37,7 @@ namespace Assistant
             }
             else
             {
-                Unequip(DressList.GetLayerFor(m_Left));
-                /*
-                Item ub = DressList.FindUndressBag(item);
-                if (ub != null)
-                    DragDropManager.DragDrop(item, ub);
-                */
+                Unequip(DressList.GetLayerFor(item));
                 m_Right = item;
             }
         }
@@ -70,15 +58,9 @@ namespace Assistant
                     if (conflict != null && (conflict.IsTwoHanded || m_Left.IsTwoHanded))
                     {
                         Unequip(DressList.GetLayerFor(conflict));
-                        /*
-                        Item ub = DressList.FindUndressBag(conflict);
-                        if (ub != null)
-                            DragDropManager.DragDrop(conflict, ub);
-                        */
                     }
 
                     Equip(m_Left, DressList.GetLayerFor(m_Left));
-                    // DragDropManager.DragDrop(m_Left, World.Player, DressList.GetLayerFor(m_Left));
                 }
                 else
                 {
@@ -87,18 +69,13 @@ namespace Assistant
             }
             else
             {
-                Unequip(DressList.GetLayerFor(m_Left));
-                /*
-                Item ub = DressList.FindUndressBag(item);
-                if (ub != null)
-                    DragDropManager.DragDrop(item, ub);
-                */
+                Unequip(DressList.GetLayerFor(item));
                 m_Left = item;
             }
         }
         public static bool Equip(Item item, Layer layer)
         {
-            if (layer == Layer.Invalid || layer > Layer.LastUserValid || item.Layer == Layer.Invalid || item.Layer > Layer.LastUserValid)
+            if (layer == Layer.Invalid || layer > Layer.LastUserValid || item == null || item.Layer == Layer.Invalid || item.Layer > Layer.LastUserValid)
                 return false;
 
             if (item != null && World.Player != null && item.IsChildOf(World.Player.Backpack))

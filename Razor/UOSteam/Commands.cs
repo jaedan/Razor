@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assistant;
-using Assistant.HotKeys;
 
 namespace UOSteam
 {
@@ -25,7 +24,7 @@ namespace UOSteam
             if (target.Type == ASTNodeType.STRING)
                 targetSerial = Interpreter.GetAlias(ref target);
             else if (target.Type == ASTNodeType.SERIAL)
-                targetSerial = Convert.ToInt32(target.Lexeme, 16);
+                targetSerial = Utility.ToInt32(target.Lexeme, -1);
 
             return targetSerial;
         }
@@ -132,7 +131,6 @@ namespace UOSteam
             Interpreter.RegisterCommandHandler("msg", Msg);
             Interpreter.RegisterCommandHandler("headmsg", HeadMsg);
             Interpreter.RegisterCommandHandler("sysmsg", SysMsg);
-
         }
         private static bool Fly(ref ASTNode node, bool quiet, bool force)
         {
@@ -550,7 +548,7 @@ namespace UOSteam
             if (args.Count == 1)
                 World.Player.Say(Config.GetInt("SysColor"), args[0].Lexeme);
             else
-                World.Player.Say(Convert.ToInt32(args[1].Lexeme, 10), args[0].Lexeme);
+                World.Player.Say(Utility.ToInt32(args[1].Lexeme, 0), args[0].Lexeme);
 
             return true;
         }
@@ -570,7 +568,7 @@ namespace UOSteam
                 World.Player.OverheadMessage(Config.GetInt("SysColor"), args[0].Lexeme);
             else
             {
-                int hue = Convert.ToInt32(args[1].Lexeme, 10);
+                int hue = Utility.ToInt32(args[1].Lexeme, 0);
 
                 if (args.Count == 3)
                 {
@@ -603,7 +601,7 @@ namespace UOSteam
             if (args.Count == 1)
                 World.Player.SendMessage(Config.GetInt("SysColor"), args[0].Lexeme);
             else if (args.Count == 2)
-                World.Player.SendMessage(Convert.ToInt32(args[1].Lexeme, 10), args[0].Lexeme);
+                World.Player.SendMessage(Utility.ToInt32(args[1].Lexeme, 0), args[0].Lexeme);
 
             return true;
         }

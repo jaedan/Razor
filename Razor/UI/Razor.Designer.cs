@@ -770,6 +770,9 @@ namespace Assistant
             this.linkMain = new System.Windows.Forms.LinkLabel();
             this.label21 = new System.Windows.Forms.Label();
             this.aboutVer = new System.Windows.Forms.Label();
+            this.scriptsPage = new System.Windows.Forms.TabPage();
+            this.startStopTestScriptButton = new System.Windows.Forms.Button();
+            this.testScriptText = new System.Windows.Forms.TextBox();
             this.tabs.SuspendLayout();
             this.generalTab.SuspendLayout();
             this.subGeneralTab.SuspendLayout();
@@ -816,6 +819,7 @@ namespace Assistant
             ((System.ComponentModel.ISupportInitialize)(this.screenPrev)).BeginInit();
             this.advancedTab.SuspendLayout();
             this.aboutTab.SuspendLayout();
+            this.scriptsPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // m_NotifyIcon
@@ -834,6 +838,7 @@ namespace Assistant
             this.tabs.Controls.Add(this.agentsTab);
             this.tabs.Controls.Add(this.hotkeysTab);
             this.tabs.Controls.Add(this.macrosTab);
+            this.tabs.Controls.Add(this.scriptsPage);
             this.tabs.Controls.Add(this.screenshotTab);
             this.tabs.Controls.Add(this.advancedTab);
             this.tabs.Controls.Add(this.aboutTab);
@@ -1183,10 +1188,10 @@ namespace Assistant
             this.subFiltersTab.Controls.Add(this.dragonAnimationList);
             this.subFiltersTab.Controls.Add(this.filterDragonGraphics);
             this.subFiltersTab.Controls.Add(this.filters);
-            this.subFiltersTab.Location = new System.Drawing.Point(4, 24);
+            this.subFiltersTab.Location = new System.Drawing.Point(4, 22);
             this.subFiltersTab.Name = "subFiltersTab";
             this.subFiltersTab.Padding = new System.Windows.Forms.Padding(3);
-            this.subFiltersTab.Size = new System.Drawing.Size(502, 286);
+            this.subFiltersTab.Size = new System.Drawing.Size(502, 288);
             this.subFiltersTab.TabIndex = 1;
             this.subFiltersTab.Text = "Filters";
             // 
@@ -1338,10 +1343,10 @@ namespace Assistant
             this.subTargetFilterTab.Controls.Add(this.targetFilterAdd);
             this.subTargetFilterTab.Controls.Add(this.targetFilter);
             this.subTargetFilterTab.Controls.Add(this.targetFilterEnabled);
-            this.subTargetFilterTab.Location = new System.Drawing.Point(4, 24);
+            this.subTargetFilterTab.Location = new System.Drawing.Point(4, 22);
             this.subTargetFilterTab.Name = "subTargetFilterTab";
             this.subTargetFilterTab.Padding = new System.Windows.Forms.Padding(3);
-            this.subTargetFilterTab.Size = new System.Drawing.Size(502, 286);
+            this.subTargetFilterTab.Size = new System.Drawing.Size(502, 288);
             this.subTargetFilterTab.TabIndex = 2;
             this.subTargetFilterTab.Text = "Target Filter";
             // 
@@ -1397,7 +1402,7 @@ namespace Assistant
             this.targetFilterEnabled.AutoSize = true;
             this.targetFilterEnabled.Location = new System.Drawing.Point(263, 50);
             this.targetFilterEnabled.Name = "targetFilterEnabled";
-            this.targetFilterEnabled.Size = new System.Drawing.Size(133, 19);
+            this.targetFilterEnabled.Size = new System.Drawing.Size(132, 19);
             this.targetFilterEnabled.TabIndex = 0;
             this.targetFilterEnabled.Text = "Target Filter Enabled";
             this.targetFilterEnabled.UseVisualStyleBackColor = true;
@@ -1415,9 +1420,9 @@ namespace Assistant
             this.subSoundMusicTab.Controls.Add(this.playSound);
             this.subSoundMusicTab.Controls.Add(this.soundFilterEnabled);
             this.subSoundMusicTab.Controls.Add(this.soundFilterList);
-            this.subSoundMusicTab.Location = new System.Drawing.Point(4, 24);
+            this.subSoundMusicTab.Location = new System.Drawing.Point(4, 22);
             this.subSoundMusicTab.Name = "subSoundMusicTab";
-            this.subSoundMusicTab.Size = new System.Drawing.Size(502, 286);
+            this.subSoundMusicTab.Size = new System.Drawing.Size(502, 288);
             this.subSoundMusicTab.TabIndex = 3;
             this.subSoundMusicTab.Text = "Sound & Music  ";
             // 
@@ -1516,9 +1521,9 @@ namespace Assistant
             // moreOptTab
             // 
             this.moreOptTab.Controls.Add(this.optionsTabCtrl);
-            this.moreOptTab.Location = new System.Drawing.Point(4, 44);
+            this.moreOptTab.Location = new System.Drawing.Point(4, 24);
             this.moreOptTab.Name = "moreOptTab";
-            this.moreOptTab.Size = new System.Drawing.Size(519, 322);
+            this.moreOptTab.Size = new System.Drawing.Size(519, 342);
             this.moreOptTab.TabIndex = 5;
             this.moreOptTab.Text = "Options";
             // 
@@ -1970,7 +1975,7 @@ namespace Assistant
             this.friendBeneficialOnly.AutoSize = true;
             this.friendBeneficialOnly.Location = new System.Drawing.Point(6, 73);
             this.friendBeneficialOnly.Name = "friendBeneficialOnly";
-            this.friendBeneficialOnly.Size = new System.Drawing.Size(232, 19);
+            this.friendBeneficialOnly.Size = new System.Drawing.Size(233, 19);
             this.friendBeneficialOnly.TabIndex = 140;
             this.friendBeneficialOnly.Text = "\'Next/Prev Friendly\' sets beneficial only";
             this.friendBeneficialOnly.UseVisualStyleBackColor = true;
@@ -1981,7 +1986,7 @@ namespace Assistant
             this.onlyNextPrevBeneficial.AutoSize = true;
             this.onlyNextPrevBeneficial.Location = new System.Drawing.Point(6, 48);
             this.onlyNextPrevBeneficial.Name = "onlyNextPrevBeneficial";
-            this.onlyNextPrevBeneficial.Size = new System.Drawing.Size(223, 19);
+            this.onlyNextPrevBeneficial.Size = new System.Drawing.Size(224, 19);
             this.onlyNextPrevBeneficial.TabIndex = 139;
             this.onlyNextPrevBeneficial.Text = "\'Next/Prev Friend\' sets beneficial only";
             this.onlyNextPrevBeneficial.UseVisualStyleBackColor = true;
@@ -2060,7 +2065,7 @@ namespace Assistant
             this.showTargetMessagesOverChar.AutoSize = true;
             this.showTargetMessagesOverChar.Location = new System.Drawing.Point(9, 118);
             this.showTargetMessagesOverChar.Name = "showTargetMessagesOverChar";
-            this.showTargetMessagesOverChar.Size = new System.Drawing.Size(225, 19);
+            this.showTargetMessagesOverChar.Size = new System.Drawing.Size(224, 19);
             this.showTargetMessagesOverChar.TabIndex = 74;
             this.showTargetMessagesOverChar.Text = "Show Target Self/Last/Clear Overhead";
             this.showTargetMessagesOverChar.UseVisualStyleBackColor = true;
@@ -2686,9 +2691,9 @@ namespace Assistant
             // displayTab
             // 
             this.displayTab.Controls.Add(this.displayCountersTabCtrl);
-            this.displayTab.Location = new System.Drawing.Point(4, 44);
+            this.displayTab.Location = new System.Drawing.Point(4, 24);
             this.displayTab.Name = "displayTab";
-            this.displayTab.Size = new System.Drawing.Size(519, 322);
+            this.displayTab.Size = new System.Drawing.Size(519, 342);
             this.displayTab.TabIndex = 1;
             this.displayTab.Text = "Display/Counters";
             // 
@@ -2979,6 +2984,7 @@ namespace Assistant
             this.cntCount});
             this.counters.GridLines = true;
             this.counters.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.counters.HideSelection = false;
             this.counters.LabelWrap = false;
             this.counters.Location = new System.Drawing.Point(6, 18);
             this.counters.MultiSelect = false;
@@ -3161,9 +3167,9 @@ namespace Assistant
             // 
             this.dressTab.Controls.Add(this.groupBox6);
             this.dressTab.Controls.Add(this.groupBox5);
-            this.dressTab.Location = new System.Drawing.Point(4, 44);
+            this.dressTab.Location = new System.Drawing.Point(4, 24);
             this.dressTab.Name = "dressTab";
-            this.dressTab.Size = new System.Drawing.Size(519, 322);
+            this.dressTab.Size = new System.Drawing.Size(519, 342);
             this.dressTab.TabIndex = 3;
             this.dressTab.Text = "Arm/Dress";
             // 
@@ -3323,9 +3329,9 @@ namespace Assistant
             this.skillsTab.Controls.Add(this.setlocks);
             this.skillsTab.Controls.Add(this.resetDelta);
             this.skillsTab.Controls.Add(this.skillList);
-            this.skillsTab.Location = new System.Drawing.Point(4, 44);
+            this.skillsTab.Location = new System.Drawing.Point(4, 24);
             this.skillsTab.Name = "skillsTab";
-            this.skillsTab.Size = new System.Drawing.Size(519, 322);
+            this.skillsTab.Size = new System.Drawing.Size(519, 342);
             this.skillsTab.TabIndex = 2;
             this.skillsTab.Text = "Skills";
             // 
@@ -3448,6 +3454,7 @@ namespace Assistant
             this.skillHDRcap,
             this.skillHDRlock});
             this.skillList.FullRowSelect = true;
+            this.skillList.HideSelection = false;
             this.skillList.Location = new System.Drawing.Point(8, 5);
             this.skillList.Name = "skillList";
             this.skillList.Size = new System.Drawing.Size(342, 307);
@@ -3497,9 +3504,9 @@ namespace Assistant
             this.agentsTab.Controls.Add(this.agentB1);
             this.agentsTab.Controls.Add(this.agentB2);
             this.agentsTab.Controls.Add(this.agentB3);
-            this.agentsTab.Location = new System.Drawing.Point(4, 44);
+            this.agentsTab.Location = new System.Drawing.Point(4, 24);
             this.agentsTab.Name = "agentsTab";
-            this.agentsTab.Size = new System.Drawing.Size(519, 322);
+            this.agentsTab.Size = new System.Drawing.Size(519, 342);
             this.agentsTab.TabIndex = 6;
             this.agentsTab.Text = "Agents";
             // 
@@ -3588,9 +3595,9 @@ namespace Assistant
             this.hotkeysTab.Controls.Add(this.hotkeyTree);
             this.hotkeysTab.Controls.Add(this.dohotkey);
             this.hotkeysTab.Controls.Add(this.groupBox8);
-            this.hotkeysTab.Location = new System.Drawing.Point(4, 44);
+            this.hotkeysTab.Location = new System.Drawing.Point(4, 24);
             this.hotkeysTab.Name = "hotkeysTab";
-            this.hotkeysTab.Size = new System.Drawing.Size(519, 322);
+            this.hotkeysTab.Size = new System.Drawing.Size(519, 342);
             this.hotkeysTab.TabIndex = 4;
             this.hotkeysTab.Text = "Hot Keys";
             // 
@@ -3729,9 +3736,9 @@ namespace Assistant
             // macrosTab
             // 
             this.macrosTab.Controls.Add(this.tabControl2);
-            this.macrosTab.Location = new System.Drawing.Point(4, 44);
+            this.macrosTab.Location = new System.Drawing.Point(4, 24);
             this.macrosTab.Name = "macrosTab";
-            this.macrosTab.Size = new System.Drawing.Size(519, 322);
+            this.macrosTab.Size = new System.Drawing.Size(519, 342);
             this.macrosTab.TabIndex = 7;
             this.macrosTab.Text = "Macros";
             // 
@@ -3927,7 +3934,7 @@ namespace Assistant
             this.rangeCheckDoubleClick.AutoSize = true;
             this.rangeCheckDoubleClick.Location = new System.Drawing.Point(272, 78);
             this.rangeCheckDoubleClick.Name = "rangeCheckDoubleClick";
-            this.rangeCheckDoubleClick.Size = new System.Drawing.Size(208, 19);
+            this.rangeCheckDoubleClick.Size = new System.Drawing.Size(207, 19);
             this.rangeCheckDoubleClick.TabIndex = 15;
             this.rangeCheckDoubleClick.Text = "Range check on \'DoubleClickType\'";
             this.rangeCheckDoubleClick.UseVisualStyleBackColor = true;
@@ -3938,7 +3945,7 @@ namespace Assistant
             this.rangeCheckTargetByType.AutoSize = true;
             this.rangeCheckTargetByType.Location = new System.Drawing.Point(272, 53);
             this.rangeCheckTargetByType.Name = "rangeCheckTargetByType";
-            this.rangeCheckTargetByType.Size = new System.Drawing.Size(190, 19);
+            this.rangeCheckTargetByType.Size = new System.Drawing.Size(188, 19);
             this.rangeCheckTargetByType.TabIndex = 14;
             this.rangeCheckTargetByType.Text = "Range check on \'TargetByType\'";
             this.rangeCheckTargetByType.UseVisualStyleBackColor = true;
@@ -3960,7 +3967,7 @@ namespace Assistant
             this.stepThroughMacro.AutoSize = true;
             this.stepThroughMacro.Location = new System.Drawing.Point(272, 118);
             this.stepThroughMacro.Name = "stepThroughMacro";
-            this.stepThroughMacro.Size = new System.Drawing.Size(135, 19);
+            this.stepThroughMacro.Size = new System.Drawing.Size(134, 19);
             this.stepThroughMacro.TabIndex = 12;
             this.stepThroughMacro.Text = "Step Through Macro";
             this.stepThroughMacro.UseVisualStyleBackColor = true;
@@ -3971,7 +3978,7 @@ namespace Assistant
             this.targetByTypeDifferent.AutoSize = true;
             this.targetByTypeDifferent.Location = new System.Drawing.Point(272, 28);
             this.targetByTypeDifferent.Name = "targetByTypeDifferent";
-            this.targetByTypeDifferent.Size = new System.Drawing.Size(183, 19);
+            this.targetByTypeDifferent.Size = new System.Drawing.Size(181, 19);
             this.targetByTypeDifferent.TabIndex = 11;
             this.targetByTypeDifferent.Text = "Force different \'TargetByType\'";
             this.targetByTypeDifferent.UseVisualStyleBackColor = true;
@@ -4529,6 +4536,34 @@ namespace Assistant
             this.aboutVer.Text = "Razor v{0}";
             this.aboutVer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // scriptsPage
+            // 
+            this.scriptsPage.Controls.Add(this.testScriptText);
+            this.scriptsPage.Controls.Add(this.startStopTestScriptButton);
+            this.scriptsPage.Location = new System.Drawing.Point(4, 44);
+            this.scriptsPage.Name = "scriptsPage";
+            this.scriptsPage.Size = new System.Drawing.Size(519, 322);
+            this.scriptsPage.TabIndex = 13;
+            this.scriptsPage.Text = "Scripts";
+            // 
+            // startStopTestScriptButton
+            // 
+            this.startStopTestScriptButton.Location = new System.Drawing.Point(3, 3);
+            this.startStopTestScriptButton.Name = "startStopTestScriptButton";
+            this.startStopTestScriptButton.Size = new System.Drawing.Size(75, 23);
+            this.startStopTestScriptButton.TabIndex = 0;
+            this.startStopTestScriptButton.Text = "Start";
+            this.startStopTestScriptButton.UseVisualStyleBackColor = true;
+            // 
+            // testScriptText
+            // 
+            this.testScriptText.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.testScriptText.Location = new System.Drawing.Point(84, 3);
+            this.testScriptText.Multiline = true;
+            this.testScriptText.Name = "testScriptText";
+            this.testScriptText.Size = new System.Drawing.Size(432, 313);
+            this.testScriptText.TabIndex = 1;
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(6, 16);
@@ -4615,10 +4650,16 @@ namespace Assistant
             this.advancedTab.PerformLayout();
             this.aboutTab.ResumeLayout(false);
             this.aboutTab.PerformLayout();
+            this.scriptsPage.ResumeLayout(false);
+            this.scriptsPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private TabPage scriptsPage;
+        private TextBox testScriptText;
+        private Button startStopTestScriptButton;
     }
 }

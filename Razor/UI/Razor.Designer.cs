@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using UOSteam;
 
 namespace Assistant
 {
@@ -4656,15 +4655,6 @@ namespace Assistant
             this.scriptsPage.PerformLayout();
             this.ResumeLayout(false);
 
-        }
-
-        private void StartStopTestScriptButton_Click(object sender, EventArgs e)
-        {
-            var root = Lexer.Lex(testScriptText.Lines);
-
-            Script script = new Script(root);
-
-            Interpreter.StartScript(script);
         }
 
         #endregion

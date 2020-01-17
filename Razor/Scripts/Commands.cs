@@ -207,19 +207,19 @@ namespace Assistant.Scripts
         private static string[] hands = new string[3] { "left", "right", "both" };
         private static bool ClearHands(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next(); // walk past COMMAND
+            node = node.Next(); // walk past COMMAND
 
             // expect one STRING node
 
-            ASTNode hand = node.Next();
+            List<ASTNode> args = ParseArguments(ref node);
 
-            if (hand == null)
+            if (args.Count == 0)
                 throw new ArgumentException("Usage: clearhands ('left'/'right'/'both')");
 
-            if (!hands.Contains(hand.Lexeme))
+            if (!hands.Contains(args[0].Lexeme))
                 throw new ArgumentException("Usage: clearhands ('left'/'right'/'both')");
 
-            switch (hand.Lexeme)
+            switch (args[0].Lexeme)
             {
                 case "left":
                     Dress.Unequip(Layer.LeftHand);
@@ -240,13 +240,13 @@ namespace Assistant.Scripts
             node.Next(); // walk past COMMAND
 
             // expect one SERIAL node
+            List<ASTNode> args = ParseArguments(ref node);
 
-            ASTNode obj = node.Next();
-
-            if (obj == null)
+            if (args.Count == 0)
                 throw new ArgumentException("Usage: clickobject (serial)");
 
-            int serial = GetSerial(ref obj);
+            ASTNode alias = args[0];
+            int serial = GetSerial(ref alias);
 
             if (serial == -1)
                 throw new ArgumentException("Invalid Serial in clickobject");
@@ -332,10 +332,23 @@ namespace Assistant.Scripts
         {
             node = node.Next();
 
-            node = node.Next(); // item alias or serial
-            node = node.Next(); // target alias or serial
-            node = node.Next(); // (x, y, z)?
-            node = node.Next(); // amount?
+            List<ASTNode> args = ParseArguments(ref node);
+
+            if (args.Count < 2)
+                throw new ArgumentException("Usage: moveitem (serial) (destination) [(x, y, z)] [amount]");
+
+            ASTNode serialNode = args[0];
+            ASTNode destinationNode = args[1];
+
+            int serial = GetSerial(ref serialNode);
+            int destination = GetSerial(ref destinationNode);
+
+            if (args.Count == 2)
+                DragDropManager.DragDrop(World.FindItem((uint)serial), World.FindItem((uint)destination));
+            else if (args.Count == 5)
+                return true;
+            else if (args.Count == 6)
+                return true;
 
             return true;
         }
@@ -498,14 +511,14 @@ namespace Assistant.Scripts
 
         public static bool ToggleHands(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
-            ASTNode hand = node.Next();
+            List<ASTNode> args = ParseArguments(ref node);
 
-            if (hand == null)
+            if (args.Count == 0)
                 throw new ArgumentException("Usage: togglehands ('left'/'right')");
 
-            if (hand.Lexeme == "left")
+            if (args[0].Lexeme == "left")
                 Dress.ToggleLeft();
             else
                 Dress.ToggleRight();

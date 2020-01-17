@@ -87,7 +87,7 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("rename", Rename);
             Interpreter.RegisterCommandHandler("shownames", ShowNames);
             Interpreter.RegisterCommandHandler("togglehands", ToggleHands);
-            Interpreter.RegisterCommandHandler("equipitem", DummyCommand);
+            Interpreter.RegisterCommandHandler("equipitem", EquipItem);
             Interpreter.RegisterCommandHandler("togglemounted", DummyCommand);
             Interpreter.RegisterCommandHandler("equipwand", DummyCommand);
             Interpreter.RegisterCommandHandler("buy", DummyCommand);
@@ -197,9 +197,9 @@ namespace Assistant.Scripts
 
         private static bool Attack(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next(); // walk past COMMAND
+            node = node.Next();
 
-            node.Next(); // walk past argument
+            ParseArguments(ref node);
 
             return true;
         }
@@ -237,7 +237,7 @@ namespace Assistant.Scripts
         }
         private static bool ClickObject(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next(); // walk past COMMAND
+            node = node.Next();
 
             // expect one SERIAL node
             List<ASTNode> args = ParseArguments(ref node);
@@ -288,6 +288,7 @@ namespace Assistant.Scripts
             node = node.Next();
 
             // variable args here
+            ParseArguments(ref node);
 
             return true;
         }
@@ -297,11 +298,12 @@ namespace Assistant.Scripts
 
             // expect a SERIAL node
 
-            ASTNode obj = node.Next();
+            List<ASTNode> args = ParseArguments(ref node);
 
-            if (obj == null)
+            if (args.Count == 0)
                 throw new ArgumentException("Usage: useobject (serial)");
 
+            ASTNode obj = args[0];
             Serial serial = Serial.Parse(obj.Lexeme);
 
             if (!serial.IsValid)
@@ -315,8 +317,7 @@ namespace Assistant.Scripts
         {
             node = node.Next();
 
-            node = node.Next(); // item ID
-            node = node.Next(); // ?color
+            ParseArguments(ref node);
 
             return true;
         }
@@ -357,6 +358,8 @@ namespace Assistant.Scripts
         {
             node = node.Next();
 
+            ParseArguments(ref node);
+
             return true;
         }
 
@@ -364,12 +367,16 @@ namespace Assistant.Scripts
         {
             node = node.Next();
 
+            ParseArguments(ref node);
+
             return true;
         }
 
         private static bool Run(ref ASTNode node, bool quiet, bool force)
         {
             node = node.Next();
+
+            ParseArguments(ref node);
 
             return true;
         }
@@ -406,14 +413,15 @@ namespace Assistant.Scripts
 
             // expect one string node or "last"
 
-            ASTNode skill = node;
+            List<ASTNode> args = ParseArguments(ref node);
 
-            if (node.Lexeme == "last")
+            if (args.Count == 0)
+                throw new ArgumentException("Usage: useskill ('skill name'/'last')");
+
+            if (args[0].Lexeme == "last")
                 Client.Instance.SendToServer(new UseSkill(World.Player.LastSkill));
-            else if(UsableSkills.TryGetValue(node.Lexeme, out int skillId))
-            {
+            else if (UsableSkills.TryGetValue(node.Lexeme, out int skillId))
                 Client.Instance.SendToServer(new UseSkill(skillId));
-            }
 
             return true;
         }
@@ -421,16 +429,13 @@ namespace Assistant.Scripts
         {
             node = node.Next();
 
-            node = node.Next(); // target alias or serial
-            node = node.Next(); // food string
-            node = node.Next(); // ?color
-            node = node.Next(); // ?amount
+            ParseArguments(ref node);
 
             return true;
         }
         private static bool Rename(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             List<ASTNode> args = ParseArguments(ref node);
 
@@ -448,7 +453,7 @@ namespace Assistant.Scripts
         }
         private static bool SetAlias(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             List<ASTNode> args = ParseArguments(ref node);
 
@@ -468,28 +473,28 @@ namespace Assistant.Scripts
         }
         private static bool UnsetAlias(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
-            ASTNode alias = node.Next();
+            List<ASTNode> args = ParseArguments(ref node);
 
-            if (alias == null)
+            if (args.Count == 0)
                 throw new ArgumentException("Usage: unsetalias (string)");
 
-            Interpreter.SetAlias(alias.Lexeme, 0);
+            Interpreter.SetAlias(args[0].Lexeme, 0);
 
             return true;
         }
 
         private static bool ShowNames(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
-            ASTNode type = node.Next();
+            List<ASTNode> args = ParseArguments(ref node);
 
             if (World.Player == null)
                 return true;
 
-            if (type == null || type.Lexeme == "mobiles")
+            if (args.Count == 0 || args[0].Lexeme == "mobiles")
             {
                 foreach (Mobile m in World.MobilesInRange())
                 {
@@ -497,7 +502,7 @@ namespace Assistant.Scripts
                         Client.Instance.SendToServer(new SingleClick(m));
                 }
             }
-            else if (type.Lexeme == "corpses")
+            else if (args[0].Lexeme == "corpses")
             {
                 foreach (Item i in World.Items.Values)
                 {
@@ -526,9 +531,29 @@ namespace Assistant.Scripts
             return true;
         }
 
+        public static bool EquipItem(ref ASTNode node, bool quiet, bool force)
+        {
+            node = node.Next();
+
+            List<ASTNode> args = ParseArguments(ref node);
+
+            if (args.Count < 2)
+                throw new ArgumentException("Usage: equipitem (serial) (layer)");
+
+            ASTNode item = args[0];
+
+            Item equip = World.FindItem((uint)GetSerial(ref item));
+            byte layer = (byte)Utility.ToInt32(args[1].Lexeme, 0);
+
+            if (equip != null && (Layer)layer != Layer.Invalid)
+                Dress.Equip(equip, (Layer)layer);
+
+            return true;
+        }
+
         public static bool ToggleScavenger(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             ScavengerAgent.Instance.ToggleEnabled();
 
@@ -542,7 +567,7 @@ namespace Assistant.Scripts
 
         private static bool Ping(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             Assistant.Ping.StartPing(5);
 
@@ -551,7 +576,7 @@ namespace Assistant.Scripts
 
         private static bool Resync(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             if (Client.Instance.ClientRunning)
                 Client.Instance.SendToServer(new ResyncReq());
@@ -561,7 +586,7 @@ namespace Assistant.Scripts
 
         private static bool MessageBox(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             List<ASTNode> args = ParseArguments(ref node);
 
@@ -670,7 +695,7 @@ namespace Assistant.Scripts
 
         public static bool SysMsg(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             List<ASTNode> args = ParseArguments(ref node);
 

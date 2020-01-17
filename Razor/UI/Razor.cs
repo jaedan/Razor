@@ -6052,11 +6052,37 @@ namespace Assistant
 
         private void StartStopTestScriptButton_Click(object sender, EventArgs e)
         {
+            testScriptText.Lines = PreParser(testScriptText.Lines);
+
             var root = Lexer.Lex(testScriptText.Lines);
 
             Script script = new Script(root);
 
             Interpreter.StartScript(script);
+        }
+
+        private static string[] PreParser(string[] lines)
+        {
+            List<string> nlines = null;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains(';'))
+                {
+                    if (nlines == null)
+                    {
+                        nlines = new List<string>();
+                        for (int cp = 0; cp < i; cp++)
+                            nlines.Add(lines[cp]);
+                    }
+                    foreach (string line in lines[i].Split(';'))
+                    {
+                        nlines.Add(line);
+                    }
+                }
+                else if (nlines != null)
+                    nlines.Add(lines[i]);
+            }
+            return nlines == null ? lines : nlines.ToArray();
         }
     }
 }

@@ -20,13 +20,13 @@ namespace Assistant.Scripts
             return args;
         }
 
-        private static int GetSerial(ref ASTNode target)
+        private static Serial GetSerial(ref ASTNode target)
         {
-            int targetSerial = -1;
+            Serial targetSerial = Serial.MinusOne;
             if (target.Type == ASTNodeType.STRING)
-                targetSerial = Interpreter.GetAlias(ref target);
+                targetSerial = (uint)Interpreter.GetAlias(ref target);
             else if (target.Type == ASTNodeType.SERIAL)
-                targetSerial = Utility.ToInt32(target.Lexeme, -1);
+                targetSerial = Utility.ToUInt32(target.Lexeme, Serial.MinusOne);
 
             return targetSerial;
         }
@@ -136,6 +136,7 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("msg", Msg);
             Interpreter.RegisterCommandHandler("headmsg", HeadMsg);
             Interpreter.RegisterCommandHandler("sysmsg", SysMsg);
+            Interpreter.RegisterCommandHandler("cast", Cast);
         }
 
         private static bool Fly(ref ASTNode node, bool quiet, bool force)
@@ -445,7 +446,7 @@ namespace Assistant.Scripts
 
             int serial = GetSerial(ref value);
 
-            if (serial == -1)
+            if (serial == Serial.MinusOne)
                 return true;
 
             Interpreter.SetAlias(args[0].Lexeme, serial);
@@ -579,9 +580,49 @@ namespace Assistant.Scripts
             return true;
         }
 
+        public static bool Cast(ref ASTNode node, bool quiet, bool force)
+        {
+            node = node.Next();
+
+            List<ASTNode> args = ParseArguments(ref node);
+
+            if (args.Count == 0)
+                ScriptErrorMsg("Usage: cast 'spell' [serial]");//throw new ArgumentException("Usage: cast 'spell' [serial]");
+
+            if (!Client.Instance.ClientRunning)
+                return true;
+
+            Spell spell;
+
+            if (int.TryParse(args[0].Lexeme, out int spellnum))
+                spell = Spell.Get(spellnum);
+            else
+                spell = Spell.GetByName(args[0].Lexeme);
+            if (spell != null)
+            {
+                if (args.Count > 1)
+                {
+                    ASTNode n = args[1];
+                    Serial s = GetSerial(ref n);
+                    if (force)
+                        Targeting.ClearQueue();
+                    if (s > Serial.Zero && s != Serial.MinusOne)
+                    {
+                        Targeting.Target(s);
+                    }
+                    else if (!quiet)
+                        ScriptErrorMsg("cast - invalid serial or alias");
+                }
+            }
+            else if (!quiet)
+                ScriptErrorMsg("cast - spell name or number not valid");
+
+            return true;
+        }
+
         public static bool HeadMsg(ref ASTNode node, bool quiet, bool force)
         {
-            node.Next();
+            node = node.Next();
 
             List<ASTNode> args = ParseArguments(ref node);
 
@@ -632,6 +673,11 @@ namespace Assistant.Scripts
                 World.Player.SendMessage(Utility.ToInt32(args[1].Lexeme, 0), args[0].Lexeme);
 
             return true;
+        }
+
+        private static void ScriptErrorMsg(string message, string scriptname = "")
+        {
+            World.Player?.SendMessage(MsgLevel.Error, $"Script {scriptname} error => {message}");
         }
     }
 }

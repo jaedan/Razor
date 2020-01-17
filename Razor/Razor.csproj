@@ -333,6 +333,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\TargetingRandom.cs" />
+    <Compile Include="Scripts\Aliases.cs" />
+    <Compile Include="Scripts\Commands.cs" />
+    <Compile Include="Scripts\Expressions.cs" />
     <Compile Include="Scripts\ScriptManager.cs" />
     <Compile Include="UI\AddCounter.cs">
       <SubType>Form</SubType>
@@ -447,10 +450,7 @@
     <Compile Include="UltimaSDK\UnicodeFont.cs" />
     <Compile Include="UltimaSDK\Verdata.cs" />
     <Compile Include="UltimaSDK\WindowProcessStream.cs" />
-    <Compile Include="UOSteam\Aliases.cs" />
-    <Compile Include="UOSteam\Commands.cs" />
-    <Compile Include="UOSteam\Expressions.cs" />
-    <None Include="UOSteam\Snippets.snippet" />
+    <None Include="Scripts\Snippets.snippet" />
     <EmbeddedResource Include="Boat\BoatWindow.resx">
       <DependentUpon>BoatWindow.cs</DependentUpon>
       <SubType>Designer</SubType>

@@ -213,14 +213,14 @@ namespace UOSteam
             switch (hand.Lexeme)
             {
                 case "left":
-                    UndressHotKeys.Unequip(Layer.LeftHand);
+                    Dress.Unequip(Layer.LeftHand);
                     break;
                 case "right":
-                    UndressHotKeys.Unequip(Layer.RightHand);
+                    Dress.Unequip(Layer.RightHand);
                     break;
                 default:
-                    UndressHotKeys.Unequip(Layer.LeftHand);
-                    UndressHotKeys.Unequip(Layer.RightHand);
+                    Dress.Unequip(Layer.LeftHand);
+                    Dress.Unequip(Layer.RightHand);
                     break;
             }
 
@@ -491,9 +491,9 @@ namespace UOSteam
                 throw new ArgumentException("Usage: togglehands ('left'/'right')");
 
             if (hand.Lexeme == "left")
-                UndressHotKeys.ToggleLeft();
+                Dress.ToggleLeft();
             else
-                UndressHotKeys.ToggleRight();
+                Dress.ToggleRight();
 
             return true;
         }

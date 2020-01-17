@@ -23,8 +23,16 @@ namespace Assistant.Scripts
         static ScriptManager()
         {
             _timer = new ScriptTimer();
+        }
 
+        public static void OnLogin()
+        {
             _timer.Start();
+        }
+
+        public static void OnLogout()
+        {
+            _timer.Stop();
         }
     }
 }

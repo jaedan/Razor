@@ -12,6 +12,7 @@ using Assistant.Macros;
 using Assistant.UI;
 using OverheadMessages = Assistant.Core.OverheadMessages;
 using ContainerLabels = Assistant.Core.ContainerLabels;
+using Assistant.Scripts;
 
 namespace Assistant
 {
@@ -2567,6 +2568,8 @@ namespace Assistant
                 p.WriteAsciiFixed(m_LastPW, 30);
                 m_LastPW = "";
             }
+
+            ScriptManager.OnLogin();
         }
 
         private static void MenuResponse(PacketReader pvSrc, PacketHandlerEventArgs args)

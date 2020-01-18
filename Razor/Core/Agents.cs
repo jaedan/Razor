@@ -860,14 +860,7 @@ namespace Assistant
                 m_Enabled = false;
             }
 
-            try
-            {
-                m_HotBag = Serial.Parse(node["hotbag"].InnerText);
-            }
-            catch
-            {
-                m_HotBag = Serial.Zero;
-            }
+            m_HotBag = Serial.Parse(node["hotbag"].InnerText);
 
             foreach (XmlElement el in node.GetElementsByTagName("item"))
             {
@@ -1841,14 +1834,7 @@ namespace Assistant
                 m_Enabled = false;
             }
 
-            try
-            {
-                m_Bag = Serial.Parse(node["bag"].GetAttribute("serial"));
-            }
-            catch
-            {
-                m_Bag = Serial.Zero;
-            }
+            m_Bag = Serial.Parse(node["bag"].GetAttribute("serial"));
 
             foreach (XmlElement el in node.GetElementsByTagName("item"))
             {
@@ -3407,23 +3393,17 @@ namespace Assistant
 
             foreach (XmlElement el in node.GetElementsByTagName("ignore"))
             {
-                try
+                Serial toAdd = Serial.Parse(el.GetAttribute("serial"));
+
+                if (!m_Chars.Contains(toAdd))
                 {
-                    Serial toAdd = Serial.Parse(el.GetAttribute("serial"));
-
-                    if (!m_Chars.Contains(toAdd))
-                    {
-                        m_Chars.Add(toAdd);
-                    }
-
-                    string name = el.GetAttribute("name");
-                    if (name != null && name != "")
-                    {
-                        m_Names.Add(toAdd, name.Trim());
-                    }
+                    m_Chars.Add(toAdd);
                 }
-                catch
+
+                string name = el.GetAttribute("name");
+                if (name != null && name != "")
                 {
+                    m_Names.Add(toAdd, name.Trim());
                 }
             }
         }

@@ -87,14 +87,7 @@ namespace Assistant
                     DressList list = new DressList(name);
                     Add(list);
 
-                    try
-                    {
-                        list.m_UndressBag = Serial.Parse(el.GetAttribute("undressbag"));
-                    }
-                    catch
-                    {
-                        list.m_UndressBag = Serial.Zero;
-                    }
+                    list.m_UndressBag = Serial.Parse(el.GetAttribute("undressbag"));
 
                     foreach (XmlElement el2 in el.GetElementsByTagName("item"))
                     {

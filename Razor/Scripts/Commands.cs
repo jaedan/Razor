@@ -96,9 +96,9 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("clearsell", DummyCommand);
             Interpreter.RegisterCommandHandler("organizer", DummyCommand);
             Interpreter.RegisterCommandHandler("autoloot", DummyCommand);
-            Interpreter.RegisterCommandHandler("dress", DummyCommand);
-            Interpreter.RegisterCommandHandler("undress", DummyCommand);
-            Interpreter.RegisterCommandHandler("dressconfig", DummyCommand);
+            Interpreter.RegisterCommandHandler("dress", DressCommand);
+            Interpreter.RegisterCommandHandler("undress", UnDressCommand);
+            Interpreter.RegisterCommandHandler("dressconfig", DressConfig);
             Interpreter.RegisterCommandHandler("toggleautoloot", DummyCommand);
             Interpreter.RegisterCommandHandler("togglescavenger", ToggleScavenger);
             Interpreter.RegisterCommandHandler("counter", DummyCommand);
@@ -623,12 +623,11 @@ namespace Assistant.Scripts
             node = node.Next();
 
             List<ASTNode> args = ParseArguments(ref node);
+            if (!Client.Instance.ClientRunning)
+                return true;
 
             if (args.Count == 0)
                 ScriptErrorMsg("Usage: cast 'spell' [serial]");//throw new ArgumentException("Usage: cast 'spell' [serial]");
-
-            if (!Client.Instance.ClientRunning)
-                return true;
 
             Spell spell;
 
@@ -709,6 +708,84 @@ namespace Assistant.Scripts
                 World.Player.SendMessage(Config.GetInt("SysColor"), args[0].Lexeme);
             else if (args.Count == 2)
                 World.Player.SendMessage(Utility.ToInt32(args[1].Lexeme, 0), args[0].Lexeme);
+
+            return true;
+        }
+
+        public static bool DressCommand(ref ASTNode node, bool quiet, bool force)
+        {
+            node = node.Next();
+
+            List<ASTNode> args = ParseArguments(ref node);
+
+            if (!Client.Instance.ClientRunning)
+                return true;
+            //we're using a named dresslist or a temporary dresslist?
+            if (args.Count == 0)
+            {
+                if (DressList._Temporary != null)
+                    DressList._Temporary.Dress();
+                else if (!quiet)
+                    ScriptErrorMsg("No dresslist specified and no temporary dressconfig present - usage: dress ['dresslist']");
+            }
+            else
+            {
+                var d = DressList.Find(args[0].Lexeme);
+                if (d != null)
+                    d.Dress();
+                else if(!quiet)
+                    ScriptErrorMsg($"dresslist {args[0].Lexeme} not found");
+            }
+
+            return true;
+        }
+
+        public static bool UnDressCommand(ref ASTNode node, bool quiet, bool force)
+        {
+            node = node.Next();
+
+            List<ASTNode> args = ParseArguments(ref node);
+
+            if (!Client.Instance.ClientRunning)
+                return true;
+            //we're using a named dresslist or a temporary dresslist?
+            if (args.Count == 0)
+            {
+                if (DressList._Temporary != null)
+                    DressList._Temporary.Undress();
+                else if (!quiet)
+                    ScriptErrorMsg("No dresslist specified and no temporary dressconfig present - usage: undress ['dresslist']");
+            }
+            else
+            {
+                var d = DressList.Find(args[0].Lexeme);
+                if (d != null)
+                    d.Undress();
+                else if (!quiet)
+                    ScriptErrorMsg($"dresslist {args[0].Lexeme} not found");
+            }
+
+            return true;
+        }
+
+        public static bool DressConfig(ref ASTNode node, bool quiet, bool force)
+        {
+            node = node.Next();
+
+            if (!Client.Instance.ClientRunning)
+                return true;
+
+            if (DressList._Temporary == null)
+                DressList._Temporary = new DressList("dressconfig");
+
+            DressList._Temporary.Items.Clear();
+            for (int i = 0; i < World.Player.Contains.Count; i++)
+            {
+                Item item = World.Player.Contains[i];
+                if (item.Layer <= Layer.LastUserValid && item.Layer != Layer.Backpack && item.Layer != Layer.Hair &&
+                    item.Layer != Layer.FacialHair)
+                    DressList._Temporary.Items.Add(item.Serial);
+            }
 
             return true;
         }

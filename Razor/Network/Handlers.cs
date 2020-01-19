@@ -1880,12 +1880,15 @@ namespace Assistant
 
                     if (!string.IsNullOrEmpty(newText) && newText != text)
                     {
+                        Journal.AddLine($"{name}: {newText}", MessageType.Spell);
                         Client.Instance.SendToClient(new AsciiMessage(ser, body, MessageType.Spell, s.GetHue(hue), font,
                             name, newText));
                         //Client.Instance.SendToClient( new UnicodeMessage( ser, body, MessageType.Spell, s.GetHue( hue ), font, Language.CliLocName, name, newText ) );
                         replaced = true;
                         args.Block = true;
                     }
+                    else
+                        Journal.AddLine($"{name}: {text}", MessageType.Spell);
                 }
 
                 if (!replaced && Config.GetBool("ForceSpellHue"))
@@ -1903,6 +1906,8 @@ namespace Assistant
                 if (m != null /*&& ( m.Name == null || m.Name == "" || m.Name == "(Not Seen)" )*/ &&
                     m.Name.IndexOf(text) != 5 && m != World.Player && !(text.StartsWith("(") && text.EndsWith(")")))
                     m.Name = text;
+
+                Journal.AddLine(text, MessageType.Label);
             }
             /*else if ( Spell.Get( text.Trim() ) != null )
             { // send fake spells to bottom left
@@ -1953,64 +1958,78 @@ namespace Assistant
                     }
                 }
 
-                if (Config.GetBool("ShowContainerLabels") && ser.IsItem)
+                if (ser.IsItem)
                 {
                     Item item = World.FindItem(ser);
 
                     if (item == null || !item.IsContainer)
                         return;
 
-                    foreach (ContainerLabels.ContainerLabel label in ContainerLabels.ContainerLabelList)
+                    if (Config.GetBool("ShowContainerLabels"))
                     {
-                        // Check if its the serial match and if the text matches the name (since we override that for the label)
-                        if (Serial.Parse(label.Id) == ser &&
-                            (item.DisplayName.Equals(text) ||
-                             label.Alias.Equals(text, StringComparison.InvariantCultureIgnoreCase)))
+                        foreach (ContainerLabels.ContainerLabel label in ContainerLabels.ContainerLabelList)
                         {
-                            string labelDisplay =
-                                $"{Config.GetString("ContainerLabelFormat").Replace("{label}", label.Label).Replace("{type}", text)}";
-
-                            //ContainerLabelStyle
-                            if (Config.GetInt("ContainerLabelStyle") == 0)
+                            // Check if its the serial match and if the text matches the name (since we override that for the label)
+                            if (Serial.Parse(label.Id) == ser &&
+                                (item.DisplayName.Equals(text) ||
+                                 label.Alias.Equals(text, StringComparison.InvariantCultureIgnoreCase)))
                             {
-                                Client.Instance.SendToClient(new AsciiMessage(ser, item.ItemID.Value, MessageType.Label,
-                                    label.Hue, 3, Language.CliLocName, labelDisplay));
+                                string labelDisplay =
+                                    $"{Config.GetString("ContainerLabelFormat").Replace("{label}", label.Label).Replace("{type}", text)}";
+
+                                Journal.AddLine(labelDisplay, MessageType.Label);
+                                //ContainerLabelStyle
+                                if (Config.GetInt("ContainerLabelStyle") == 0)
+                                {
+                                    Client.Instance.SendToClient(new AsciiMessage(ser, item.ItemID.Value, MessageType.Label,
+                                        label.Hue, 3, Language.CliLocName, labelDisplay));
+                                }
+                                else
+                                {
+                                    Client.Instance.SendToClient(new UnicodeMessage(ser, item.ItemID.Value,
+                                        MessageType.Label, label.Hue, 3, Language.CliLocName, "", labelDisplay));
+                                }
+
+                                // block the actual message from coming through since we have it in the label
+                                args.Block = true;
+
+                                ContainerLabels.LastContainerLabelDisplayed = ser;
+
+                                break;
                             }
-                            else
-                            {
-                                Client.Instance.SendToClient(new UnicodeMessage(ser, item.ItemID.Value,
-                                    MessageType.Label, label.Hue, 3, Language.CliLocName, "", labelDisplay));
-                            }
-
-                            // block the actual message from coming through since we have it in the label
-                            args.Block = true;
-
-                            ContainerLabels.LastContainerLabelDisplayed = ser;
-
-                            break;
                         }
                     }
+                    else
+                        Journal.AddLine(text, MessageType.Label);
                 }
 
                 if ((type == MessageType.Emote || type == MessageType.Regular || type == MessageType.Whisper ||
-                     type == MessageType.Yell) && ser.IsMobile && ser != World.Player.Serial)
+                     type == MessageType.Yell) && ser.IsMobile)
                 {
-                    if (ser.IsMobile && IgnoreAgent.IsIgnored(ser))
+                    if (ser != World.Player.Serial)
                     {
-                        args.Block = true;
-                        return;
+                        if (IgnoreAgent.IsIgnored(ser))
+                        {
+                            args.Block = true;
+                            return;
+                        }
+
+                        if (Config.GetBool("ForceSpeechHue"))
+                        {
+                            p.Seek(10, SeekOrigin.Begin);
+                            p.Write((ushort)Config.GetInt("SpeechHue"));
+                        }
                     }
 
-                    if (Config.GetBool("ForceSpeechHue"))
-                    {
-                        p.Seek(10, SeekOrigin.Begin);
-                        p.Write((ushort) Config.GetInt("SpeechHue"));
-                    }
+                    Journal.AddLine($"{name}: {text}", type);
+
+                    return;
                 }
 
                 if (!ser.IsValid || ser == World.Player.Serial || ser.IsItem)
                 {
                     SysMessages.Add(text);
+                    Journal.AddLine(text, MessageType.System);
 
                     if (SysMessages.Count >= 25)
                         SysMessages.RemoveRange(0, 10);

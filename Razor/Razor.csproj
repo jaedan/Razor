@@ -337,6 +337,7 @@
     <Compile Include="Scripts\Commands.cs" />
     <Compile Include="Scripts\Expressions.cs" />
     <Compile Include="Scripts\ScriptManager.cs" />
+    <Compile Include="Scripts\ScriptUtilities.cs" />
     <Compile Include="UI\AddCounter.cs">
       <SubType>Form</SubType>
     </Compile>

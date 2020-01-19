@@ -57,7 +57,7 @@ namespace Assistant.Scripts
             Interpreter.RegisterExpressionHandler("war", DummyExpression);
             Interpreter.RegisterExpressionHandler("ingump", DummyExpression);
             Interpreter.RegisterExpressionHandler("gumpexists", DummyExpression);
-            Interpreter.RegisterExpressionHandler("injournal", DummyExpression);
+            Interpreter.RegisterExpressionHandler("injournal", InJournal);
             Interpreter.RegisterExpressionHandler("listexists", DummyExpression);
             Interpreter.RegisterExpressionHandler("list", DummyExpression);
             Interpreter.RegisterExpressionHandler("inlist", DummyExpression);
@@ -72,14 +72,37 @@ namespace Assistant.Scripts
         }
         private static int FindAlias(ref ASTNode node, bool quiet)
         {
-            node.Next();
+            node = node.Next();
 
-            ASTNode alias = node.Next();
+            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
 
-            if (alias == null)
-                throw new ArgumentException("Usage: findalias (string)");
+            if (args.Count == 0)
+                ScriptUtilities.ScriptErrorMsg("Usage: findalias (string)");
+
+            ASTNode alias = args[0];
 
             return Interpreter.GetAlias(ref alias);
+        }
+
+        private static int InJournal(ref ASTNode node, bool quiet)
+        {
+            node = node.Next();
+
+            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
+
+            if (args.Count == 0)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: injournal ('text') ['author'/'system']");
+                return 0;
+            }
+
+            if (args.Count == 1 && Journal.Contains(args[0].Lexeme))
+                return 1;
+
+            // TODO:
+            // handle second argument
+
+            return 0;
         }
 
         private static int Mana(ref ASTNode node, bool quiet)

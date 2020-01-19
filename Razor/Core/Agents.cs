@@ -3310,7 +3310,7 @@ namespace Assistant
                 name = m_Names[s] as string;
             }
 
-            if (m != null && m.Name != null && m.Name != "")
+            if (m != null && !string.IsNullOrEmpty(m.Name))
             {
                 name = m.Name;
             }
@@ -3401,7 +3401,7 @@ namespace Assistant
                 }
 
                 string name = el.GetAttribute("name");
-                if (name != null && name != "")
+                if (!string.IsNullOrEmpty(name))
                 {
                     m_Names.Add(toAdd, name.Trim());
                 }

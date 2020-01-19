@@ -61,6 +61,8 @@ namespace Assistant.Scripts
             Interpreter.RegisterExpressionHandler("listexists", DummyExpression);
             Interpreter.RegisterExpressionHandler("list", DummyExpression);
             Interpreter.RegisterExpressionHandler("inlist", DummyExpression);
+            Interpreter.RegisterExpressionHandler("timer", DummyExpression);
+            Interpreter.RegisterExpressionHandler("timerexists", DummyExpression);
 
             // Player Attributes
             Interpreter.RegisterExpressionHandler("mana", Mana);

@@ -263,6 +263,9 @@ namespace Assistant
     public class PlayerData : Mobile
     {
         public int VisRange = 18;
+        #region UOSTEAM_ALIASES
+        internal Serial? _Mount;
+        #endregion
 
         public int MultiVisRange
         {

@@ -86,8 +86,13 @@ namespace Assistant.Scripts
 
         private static int Mount(ref ASTNode node)
         {
-            // not sure how to support this
-            return -1;
+            if (World.Player == null)
+                return 0;
+
+            if (World.Player._Mount.HasValue)
+                return World.Player._Mount.Value;
+            
+            return 0;
         }
 
         private static int RightHand(ref ASTNode node)

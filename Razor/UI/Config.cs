@@ -709,13 +709,7 @@ namespace Assistant
                     if (line.Length <= 0 || line[0] == ';' || line[0] == '#')
                         continue;
                     string[] split = line.Split('=');
-                    try
-                    {
-                        m_Chars.Add(Serial.Parse(split[0]), split[1]);
-                    }
-                    catch
-                    {
-                    }
+                    m_Chars.Add(Serial.Parse(split[0]), split[1]);
                 }
             }
         }

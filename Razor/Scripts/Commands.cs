@@ -88,7 +88,7 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("shownames", ShowNames);
             Interpreter.RegisterCommandHandler("togglehands", ToggleHands);
             Interpreter.RegisterCommandHandler("equipitem", EquipItem);
-            Interpreter.RegisterCommandHandler("togglemounted", DummyCommand);
+            Interpreter.RegisterCommandHandler("togglemounted", ToggleMounted);
             Interpreter.RegisterCommandHandler("equipwand", DummyCommand);
             Interpreter.RegisterCommandHandler("buy", DummyCommand);
             Interpreter.RegisterCommandHandler("sell", DummyCommand);
@@ -788,6 +788,42 @@ namespace Assistant.Scripts
             }
 
             return true;
+        }
+
+        public static bool ToggleMounted(ref ASTNode node, bool quiet, bool force)
+        {
+            node = node.Next();
+
+            if (!Client.Instance.ClientRunning || World.Player == null)
+                return true;
+
+            if (!World.Player._Mount.HasValue)
+            {
+                Targeting.OneTimeTarget(false, TargetMountResponse, TargetMountCancel);
+#warning TODO: pause the script from here, until a response, positive or not
+            }
+            if(World.Player != null && World.Player._Mount.HasValue)
+            {
+                Serial? ser = World.FindMobile(World.Player._Mount.Value)?.Serial;
+                if (!ser.HasValue)
+                    ser = World.Player.GetItemOnLayer(Layer.Mount)?.Serial;
+                if (ser.HasValue)
+                    Client.Instance?.SendToServer(new DoubleClick(ser.Value));
+            }
+
+            return true;
+        }
+
+        private static void TargetMountResponse(bool location, Serial serial, Point3D p, ushort gfxid)
+        {
+            if(serial > Serial.Zero && serial != Serial.MinusOne)
+                World.Player._Mount = serial;
+#warning TODO: we should unpause the script from here
+        }
+
+        private static void TargetMountCancel()
+        {
+#warning TODO: we should unpause the script from here
         }
 
         private static void ScriptErrorMsg(string message, string scriptname = "")

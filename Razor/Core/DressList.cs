@@ -81,30 +81,24 @@ namespace Assistant
 
             foreach (XmlElement el in xml.GetElementsByTagName("list"))
             {
-                try
+                string name = el.GetAttribute("name");
+                DressList list = new DressList(name);
+                Add(list);
+
+                list.m_UndressBag = Serial.Parse(el.GetAttribute("undressbag"));
+
+                foreach (XmlElement el2 in el.GetElementsByTagName("item"))
                 {
-                    string name = el.GetAttribute("name");
-                    DressList list = new DressList(name);
-                    Add(list);
-
-                    list.m_UndressBag = Serial.Parse(el.GetAttribute("undressbag"));
-
-                    foreach (XmlElement el2 in el.GetElementsByTagName("item"))
+                    string ser = el2.GetAttribute("serial");
+                    uint val = Utility.ToUInt32(ser, Serial.MinusOne);
+                    if (val == Serial.MinusOne)
                     {
-                        string ser = el2.GetAttribute("serial");
-                        uint val = Utility.ToUInt32(ser, Serial.MinusOne);
-                        if (val == Serial.MinusOne)
-                        {
-                            val = Utility.ToUInt32(el2.GetAttribute("id"), 0);
-                            if (val > 0)
-                                list.Items.Add((ItemID)val);
-                        }
-                        else
-                            list.Items.Add((Serial)val);
+                        val = Utility.ToUInt32(el2.GetAttribute("id"), 0);
+                        if (val > 0)
+                            list.Items.Add((ItemID)val);
                     }
-                }
-                catch
-                {
+                    else
+                        list.Items.Add((Serial)val);
                 }
             }
         }

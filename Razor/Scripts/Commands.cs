@@ -35,6 +35,8 @@ namespace Assistant.Scripts
         {
             Console.WriteLine("Executing command {0} {1}", node.Type, node.Lexeme);
 
+            World.Player?.SendMessage(MsgLevel.Info, $"Unimplemented command {node.Lexeme}");
+
             node = null;
 
             return true;
@@ -196,11 +198,11 @@ namespace Assistant.Scripts
 
             List<ASTNode> args = ParseArguments(ref node);
 
-            if (args.Count < 1)
-                throw new ArgumentException("Usage: setability ('primary'/'secondary'/'stun'/'disarm') ['on'/'off']");
-
-            if (!abilities.Contains(args[0].Lexeme))
-                throw new ArgumentException("Usage: setability ('primary'/'secondary'/'stun'/'disarm') ['on'/'off']");
+            if (args.Count < 1 || !abilities.Contains(args[0].Lexeme))
+            {
+                ScriptErrorMsg("Usage: setability ('primary'/'secondary'/'stun'/'disarm') ['on'/'off']");
+                return true;
+            }
 
             if (args.Count == 2 && args[1].Lexeme == "on" || args.Count == 1)
             {
@@ -249,11 +251,11 @@ namespace Assistant.Scripts
 
             List<ASTNode> args = ParseArguments(ref node);
 
-            if (args.Count == 0)
-                throw new ArgumentException("Usage: clearhands ('left'/'right'/'both')");
-
-            if (!hands.Contains(args[0].Lexeme))
-                throw new ArgumentException("Usage: clearhands ('left'/'right'/'both')");
+            if (args.Count == 0 || !hands.Contains(args[0].Lexeme))
+            {
+                ScriptErrorMsg("Usage: clearhands ('left'/'right'/'both')");
+                return true;
+            }
 
             switch (args[0].Lexeme)
             {
@@ -279,13 +281,16 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count == 0)
-                throw new ArgumentException("Usage: clickobject (serial)");
+            {
+                ScriptErrorMsg("Usage: clickobject (serial)");
+                return true;
+            }
 
             ASTNode alias = args[0];
             int serial = GetSerial(ref alias);
 
             if (serial == -1)
-                throw new ArgumentException("Invalid Serial in clickobject");
+                ScriptErrorMsg("Invalid Serial in clickobject");
 
             Client.Instance.SendToServer(new SingleClick(serial));
 
@@ -337,13 +342,19 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count == 0)
-                throw new ArgumentException("Usage: useobject (serial)");
+            {
+                ScriptErrorMsg("Usage: useobject (serial)");
+                return true;
+            }
 
             ASTNode obj = args[0];
             Serial serial = Serial.Parse(obj.Lexeme);
 
             if (!serial.IsValid)
-                throw new ArgumentException("Invalid Serial in useobject");
+            {
+                ScriptErrorMsg("useobject - invalid serial");
+                return true;
+            }
 
             Client.Instance.SendToServer(new DoubleClick(serial));
 
@@ -372,7 +383,10 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count < 2)
-                throw new ArgumentException("Usage: moveitem (serial) (destination) [(x, y, z)] [amount]");
+            {
+                ScriptErrorMsg("Usage: moveitem (serial) (destination) [(x, y, z)] [amount]");
+                return true;
+            }
 
             ASTNode serialNode = args[0];
             ASTNode destinationNode = args[1];
@@ -452,7 +466,10 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count == 0)
-                throw new ArgumentException("Usage: useskill ('skill name'/'last')");
+            {
+                ScriptErrorMsg("Usage: useskill ('skill name'/'last')");
+                return true;
+            }
 
             if (args[0].Lexeme == "last")
                 Client.Instance.SendToServer(new UseSkill(World.Player.LastSkill));
@@ -476,7 +493,10 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count != 2)
-                throw new ArgumentException("Usage: rename (serial) ('name')");
+            {
+                ScriptErrorMsg("Usage: rename (serial) ('name')");
+                return true;
+            }
 
             ASTNode target = args[0];
 
@@ -494,7 +514,10 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count != 2)
-                throw new ArgumentException("Usage: setalias ('name') [serial]");
+            {
+                ScriptErrorMsg("Usage: setalias ('name') [serial]");
+                return true;
+            }
 
             ASTNode value = args[1]; // can't pass ref to this
 
@@ -514,7 +537,10 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count == 0)
-                throw new ArgumentException("Usage: unsetalias (string)");
+            {
+                ScriptErrorMsg("Usage: unsetalias (string)");
+                return true;
+            }
 
             Interpreter.SetAlias(args[0].Lexeme, 0);
 
@@ -557,7 +583,10 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count == 0)
-                throw new ArgumentException("Usage: togglehands ('left'/'right')");
+            {
+                ScriptErrorMsg("Usage: togglehands ('left'/'right')");
+                return true;
+            }
 
             if (args[0].Lexeme == "left")
                 Dress.ToggleLeft();
@@ -574,7 +603,10 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count < 2)
-                throw new ArgumentException("Usage: equipitem (serial) (layer)");
+            {
+                ScriptErrorMsg("Usage: equipitem (serial) (layer)");
+                return true;
+            }
 
             ASTNode item = args[0];
 
@@ -627,7 +659,10 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count != 2)
-                throw new ArgumentException("Usage: messagebox ('title') ('body')");
+            {
+                ScriptErrorMsg("Usage: messagebox ('title') ('body')");
+                return true;
+            }
 
             System.Windows.Forms.MessageBox.Show(args[0].Lexeme, args[1].Lexeme);
 
@@ -641,7 +676,10 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count == 0)
-                throw new ArgumentException("Usage: msg ('text') [color]");
+            {
+                ScriptErrorMsg("Usage: msg ('text') [color]");
+                return true;
+            }
 
             if (!Client.Instance.ClientRunning)
                 return true;
@@ -661,7 +699,10 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count == 0)
-                ScriptErrorMsg("Usage: cast 'spell' [serial]");//throw new ArgumentException("Usage: cast 'spell' [serial]");
+            {
+                ScriptErrorMsg("Usage: cast 'spell' [serial]");
+                return true;
+            }
 
             if (!Client.Instance.ClientRunning)
                 return true;
@@ -701,8 +742,11 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count == 0)
-                throw new ArgumentException("Usage: headmsg ('text') [color] [serial]");
-
+            {
+                ScriptErrorMsg("Usage: headmsg ('text') [color] [serial]");
+                return true;
+            }
+            
             if (!Client.Instance.ClientRunning)
                 return true;
 
@@ -736,7 +780,10 @@ namespace Assistant.Scripts
             List<ASTNode> args = ParseArguments(ref node);
 
             if (args.Count == 0)
-                throw new ArgumentException("Usage: sysmsg ('text') [color]");
+            {
+                ScriptErrorMsg("Usage: sysmsg ('text') [color]");
+                return true;
+            }
 
             if (!Client.Instance.ClientRunning)
                 return true;

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UOSteam;
-using Assistant;
 
-namespace UOSteam
+namespace Assistant.Scripts
 {
     public static class ScriptUtilities
     {

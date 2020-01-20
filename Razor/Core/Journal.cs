@@ -19,7 +19,7 @@ namespace Assistant
     }
     public static class Journal
     {
-        private static List<JournalEntry> _entries = new List<JournalEntry>();
+        private static LinkedList<JournalEntry> _entries = new LinkedList<JournalEntry>();
 
         public static void AddLine(string text)
         {
@@ -49,12 +49,12 @@ namespace Assistant
             AddLine(new JournalEntry(newText, type));
 
             if (_entries.Count > 50)
-                _entries.RemoveAt(_entries.Count - 1);
+                _entries.RemoveLast();
         }
 
         public static void AddLine(JournalEntry entry)
         {
-            _entries.Insert(0, entry);
+            _entries.AddFirst(entry);
         }
 
         public static void Clear()

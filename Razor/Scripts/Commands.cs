@@ -9,13 +9,11 @@ namespace Assistant.Scripts
 {
     public static class Commands
     {
-        private static bool DummyCommand(ref ASTNode node, bool quiet, bool force)
+        private static bool DummyCommand(string command, Argument[] args, bool quiet, bool force)
         {
-            Console.WriteLine("Executing command {0} {1}", node.Type, node.Lexeme);
+            Console.WriteLine("Executing command {0} {1}", command, args);
 
-            World.Player?.SendMessage(MsgLevel.Info, $"Unimplemented command {node.Lexeme}");
-
-            node = null;
+            World.Player?.SendMessage(MsgLevel.Info, $"Unimplemented command {command}");
 
             return true;
         }
@@ -155,36 +153,28 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("createtimer", DummyCommand);
         }
 
-        private static bool Fly(ref ASTNode node, bool quiet, bool force)
+        private static bool Fly(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
             return true;
         }
 
-        private static bool Land(ref ASTNode node, bool quiet, bool force)
+        private static bool Land(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
             return true;
         }
 
         private static string[] abilities = new string[4] { "primary", "secondary", "stun", "disarm" };
-        private static bool SetAbility(ref ASTNode node, bool quiet, bool force)
+        private static bool SetAbility(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next(); // walk past COMMAND
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count < 1 || !abilities.Contains(args[0].Lexeme))
+            if (args.Length < 1 || !abilities.Contains(args[0].AsString()))
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: setability ('primary'/'secondary'/'stun'/'disarm') ['on'/'off']");
                 return true;
             }
 
-            if (args.Count == 2 && args[1].Lexeme == "on" || args.Count == 1)
+            if (args.Length == 2 && args[1].AsString() == "on" || args.Length == 1)
             {
-                switch (args[0].Lexeme)
+                switch (args[0].AsString())
                 {
                     case "primary":
                         SpecialMoves.SetPrimaryAbility();
@@ -202,7 +192,7 @@ namespace Assistant.Scripts
                         break;
                 }
             }
-            else if (args.Count == 2 && args[1].Lexeme == "off")
+            else if (args.Length == 2 && args[1].AsString() == "off")
             {
                 Client.Instance.SendToServer(new UseAbility(AOSAbility.Clear));
                 Client.Instance.SendToClient(ClearAbility.Instance);
@@ -211,31 +201,23 @@ namespace Assistant.Scripts
             return true;
         }
 
-        private static bool Attack(ref ASTNode node, bool quiet, bool force)
+        private static bool Attack(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            ScriptUtilities.ParseArguments(ref node);
-
             return true;
         }
 
         private static string[] hands = new string[3] { "left", "right", "both" };
-        private static bool ClearHands(ref ASTNode node, bool quiet, bool force)
+        private static bool ClearHands(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next(); // walk past COMMAND
-
             // expect one STRING node
 
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0 || !hands.Contains(args[0].Lexeme))
+            if (args.Length == 0 || !hands.Contains(args[0].AsString()))
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: clearhands ('left'/'right'/'both')");
                 return true;
             }
 
-            switch (args[0].Lexeme)
+            switch (args[0].AsString())
             {
                 case "left":
                     Dress.Unequip(Layer.LeftHand);
@@ -251,33 +233,22 @@ namespace Assistant.Scripts
 
             return true;
         }
-        private static bool ClickObject(ref ASTNode node, bool quiet, bool force)
+        private static bool ClickObject(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            // expect one SERIAL node
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: clickobject (serial)");
                 return true;
             }
 
-            ASTNode alias = args[0];
-            int serial = ScriptUtilities.GetSerial(ref alias);
-
-            if (serial == -1)
-                ScriptUtilities.ScriptErrorMsg("Invalid Serial in clickobject");
-
+            uint serial = args[0].AsSerial();
             Client.Instance.SendToServer(new SingleClick(serial));
 
             return true;
         }
-        private static bool BandageSelf(ref ASTNode node, bool quiet, bool force)
-        {
-            node = node.Next();
 
+        private static bool BandageSelf(string command, Argument[] args, bool quiet, bool force)
+        {
             if (World.Player == null)
                 return true;
 
@@ -302,31 +273,22 @@ namespace Assistant.Scripts
 
             return true;
         }
-        private static bool UseType(ref ASTNode node, bool quiet, bool force)
+        private static bool UseType(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            // variable args here
-            ScriptUtilities.ParseArguments(ref node);
-
             return true;
         }
-        private static bool UseObject(ref ASTNode node, bool quiet, bool force)
-        {
-            node = node.Next();
 
+        private static bool UseObject(string command, Argument[] args, bool quiet, bool force)
+        {
             // expect a SERIAL node
 
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: useobject (serial)");
                 return true;
             }
 
-            ASTNode obj = args[0];
-            Serial serial = Serial.Parse(obj.Lexeme);
+            Serial serial = args[0].AsSerial();
 
             if (!serial.IsValid)
             {
@@ -338,74 +300,48 @@ namespace Assistant.Scripts
 
             return true;
         }
-        private static bool UseOnce(ref ASTNode node, bool quiet, bool force)
+        private static bool UseOnce(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            ScriptUtilities.ParseArguments(ref node);
-
             return true;
         }
 
-        private static bool CleanUseQueue(ref ASTNode node, bool quiet, bool force)
+        private static bool CleanUseQueue(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
             return true;
         }
 
-        private static bool MoveItem(ref ASTNode node, bool quiet, bool force)
+        private static bool MoveItem(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count < 2)
+            if (args.Length < 2)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: moveitem (serial) (destination) [(x, y, z)] [amount]");
                 return true;
             }
 
-            ASTNode serialNode = args[0];
-            ASTNode destinationNode = args[1];
-
-            int serial = ScriptUtilities.GetSerial(ref serialNode);
-            int destination = ScriptUtilities.GetSerial(ref destinationNode);
-
-            if (args.Count == 2)
+            uint serial = args[0].AsSerial();
+            uint destination = args[1].AsSerial();
+            if (args.Length == 2)
                 DragDropManager.DragDrop(World.FindItem((uint)serial), World.FindItem((uint)destination));
-            else if (args.Count == 5)
+            else if (args.Length == 5)
                 return true;
-            else if (args.Count == 6)
+            else if (args.Length == 6)
                 return true;
 
             return true;
         }
 
-        private static bool Walk(ref ASTNode node, bool quiet, bool force)
+        private static bool Walk(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            ScriptUtilities.ParseArguments(ref node);
-
             return true;
         }
 
-        private static bool Turn(ref ASTNode node, bool quiet, bool force)
+        private static bool Turn(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            ScriptUtilities.ParseArguments(ref node);
-
             return true;
         }
 
-        private static bool Run(ref ASTNode node, bool quiet, bool force)
+        private static bool Run(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            ScriptUtilities.ParseArguments(ref node);
-
             return true;
         }
 
@@ -435,116 +371,82 @@ namespace Assistant.Scripts
             { "stealth", 47 }, // Stealth
             { "removetrap", 48 } // RemoveTrap
         };
-        private static bool UseSkill(ref ASTNode node, bool quiet, bool force)
+
+        private static bool UseSkill(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            // expect one string node or "last"
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: useskill ('skill name'/'last')");
                 return true;
             }
 
-            if (args[0].Lexeme == "last")
+            if (args[0].AsString() == "last")
                 Client.Instance.SendToServer(new UseSkill(World.Player.LastSkill));
-            else if (UsableSkills.TryGetValue(node.Lexeme, out int skillId))
+            else if (UsableSkills.TryGetValue(args[0].AsString(), out int skillId))
                 Client.Instance.SendToServer(new UseSkill(skillId));
 
             return true;
         }
-        private static bool Feed(ref ASTNode node, bool quiet, bool force)
+
+        private static bool Feed(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            ScriptUtilities.ParseArguments(ref node);
-
             return true;
         }
-        private static bool Rename(ref ASTNode node, bool quiet, bool force)
+
+        private static bool Rename(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count != 2)
+            if (args.Length != 2)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: rename (serial) ('name')");
                 return true;
             }
 
-            ASTNode target = args[0];
+            uint targetSerial = args[0].AsSerial();
 
-            uint serial = ScriptUtilities.GetSerial(ref target);
-
-            if (Client.Instance.ClientRunning && serial != Serial.MinusOne)
-                Client.Instance.SendToServer(new RenameReq(serial, args[1].Lexeme));
-
+            if (Client.Instance.ClientRunning && targetSerial != -1)
+                Client.Instance.SendToServer(new RenameReq(targetSerial, args[1].AsString()));
             return true;
         }
-        private static bool SetAlias(ref ASTNode node, bool quiet, bool force)
+
+        private static bool SetAlias(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count != 2)
+            if (args.Length != 2)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: setalias ('name') [serial]");
                 return true;
             }
 
-            ASTNode value = args[1]; // can't pass ref to this
-
-            int serial = ScriptUtilities.GetSerial(ref value);
-
-            if (serial == Serial.MinusOne)
-                return true;
-
-            Interpreter.SetAlias(args[0].Lexeme, serial);
+            Interpreter.SetAlias(args[0].AsString(), args[1].AsSerial());
 
             return true;
         }
 
-        private static bool ClearJournal(ref ASTNode node, bool quiet, bool force)
+        private static bool ClearJournal(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
             Journal.Clear();
 
             return true;
         }
 
-        private static bool UnsetAlias(ref ASTNode node, bool quiet, bool force)
+        private static bool UnsetAlias(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: unsetalias (string)");
                 return true;
             }
 
-            Interpreter.SetAlias(args[0].Lexeme, 0);
+            Interpreter.SetAlias(args[0].AsString(), 0);
 
             return true;
         }
 
-        private static bool ShowNames(ref ASTNode node, bool quiet, bool force)
+        private static bool ShowNames(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
             if (World.Player == null)
                 return true;
 
-            if (args.Count == 0 || args[0].Lexeme == "mobiles")
+            if (args.Length == 0 || args[0].AsString() == "mobiles")
             {
                 foreach (Mobile m in World.MobilesInRange())
                 {
@@ -552,7 +454,7 @@ namespace Assistant.Scripts
                         Client.Instance.SendToServer(new SingleClick(m));
                 }
             }
-            else if (args[0].Lexeme == "corpses")
+            else if (args[0].AsString() == "corpses")
             {
                 foreach (Item i in World.Items.Values)
                 {
@@ -564,19 +466,15 @@ namespace Assistant.Scripts
             return true;
         }
 
-        public static bool ToggleHands(ref ASTNode node, bool quiet, bool force)
+        public static bool ToggleHands(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: togglehands ('left'/'right')");
                 return true;
             }
 
-            if (args[0].Lexeme == "left")
+            if (args[0].AsString() == "left")
                 Dress.ToggleLeft();
             else
                 Dress.ToggleRight();
@@ -584,86 +482,65 @@ namespace Assistant.Scripts
             return true;
         }
 
-        public static bool EquipItem(ref ASTNode node, bool quiet, bool force)
+        public static bool EquipItem(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count < 2)
+            if (args.Length < 2)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: equipitem (serial) (layer)");
                 return true;
             }
 
-            ASTNode item = args[0];
-
-            Item equip = World.FindItem((uint)ScriptUtilities.GetSerial(ref item));
-            byte layer = (byte)Utility.ToInt32(args[1].Lexeme, 0);
-
+            Item equip = World.FindItem(args[0].AsSerial());
+            byte layer = (byte)Utility.ToInt32(args[1].AsString(), 0);
             if (equip != null && (Layer)layer != Layer.Invalid)
                 Dress.Equip(equip, (Layer)layer);
 
             return true;
         }
 
-        public static bool ToggleScavenger(ref ASTNode node, bool quiet, bool force)
+        public static bool ToggleScavenger(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
             ScavengerAgent.Instance.ToggleEnabled();
 
             return true;
         }
 
-        private static bool Pause(ref ASTNode node, bool quiet, bool force)
+        private static bool Pause(string command, Argument[] args, bool quiet, bool force)
         {
             return true;
         }
 
-        private static bool Ping(ref ASTNode node, bool quiet, bool force)
+        private static bool Ping(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
             Assistant.Ping.StartPing(5);
 
             return true;
         }
 
-        private static bool Resync(ref ASTNode node, bool quiet, bool force)
+        private static bool Resync(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
             if (Client.Instance.ClientRunning)
                 Client.Instance.SendToServer(new ResyncReq());
 
             return true;
         }
 
-        private static bool MessageBox(ref ASTNode node, bool quiet, bool force)
+        private static bool MessageBox(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count != 2)
+            if (args.Length != 2)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: messagebox ('title') ('body')");
                 return true;
             }
 
-            System.Windows.Forms.MessageBox.Show(args[0].Lexeme, args[1].Lexeme);
+            System.Windows.Forms.MessageBox.Show(args[0].AsString(), args[1].AsString());
 
             return true;
         }
 
-        public static bool Msg(ref ASTNode node, bool quiet, bool force)
+        public static bool Msg(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: msg ('text') [color]");
                 return true;
@@ -672,42 +549,38 @@ namespace Assistant.Scripts
             if (!Client.Instance.ClientRunning)
                 return true;
 
-            if (args.Count == 1)
-                World.Player.Say(Config.GetInt("SysColor"), args[0].Lexeme);
+            if (args.Length == 1)
+                World.Player.Say(Config.GetInt("SysColor"), args[0].AsString());
             else
-                World.Player.Say(Utility.ToInt32(args[1].Lexeme, 0), args[0].Lexeme);
+                World.Player.Say(Utility.ToInt32(args[1].AsString(), 0), args[0].AsString());
 
             return true;
         }
 
-        public static bool Cast(ref ASTNode node, bool quiet, bool force)
+        public static bool Cast(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: cast 'spell' [serial]");
                 return true;
             }
 
-            if (!Client.Instance.ClientRunning) {
+            if (!Client.Instance.ClientRunning)
+            {
                 return true;
             }
 
             Spell spell;
 
-            if (int.TryParse(args[0].Lexeme, out int spellnum))
+            if (int.TryParse(args[0].AsString(), out int spellnum))
                 spell = Spell.Get(spellnum);
             else
-                spell = Spell.GetByName(args[0].Lexeme);
+                spell = Spell.GetByName(args[0].AsString());
             if (spell != null)
             {
-                if (args.Count > 1)
+                if (args.Length > 1)
                 {
-                    ASTNode n = args[1];
-                    Serial s = ScriptUtilities.GetSerial(ref n);
+                    Serial s = args[1].AsSerial();
                     if (force)
                         Targeting.ClearQueue();
                     if (s > Serial.Zero && s != Serial.MinusOne)
@@ -724,51 +597,41 @@ namespace Assistant.Scripts
             return true;
         }
 
-        public static bool HeadMsg(ref ASTNode node, bool quiet, bool force)
+        public static bool HeadMsg(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: headmsg ('text') [color] [serial]");
                 return true;
             }
-            
+
             if (!Client.Instance.ClientRunning)
                 return true;
 
-            if (args.Count == 1)
-                World.Player.OverheadMessage(Config.GetInt("SysColor"), args[0].Lexeme);
+            if (args.Length == 1)
+                World.Player.OverheadMessage(Config.GetInt("SysColor"), args[0].AsString());
             else
             {
-                int hue = Utility.ToInt32(args[1].Lexeme, 0);
+                int hue = Utility.ToInt32(args[1].AsString(), 0);
 
-                if (args.Count == 3)
+                if (args.Length == 3)
                 {
-                    ASTNode target = args[2];
-                    int serial = ScriptUtilities.GetSerial(ref target);
-
+                    uint serial = args[2].AsSerial();
                     Mobile m = World.FindMobile((uint)serial);
 
                     if (m != null)
-                        m.OverheadMessage(hue, args[0].Lexeme);
+                        m.OverheadMessage(hue, args[0].AsString());
                 }
                 else
-                    World.Player.OverheadMessage(hue, args[0].Lexeme);
+                    World.Player.OverheadMessage(hue, args[0].AsString());
             }
 
             return true;
         }
 
-        public static bool SysMsg(ref ASTNode node, bool quiet, bool force)
+        public static bool SysMsg(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: sysmsg ('text') [color]");
                 return true;
@@ -777,24 +640,21 @@ namespace Assistant.Scripts
             if (!Client.Instance.ClientRunning)
                 return true;
 
-            if (args.Count == 1)
-                World.Player.SendMessage(Config.GetInt("SysColor"), args[0].Lexeme);
-            else if (args.Count == 2)
-                World.Player.SendMessage(Utility.ToInt32(args[1].Lexeme, 0), args[0].Lexeme);
+            if (args.Length == 1)
+                World.Player.SendMessage(Config.GetInt("SysColor"), args[0].AsString());
+            else if (args.Length == 2)
+                World.Player.SendMessage(Utility.ToInt32(args[1].AsString(), 0), args[0].AsString());
 
             return true;
         }
 
-        public static bool DressCommand(ref ASTNode node, bool quiet, bool force)
+        public static bool DressCommand(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
             if (!Client.Instance.ClientRunning)
                 return true;
+
             //we're using a named dresslist or a temporary dresslist?
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 if (DressList._Temporary != null)
                     DressList._Temporary.Dress();
@@ -803,26 +663,22 @@ namespace Assistant.Scripts
             }
             else
             {
-                var d = DressList.Find(args[0].Lexeme);
+                var d = DressList.Find(args[0].AsString());
                 if (d != null)
                     d.Dress();
-                else if(!quiet)
-                    ScriptUtilities.ScriptErrorMsg($"dresslist {args[0].Lexeme} not found");
+                else if (!quiet)
+                    ScriptUtilities.ScriptErrorMsg($"dresslist {args[0].AsString()} not found");
             }
 
             return true;
         }
 
-        public static bool UnDressCommand(ref ASTNode node, bool quiet, bool force)
+        public static bool UnDressCommand(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
             if (!Client.Instance.ClientRunning)
                 return true;
             //we're using a named dresslist or a temporary dresslist?
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 if (DressList._Temporary != null)
                     DressList._Temporary.Undress();
@@ -831,20 +687,18 @@ namespace Assistant.Scripts
             }
             else
             {
-                var d = DressList.Find(args[0].Lexeme);
+                var d = DressList.Find(args[0].AsString());
                 if (d != null)
                     d.Undress();
                 else if (!quiet)
-                    ScriptUtilities.ScriptErrorMsg($"dresslist {args[0].Lexeme} not found");
+                    ScriptUtilities.ScriptErrorMsg($"dresslist {args[0].AsString()} not found");
             }
 
             return true;
         }
 
-        public static bool DressConfig(ref ASTNode node, bool quiet, bool force)
+        public static bool DressConfig(string command, Argument[] args, bool quiet, bool force)
         {
-            node = node.Next();
-
             if (!Client.Instance.ClientRunning)
                 return true;
 

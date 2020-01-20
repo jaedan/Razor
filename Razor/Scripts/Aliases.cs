@@ -24,7 +24,7 @@ namespace Assistant.Scripts
             Interpreter.RegisterAliasHandler("self", Self);
         }
 
-        private static int Backpack(ref ASTNode node)
+        private static uint Backpack(string alias)
         {
             if (World.Player == null || World.Player.Backpack == null)
                 return 0;
@@ -32,38 +32,39 @@ namespace Assistant.Scripts
             return World.Player.Backpack.Serial;
         }
 
-        private static int Bank(ref ASTNode node)
+        private static uint Bank(string alias)
         {
             // unsupported?  I can't find a reference to the bankbox in the player
-            return -1;
+            return uint.MaxValue;
         }
 
-        private static int Enemy(ref ASTNode node)
+        private static uint Enemy(string alias)
         {
             // we will need to modify the PlayerData class to keep track of the current enemy to make this work
-            return -1;
+            return uint.MaxValue;
         }
 
-        private static int Friend(ref ASTNode node)
+        private static uint Friend(string alias)
         {
             // we will need to modify the PlayerData class to keep track of the current enemy to make this work
-            return -1;
+            return uint.MaxValue;
         }
 
-        private static int Ground(ref ASTNode node)
+        private static uint Ground(string alias)
         {
             // not sure how to return the serial of the ground at your current position
-            return -1;
+            return uint.MaxValue;
         }
 
-        private static int Last(ref ASTNode node)
+        private static uint Last(string alias)
         {
             if (Targeting.LastTargetInfo == null)
                 return 0;
 
             return Targeting.LastTargetInfo.Serial;
         }
-        private static int LastObject(ref ASTNode node)
+
+        private static uint LastObject(string alias)
         {
             if (World.Player.LastObject != null)
                 return World.Player.LastObject;
@@ -71,7 +72,7 @@ namespace Assistant.Scripts
             return 0;
         }
 
-        private static int LeftHand(ref ASTNode node)
+        private static uint LeftHand(string alias)
         {
             if (World.Player == null)
                 return 0;
@@ -84,13 +85,13 @@ namespace Assistant.Scripts
             return i.Serial;
         }
 
-        private static int Mount(ref ASTNode node)
+        private static uint Mount(string alias)
         {
             // not sure how to support this
-            return -1;
+            return uint.MaxValue;
         }
 
-        private static int RightHand(ref ASTNode node)
+        private static uint RightHand(string alias)
         {
             if (World.Player == null)
                 return 0;
@@ -103,7 +104,7 @@ namespace Assistant.Scripts
             return i.Serial;
         }
 
-        private static int Self(ref ASTNode node)
+        private static uint Self(string alias)
         {
             if (World.Player == null)
                 return 0;

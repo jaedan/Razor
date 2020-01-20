@@ -9,27 +9,9 @@ namespace Assistant.Scripts
 {
     public static class Expressions
     {
-        private static int DummyExpression(ref ASTNode node, bool quiet)
+        private static int DummyExpression(string expression, Argument[] args, bool quiet)
         {
-            Console.WriteLine("Executing expression {0} {1}", node.Type, node.Lexeme);
-
-            while (node != null)
-            {
-                switch (node.Type)
-                {
-                    case ASTNodeType.AND:
-                    case ASTNodeType.OR:
-                    case ASTNodeType.EQUAL:
-                    case ASTNodeType.NOT_EQUAL:
-                    case ASTNodeType.LESS_THAN:
-                    case ASTNodeType.LESS_THAN_OR_EQUAL:
-                    case ASTNodeType.GREATER_THAN:
-                    case ASTNodeType.GREATER_THAN_OR_EQUAL:
-                        return 0;
-                }
-
-                node = node.Next();
-            }
+            Console.WriteLine("Executing expression {0} {1}", expression, args);
 
             return 0;
         }
@@ -70,33 +52,29 @@ namespace Assistant.Scripts
             Interpreter.RegisterExpressionHandler("y", Y);
             Interpreter.RegisterExpressionHandler("z", Z);
         }
-        private static int FindAlias(ref ASTNode node, bool quiet)
+
+        private static int FindAlias(string expression, Argument[] args, bool quiet)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0)
+            if (args.Length < 1)
                 ScriptUtilities.ScriptErrorMsg("Usage: findalias (string)");
 
-            ASTNode alias = args[0];
+            uint serial = Interpreter.GetAlias(args[0].AsString());
 
-            return Interpreter.GetAlias(ref alias);
+            if (serial == uint.MaxValue)
+                return 0;
+
+            return 1;
         }
 
-        private static int InJournal(ref ASTNode node, bool quiet)
+        private static int InJournal(string expression, Argument[] args, bool quiet)
         {
-            node = node.Next();
-
-            List<ASTNode> args = ScriptUtilities.ParseArguments(ref node);
-
-            if (args.Count == 0)
+            if (args.Length == 0)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: injournal ('text') ['author'/'system']");
                 return 0;
             }
 
-            if (args.Count == 1 && Journal.Contains(args[0].Lexeme))
+            if (args.Length == 1 && Journal.Contains(args[0].AsString()))
                 return 1;
 
             // TODO:
@@ -105,37 +83,32 @@ namespace Assistant.Scripts
             return 0;
         }
 
-        private static int Mana(ref ASTNode node, bool quiet)
+        private static int Mana(string expression, Argument[] args, bool quiet)
         {
-            node.Next();
-
             if (World.Player == null)
                 return 0;
 
             return World.Player.Mana;
         }
-        private static int X(ref ASTNode node, bool quiet)
-        {
-            node.Next();
 
+        private static int X(string expression, Argument[] args, bool quiet)
+        {
             if (World.Player == null)
                 return 0;
 
             return World.Player.Position.X;
         }
-        private static int Y(ref ASTNode node, bool quiet)
-        {
-            node.Next();
 
+        private static int Y(string expression, Argument[] args, bool quiet)
+        {
             if (World.Player == null)
                 return 0;
 
             return World.Player.Position.Y;
         }
-        private static int Z(ref ASTNode node, bool quiet)
-        {
-            node.Next();
 
+        private static int Z(string expression, Argument[] args, bool quiet)
+        {
             if (World.Player == null)
                 return 0;
 
@@ -143,13 +116,9 @@ namespace Assistant.Scripts
         }
 
         // WIP
-        private static int SkillExpression(ref ASTNode node, bool quiet)
+        private static int SkillExpression(string expression, Argument[] args, bool quiet)
         {
-            node.Next();
-
-            ASTNode skillName = node.Next();
-
-            if (skillName == null)
+            if (args.Length < 1)
                 throw new ArgumentException("Usage: skill (name)");
 
             if (World.Player == null)

@@ -19,6 +19,7 @@ namespace Assistant.Scripts
         }
 
         private static ScriptTimer _timer;
+        private static DateTime _pauseEndTime = DateTime.MinValue;
 
         static ScriptManager()
         {
@@ -37,6 +38,25 @@ namespace Assistant.Scripts
         public static void OnLogout()
         {
             _timer.Stop();
+        }
+
+        public static bool Pause(int duration)
+        {
+            if (_pauseEndTime == DateTime.MinValue)
+            {
+                _pauseEndTime = DateTime.UtcNow + TimeSpan.FromMilliseconds(duration);
+            } else if (_pauseEndTime <= DateTime.UtcNow)
+            {
+                _pauseEndTime = DateTime.MinValue;
+                return false;
+            }
+
+            return true;
+        }
+
+        public static void Unpause()
+        {
+            _pauseEndTime = DateTime.MinValue;
         }
     }
 }

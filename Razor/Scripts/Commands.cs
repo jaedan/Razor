@@ -83,11 +83,11 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("unsetalias", UnsetAlias);
             Interpreter.RegisterCommandHandler("setalias", SetAlias);
             Interpreter.RegisterCommandHandler("promptalias", DummyCommand);
-            Interpreter.RegisterCommandHandler("waitforgump", DummyCommand);
+            Interpreter.RegisterCommandHandler("waitforgump", WaitForGump);
             Interpreter.RegisterCommandHandler("replygump", DummyCommand);
             Interpreter.RegisterCommandHandler("closegump", DummyCommand);
             Interpreter.RegisterCommandHandler("clearjournal", ClearJournal);
-            Interpreter.RegisterCommandHandler("waitforjournal", DummyCommand);
+            Interpreter.RegisterCommandHandler("waitforjournal", WaitForJournal);
             Interpreter.RegisterCommandHandler("poplist", DummyCommand);
             Interpreter.RegisterCommandHandler("pushlist", DummyCommand);
             Interpreter.RegisterCommandHandler("removelist", DummyCommand);
@@ -139,7 +139,7 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("bigheal", DummyCommand);
             Interpreter.RegisterCommandHandler("cast", Cast);
             Interpreter.RegisterCommandHandler("chivalryheal", DummyCommand);
-            Interpreter.RegisterCommandHandler("waitfortarget", DummyCommand);
+            Interpreter.RegisterCommandHandler("waitfortarget", WaitForTarget);
             Interpreter.RegisterCommandHandler("canceltarget", DummyCommand);
             Interpreter.RegisterCommandHandler("target", DummyCommand);
             Interpreter.RegisterCommandHandler("targettype", DummyCommand);
@@ -209,8 +209,6 @@ namespace Assistant.Scripts
         private static string[] hands = new string[3] { "left", "right", "both" };
         private static bool ClearHands(string command, Argument[] args, bool quiet, bool force)
         {
-            // expect one STRING node
-
             if (args.Length == 0 || !hands.Contains(args[0].AsString()))
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: clearhands ('left'/'right'/'both')");
@@ -280,8 +278,6 @@ namespace Assistant.Scripts
 
         private static bool UseObject(string command, Argument[] args, bool quiet, bool force)
         {
-            // expect a SERIAL node
-
             if (args.Length == 0)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: useobject (serial)");
@@ -403,7 +399,7 @@ namespace Assistant.Scripts
 
             uint targetSerial = args[0].AsSerial();
 
-            if (Client.Instance.ClientRunning && targetSerial != -1)
+            if (Client.Instance.ClientRunning)
                 Client.Instance.SendToServer(new RenameReq(targetSerial, args[1].AsString()));
             return true;
         }
@@ -421,11 +417,48 @@ namespace Assistant.Scripts
             return true;
         }
 
+        // @Jaedan this crashes as we discussed
+        private static bool WaitForGump(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length < 2)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: waitforgump (gump id/'any') (timeout)");
+                return true;
+            }
+
+            if (!ScriptManager.Pause(args[0].AsInt()))
+                return true;
+
+            bool _strict = args[0].AsString() != "any";
+            uint gumpId = _strict ? args[0].AsSerial() : uint.MaxValue;
+            return (World.Player.HasGump || World.Player.HasCompressedGump) && (World.Player.CurrentGumpI == gumpId || !_strict);
+        }
+
         private static bool ClearJournal(string command, Argument[] args, bool quiet, bool force)
         {
             Journal.Clear();
 
             return true;
+        }
+
+        private static bool WaitForJournal(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length < 2)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: waitforjournal ('text') (timeout) ['author'/'system']");
+                return true;
+            }
+
+            if (!ScriptManager.Pause(args[1].AsInt()))
+                return true;
+
+            if (Journal.Contains(args[0].AsString()))
+            {
+                ScriptManager.Unpause();
+                return true;
+            }
+
+            return false;
         }
 
         private static bool UnsetAlias(string command, Argument[] args, bool quiet, bool force)
@@ -484,6 +517,9 @@ namespace Assistant.Scripts
 
         public static bool EquipItem(string command, Argument[] args, bool quiet, bool force)
         {
+            if (!Client.Instance.ClientRunning || World.Player == null)
+                return true;
+
             if (args.Length < 2)
             {
                 ScriptUtilities.ScriptErrorMsg("Usage: equipitem (serial) (layer)");
@@ -507,7 +543,16 @@ namespace Assistant.Scripts
 
         private static bool Pause(string command, Argument[] args, bool quiet, bool force)
         {
-            return true;
+            if (args.Length == 0)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: pause (timeout)");
+                return true;
+            }
+
+            if (!ScriptManager.Pause(args[0].AsInt()))
+                return true;
+
+            return false;
         }
 
         private static bool Ping(string command, Argument[] args, bool quiet, bool force)
@@ -597,6 +642,20 @@ namespace Assistant.Scripts
             return true;
         }
 
+        public static bool WaitForTarget(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (!ScriptManager.Pause(args[0].AsInt()))
+                return true;
+
+            if (Targeting.HasTarget)
+            {
+                ScriptManager.Unpause();
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool HeadMsg(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0)
@@ -677,6 +736,7 @@ namespace Assistant.Scripts
         {
             if (!Client.Instance.ClientRunning)
                 return true;
+
             //we're using a named dresslist or a temporary dresslist?
             if (args.Length == 0)
             {

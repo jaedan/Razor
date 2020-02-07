@@ -88,11 +88,11 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("closegump", DummyCommand);
             Interpreter.RegisterCommandHandler("clearjournal", ClearJournal);
             Interpreter.RegisterCommandHandler("waitforjournal", WaitForJournal);
-            Interpreter.RegisterCommandHandler("poplist", DummyCommand);
-            Interpreter.RegisterCommandHandler("pushlist", DummyCommand);
-            Interpreter.RegisterCommandHandler("removelist", DummyCommand);
-            Interpreter.RegisterCommandHandler("createlist", DummyCommand);
-            Interpreter.RegisterCommandHandler("clearlist", DummyCommand);
+            Interpreter.RegisterCommandHandler("poplist", PopList);
+            Interpreter.RegisterCommandHandler("pushlist", PushList);
+            Interpreter.RegisterCommandHandler("removelist", RemoveList);
+            Interpreter.RegisterCommandHandler("createlist", CreateList);
+            Interpreter.RegisterCommandHandler("clearlist", ClearList);
             Interpreter.RegisterCommandHandler("info", DummyCommand);
             Interpreter.RegisterCommandHandler("pause", Pause);
             Interpreter.RegisterCommandHandler("ping", Ping);
@@ -459,6 +459,98 @@ namespace Assistant.Scripts
             }
 
             return false;
+        }
+
+        private static bool PopList(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length != 2)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: poplist ('list name') ('element value'/'front'/'back')");
+                return true;
+            }
+
+            if (args[1].AsString() == "front")
+            {
+                if (force)
+                    while (Interpreter.PopList(args[0].AsString(), true)) { }
+                else
+                    Interpreter.PopList(args[0].AsString(), true);
+            }
+            else if (args[1].AsString() == "back")
+            {
+                if (force)
+                    while (Interpreter.PopList(args[0].AsString(), false)) { }
+                else
+                    Interpreter.PopList(args[0].AsString(), false);
+            }
+            else
+            {
+                if (force)
+                    while (Interpreter.PopList(args[0].AsString(), args[1])) { }
+                else
+                    Interpreter.PopList(args[0].AsString(), args[1]);
+            }
+
+            return true;
+        }
+
+        private static bool PushList(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length < 2 || args.Length > 3)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: pushlist ('list name') ('element value') ['front'/'back']");
+                return true;
+            }
+
+            bool front = false;
+            if (args.Length == 3)
+            {
+                if (args[2].AsString() == "front")
+                    front = true;
+            }
+
+            Interpreter.PushList(args[0].AsString(), args[1], front, force);
+
+            return true;
+        }
+
+        private static bool RemoveList(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length != 1)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: removelist ('list name')");
+                return true;
+            }
+
+            Interpreter.DestroyList(args[0].AsString());
+
+            return true;
+        }
+
+        private static bool CreateList(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length != 1)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: createlist ('list name')");
+                return true;
+            }
+
+            Interpreter.CreateList(args[0].AsString());
+
+            return true;
+        }
+
+        private static bool ClearList(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length != 1)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: clearlist ('list name')");
+                return true;
+            }
+
+            Interpreter.ClearList(args[0].AsString());
+
+            return true;
         }
 
         private static bool UnsetAlias(string command, Argument[] args, bool quiet, bool force)

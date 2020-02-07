@@ -40,9 +40,9 @@ namespace Assistant.Scripts
             Interpreter.RegisterExpressionHandler("ingump", DummyExpression);
             Interpreter.RegisterExpressionHandler("gumpexists", DummyExpression);
             Interpreter.RegisterExpressionHandler("injournal", InJournal);
-            Interpreter.RegisterExpressionHandler("listexists", DummyExpression);
-            Interpreter.RegisterExpressionHandler("list", DummyExpression);
-            Interpreter.RegisterExpressionHandler("inlist", DummyExpression);
+            Interpreter.RegisterExpressionHandler("listexists", ListExists);
+            Interpreter.RegisterExpressionHandler("list", ListLength);
+            Interpreter.RegisterExpressionHandler("inlist", InList);
             Interpreter.RegisterExpressionHandler("timer", DummyExpression);
             Interpreter.RegisterExpressionHandler("timerexists", DummyExpression);
 
@@ -79,6 +79,45 @@ namespace Assistant.Scripts
 
             // TODO:
             // handle second argument
+
+            return 0;
+        }
+
+        private static int ListExists(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 1)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: listexists ('list name')");
+                return 0;
+            }
+
+            if (Interpreter.ListExists(args[0].AsString()))
+                return 1;
+
+            return 0;
+        }
+
+        private static int ListLength(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 1)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: list ('list name') (operator) (value)");
+                return 0;
+            }
+
+            return Interpreter.ListLength(args[0].AsString());
+        }
+
+        private static int InList(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 1)
+            {
+                ScriptUtilities.ScriptErrorMsg("Usage: inlist ('list name')");
+                return 0;
+            }
+
+            if (Interpreter.ListContains(args[0].AsString(), args[1]))
+                return 1;
 
             return 0;
         }

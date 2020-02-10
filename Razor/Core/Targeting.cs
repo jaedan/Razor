@@ -21,7 +21,7 @@ namespace Assistant
         public const uint LocalTargID = 0x7FFFFFFF; // uid for target sent from razor
 
         public delegate void TargetResponseCallback(bool location, Serial serial, Point3D p, ushort gfxid);
-
+        
         public delegate void CancelTargetCallback();
 
         private static CancelTargetCallback m_OnCancel;

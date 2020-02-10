@@ -40,6 +40,13 @@ namespace Assistant.Scripts
             return true;
         }
 
+        private static bool Deprecated(string command, Argument[] args, bool quiet, bool force)
+        {
+            World.Player?.SendMessage(MsgLevel.Info, $"Deprecated command {command}");
+
+            return true;
+        }
+
         private static bool UseItem(Item cont, ushort find)
         {
             for (int i = 0; i < cont.Contains.Count; i++)
@@ -95,16 +102,16 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("clearbuy", DummyCommand);
             Interpreter.RegisterCommandHandler("clearsell", DummyCommand);
             Interpreter.RegisterCommandHandler("organizer", DummyCommand);
-            Interpreter.RegisterCommandHandler("autoloot", DummyCommand);
+            Interpreter.RegisterCommandHandler("autoloot", Deprecated);
             Interpreter.RegisterCommandHandler("dress", DressCommand);
             Interpreter.RegisterCommandHandler("undress", UnDressCommand);
             Interpreter.RegisterCommandHandler("dressconfig", DressConfig);
-            Interpreter.RegisterCommandHandler("toggleautoloot", DummyCommand);
+            Interpreter.RegisterCommandHandler("toggleautoloot", Deprecated);
             Interpreter.RegisterCommandHandler("togglescavenger", ToggleScavenger);
             Interpreter.RegisterCommandHandler("counter", DummyCommand);
             Interpreter.RegisterCommandHandler("unsetalias", UnsetAlias);
             Interpreter.RegisterCommandHandler("setalias", SetAlias);
-            Interpreter.RegisterCommandHandler("promptalias", DummyCommand);
+            Interpreter.RegisterCommandHandler("promptalias", PromptAlias);
             Interpreter.RegisterCommandHandler("waitforgump", WaitForGump);
             Interpreter.RegisterCommandHandler("replygump", DummyCommand);
             Interpreter.RegisterCommandHandler("closegump", DummyCommand);
@@ -437,6 +444,33 @@ namespace Assistant.Scripts
             Interpreter.SetAlias(args[0].AsString(), args[1].AsSerial());
 
             return true;
+        }
+
+        private static bool _hasPrompt = false;
+        private static string _nextPromptAliasName = "";
+        private static void OnPromptAliasTarget(bool location, Serial serial, Point3D p, ushort gfxid)
+        {
+            Interpreter.SetAlias(_nextPromptAliasName, serial);
+        }
+
+        private static bool PromptAlias(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (!_hasPrompt)
+            {
+                _hasPrompt = true;
+                _nextPromptAliasName = args[0].AsString();
+                Targeting.OneTimeTarget(OnPromptAliasTarget);
+                return false;
+            }
+
+            if (!Targeting.HasTarget)
+            {
+                _hasPrompt = false;
+                _nextPromptAliasName = "";
+                return true;
+            }
+
+            return false;
         }
 
         private static bool WaitForGump(string command, Argument[] args, bool quiet, bool force)

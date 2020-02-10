@@ -727,6 +727,9 @@ namespace Assistant
             this.removeMacroVariable = new System.Windows.Forms.Button();
             this.addMacroVariable = new System.Windows.Forms.Button();
             this.macroVariables = new System.Windows.Forms.ListBox();
+            this.scriptsTab = new System.Windows.Forms.TabPage();
+            this.scriptTextBox = new System.Windows.Forms.TextBox();
+            this.scriptStart = new System.Windows.Forms.Button();
             this.screenshotTab = new System.Windows.Forms.TabPage();
             this.captureOwnDeathDelay = new System.Windows.Forms.TextBox();
             this.lblOwnDeathMs = new System.Windows.Forms.Label();
@@ -770,9 +773,12 @@ namespace Assistant
             this.linkMain = new System.Windows.Forms.LinkLabel();
             this.label21 = new System.Windows.Forms.Label();
             this.aboutVer = new System.Windows.Forms.Label();
-            this.scriptsPage = new System.Windows.Forms.TabPage();
-            this.startStopTestScriptButton = new System.Windows.Forms.Button();
-            this.testScriptText = new System.Windows.Forms.TextBox();
+            this.scriptList = new System.Windows.Forms.ListBox();
+            this.scriptNew = new System.Windows.Forms.Button();
+            this.scriptSave = new System.Windows.Forms.Button();
+            this.scriptDelete = new System.Windows.Forms.Button();
+            this.scriptRecord = new System.Windows.Forms.Button();
+            this.scriptSetKey = new System.Windows.Forms.Button();
             this.tabs.SuspendLayout();
             this.generalTab.SuspendLayout();
             this.subGeneralTab.SuspendLayout();
@@ -815,11 +821,11 @@ namespace Assistant
             this.macroActGroup.SuspendLayout();
             this.subMacrosOptionsTab.SuspendLayout();
             this.macroVariableGroup.SuspendLayout();
+            this.scriptsTab.SuspendLayout();
             this.screenshotTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.screenPrev)).BeginInit();
             this.advancedTab.SuspendLayout();
             this.aboutTab.SuspendLayout();
-            this.scriptsPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // m_NotifyIcon
@@ -838,7 +844,7 @@ namespace Assistant
             this.tabs.Controls.Add(this.agentsTab);
             this.tabs.Controls.Add(this.hotkeysTab);
             this.tabs.Controls.Add(this.macrosTab);
-            this.tabs.Controls.Add(this.scriptsPage);
+            this.tabs.Controls.Add(this.scriptsTab);
             this.tabs.Controls.Add(this.screenshotTab);
             this.tabs.Controls.Add(this.advancedTab);
             this.tabs.Controls.Add(this.aboutTab);
@@ -1521,9 +1527,9 @@ namespace Assistant
             // moreOptTab
             // 
             this.moreOptTab.Controls.Add(this.optionsTabCtrl);
-            this.moreOptTab.Location = new System.Drawing.Point(4, 24);
+            this.moreOptTab.Location = new System.Drawing.Point(4, 44);
             this.moreOptTab.Name = "moreOptTab";
-            this.moreOptTab.Size = new System.Drawing.Size(519, 342);
+            this.moreOptTab.Size = new System.Drawing.Size(519, 322);
             this.moreOptTab.TabIndex = 5;
             this.moreOptTab.Text = "Options";
             // 
@@ -2691,9 +2697,9 @@ namespace Assistant
             // displayTab
             // 
             this.displayTab.Controls.Add(this.displayCountersTabCtrl);
-            this.displayTab.Location = new System.Drawing.Point(4, 24);
+            this.displayTab.Location = new System.Drawing.Point(4, 44);
             this.displayTab.Name = "displayTab";
-            this.displayTab.Size = new System.Drawing.Size(519, 342);
+            this.displayTab.Size = new System.Drawing.Size(519, 322);
             this.displayTab.TabIndex = 1;
             this.displayTab.Text = "Display/Counters";
             // 
@@ -3167,9 +3173,9 @@ namespace Assistant
             // 
             this.dressTab.Controls.Add(this.groupBox6);
             this.dressTab.Controls.Add(this.groupBox5);
-            this.dressTab.Location = new System.Drawing.Point(4, 24);
+            this.dressTab.Location = new System.Drawing.Point(4, 44);
             this.dressTab.Name = "dressTab";
-            this.dressTab.Size = new System.Drawing.Size(519, 342);
+            this.dressTab.Size = new System.Drawing.Size(519, 322);
             this.dressTab.TabIndex = 3;
             this.dressTab.Text = "Arm/Dress";
             // 
@@ -3329,9 +3335,9 @@ namespace Assistant
             this.skillsTab.Controls.Add(this.setlocks);
             this.skillsTab.Controls.Add(this.resetDelta);
             this.skillsTab.Controls.Add(this.skillList);
-            this.skillsTab.Location = new System.Drawing.Point(4, 24);
+            this.skillsTab.Location = new System.Drawing.Point(4, 44);
             this.skillsTab.Name = "skillsTab";
-            this.skillsTab.Size = new System.Drawing.Size(519, 342);
+            this.skillsTab.Size = new System.Drawing.Size(519, 322);
             this.skillsTab.TabIndex = 2;
             this.skillsTab.Text = "Skills";
             // 
@@ -3504,9 +3510,9 @@ namespace Assistant
             this.agentsTab.Controls.Add(this.agentB1);
             this.agentsTab.Controls.Add(this.agentB2);
             this.agentsTab.Controls.Add(this.agentB3);
-            this.agentsTab.Location = new System.Drawing.Point(4, 24);
+            this.agentsTab.Location = new System.Drawing.Point(4, 44);
             this.agentsTab.Name = "agentsTab";
-            this.agentsTab.Size = new System.Drawing.Size(519, 342);
+            this.agentsTab.Size = new System.Drawing.Size(519, 322);
             this.agentsTab.TabIndex = 6;
             this.agentsTab.Text = "Agents";
             // 
@@ -3595,9 +3601,9 @@ namespace Assistant
             this.hotkeysTab.Controls.Add(this.hotkeyTree);
             this.hotkeysTab.Controls.Add(this.dohotkey);
             this.hotkeysTab.Controls.Add(this.groupBox8);
-            this.hotkeysTab.Location = new System.Drawing.Point(4, 24);
+            this.hotkeysTab.Location = new System.Drawing.Point(4, 44);
             this.hotkeysTab.Name = "hotkeysTab";
-            this.hotkeysTab.Size = new System.Drawing.Size(519, 342);
+            this.hotkeysTab.Size = new System.Drawing.Size(519, 322);
             this.hotkeysTab.TabIndex = 4;
             this.hotkeysTab.Text = "Hot Keys";
             // 
@@ -3736,9 +3742,9 @@ namespace Assistant
             // macrosTab
             // 
             this.macrosTab.Controls.Add(this.tabControl2);
-            this.macrosTab.Location = new System.Drawing.Point(4, 24);
+            this.macrosTab.Location = new System.Drawing.Point(4, 44);
             this.macrosTab.Name = "macrosTab";
-            this.macrosTab.Size = new System.Drawing.Size(519, 342);
+            this.macrosTab.Size = new System.Drawing.Size(519, 322);
             this.macrosTab.TabIndex = 7;
             this.macrosTab.Text = "Macros";
             // 
@@ -4061,6 +4067,41 @@ namespace Assistant
             this.macroVariables.Name = "macroVariables";
             this.macroVariables.Size = new System.Drawing.Size(153, 199);
             this.macroVariables.TabIndex = 1;
+            // 
+            // scriptsPage
+            // 
+            this.scriptsTab.Controls.Add(this.scriptSetKey);
+            this.scriptsTab.Controls.Add(this.scriptRecord);
+            this.scriptsTab.Controls.Add(this.scriptDelete);
+            this.scriptsTab.Controls.Add(this.scriptSave);
+            this.scriptsTab.Controls.Add(this.scriptNew);
+            this.scriptsTab.Controls.Add(this.scriptList);
+            this.scriptsTab.Controls.Add(this.scriptTextBox);
+            this.scriptsTab.Controls.Add(this.scriptStart);
+            this.scriptsTab.Location = new System.Drawing.Point(4, 44);
+            this.scriptsTab.Name = "scriptsTab";
+            this.scriptsTab.Size = new System.Drawing.Size(519, 322);
+            this.scriptsTab.TabIndex = 13;
+            this.scriptsTab.Text = "Scripts";
+            // 
+            // scriptTextBox
+            // 
+            this.scriptTextBox.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.scriptTextBox.Location = new System.Drawing.Point(144, 9);
+            this.scriptTextBox.Multiline = true;
+            this.scriptTextBox.Name = "scriptTextBox";
+            this.scriptTextBox.Size = new System.Drawing.Size(287, 313);
+            this.scriptTextBox.TabIndex = 1;
+            // 
+            // scriptStart
+            // 
+            this.scriptStart.Location = new System.Drawing.Point(437, 9);
+            this.scriptStart.Name = "scriptStart";
+            this.scriptStart.Size = new System.Drawing.Size(75, 23);
+            this.scriptStart.TabIndex = 0;
+            this.scriptStart.Text = "Start";
+            this.scriptStart.UseVisualStyleBackColor = true;
+            this.scriptStart.Click += StartStopScript;
             // 
             // screenshotTab
             // 
@@ -4536,34 +4577,60 @@ namespace Assistant
             this.aboutVer.Text = "Razor v{0}";
             this.aboutVer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // scriptsPage
+            // scriptList
             // 
-            this.scriptsPage.Controls.Add(this.testScriptText);
-            this.scriptsPage.Controls.Add(this.startStopTestScriptButton);
-            this.scriptsPage.Location = new System.Drawing.Point(4, 44);
-            this.scriptsPage.Name = "scriptsPage";
-            this.scriptsPage.Size = new System.Drawing.Size(519, 322);
-            this.scriptsPage.TabIndex = 13;
-            this.scriptsPage.Text = "Scripts";
+            this.scriptList.FormattingEnabled = true;
+            this.scriptList.ItemHeight = 15;
+            this.scriptList.Location = new System.Drawing.Point(3, 9);
+            this.scriptList.Name = "";
+            this.scriptList.Size = new System.Drawing.Size(132, 244);
+            this.scriptList.TabIndex = 2;
+            this.scriptList.SelectedIndexChanged += ScriptSelected;
             // 
-            // startStopTestScriptButton
+            // newScript
             // 
-            this.startStopTestScriptButton.Location = new System.Drawing.Point(3, 3);
-            this.startStopTestScriptButton.Name = "startStopTestScriptButton";
-            this.startStopTestScriptButton.Size = new System.Drawing.Size(75, 23);
-            this.startStopTestScriptButton.TabIndex = 0;
-            this.startStopTestScriptButton.Text = "Start";
-            this.startStopTestScriptButton.UseVisualStyleBackColor = true;
-            this.startStopTestScriptButton.Click += StartStopTestScriptButton_Click;
+            this.scriptNew.Location = new System.Drawing.Point(2, 265);
+            this.scriptNew.Name = "scriptNew";
+            this.scriptNew.Size = new System.Drawing.Size(60, 24);
+            this.scriptNew.TabIndex = 3;
+            this.scriptNew.Text = "New";
+            this.scriptNew.UseVisualStyleBackColor = true;
             // 
-            // testScriptText
+            // scriptSave
             // 
-            this.testScriptText.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.testScriptText.Location = new System.Drawing.Point(84, 3);
-            this.testScriptText.Multiline = true;
-            this.testScriptText.Name = "testScriptText";
-            this.testScriptText.Size = new System.Drawing.Size(432, 313);
-            this.testScriptText.TabIndex = 1;
+            this.scriptSave.Location = new System.Drawing.Point(68, 265);
+            this.scriptSave.Name = "scriptSave";
+            this.scriptSave.Size = new System.Drawing.Size(60, 24);
+            this.scriptSave.TabIndex = 4;
+            this.scriptSave.Text = "Save";
+            this.scriptSave.UseVisualStyleBackColor = true;
+            // 
+            // scriptDelete
+            // 
+            this.scriptDelete.Location = new System.Drawing.Point(3, 295);
+            this.scriptDelete.Name = "scriptDelete";
+            this.scriptDelete.Size = new System.Drawing.Size(60, 24);
+            this.scriptDelete.TabIndex = 5;
+            this.scriptDelete.Text = "Delete";
+            this.scriptDelete.UseVisualStyleBackColor = true;
+            // 
+            // scriptRecord
+            // 
+            this.scriptRecord.Location = new System.Drawing.Point(437, 38);
+            this.scriptRecord.Name = "scriptRecord";
+            this.scriptRecord.Size = new System.Drawing.Size(75, 23);
+            this.scriptRecord.TabIndex = 6;
+            this.scriptRecord.Text = "Record";
+            this.scriptRecord.UseVisualStyleBackColor = true;
+            // 
+            // scriptSetKey
+            // 
+            this.scriptSetKey.Location = new System.Drawing.Point(437, 67);
+            this.scriptSetKey.Name = "scriptSetKey";
+            this.scriptSetKey.Size = new System.Drawing.Size(75, 23);
+            this.scriptSetKey.TabIndex = 7;
+            this.scriptSetKey.Text = "Set Key";
+            this.scriptSetKey.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -4644,6 +4711,8 @@ namespace Assistant
             this.subMacrosOptionsTab.ResumeLayout(false);
             this.subMacrosOptionsTab.PerformLayout();
             this.macroVariableGroup.ResumeLayout(false);
+            this.scriptsTab.ResumeLayout(false);
+            this.scriptsTab.PerformLayout();
             this.screenshotTab.ResumeLayout(false);
             this.screenshotTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.screenPrev)).EndInit();
@@ -4651,16 +4720,20 @@ namespace Assistant
             this.advancedTab.PerformLayout();
             this.aboutTab.ResumeLayout(false);
             this.aboutTab.PerformLayout();
-            this.scriptsPage.ResumeLayout(false);
-            this.scriptsPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private TabPage scriptsPage;
-        private TextBox testScriptText;
-        private Button startStopTestScriptButton;
+        private TabPage scriptsTab;
+        private TextBox scriptTextBox;
+        private Button scriptStart;
+        private Button scriptSetKey;
+        private Button scriptRecord;
+        private Button scriptDelete;
+        private Button scriptSave;
+        private Button scriptNew;
+        private ListBox scriptList;
     }
 }

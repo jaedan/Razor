@@ -21,6 +21,7 @@ using UOSteam;
 using ContainerLabels = Assistant.UI.ContainerLabels;
 using Exception = System.Exception;
 using OverheadMessages = Assistant.UI.OverheadMessages;
+using Assistant.Scripts;
 
 namespace Assistant
 {
@@ -647,6 +648,10 @@ namespace Assistant
             else if (tabs.SelectedTab == moreOptTab)
             {
                 FriendsManager.RedrawGroup();
+            }
+            else if (tabs.SelectedTab == scriptsTab)
+            {
+                ScriptManager.Populate(scriptList);
             }
         }
 
@@ -6050,13 +6055,18 @@ namespace Assistant
             Config.SetProperty("ShowMusicInfo", showPlayingMusic.Checked);
         }
 
-        private void StartStopTestScriptButton_Click(object sender, EventArgs e)
+        private void StartStopScript(object sender, EventArgs e)
         {
-            var root = Lexer.Lex(testScriptText.Lines);
+            var root = Lexer.Lex(scriptTextBox.Lines);
 
             Script script = new Script(root);
 
             Interpreter.StartScript(script);
+        }
+
+        private void ScriptSelected(object sender, EventArgs e)
+        {
+            scriptTextBox.Lines = ScriptManager.Load(scriptList.SelectedItem.ToString());
         }
     }
 }

@@ -6066,7 +6066,46 @@ namespace Assistant
 
         private void ScriptSelected(object sender, EventArgs e)
         {
+            if (scriptList.SelectedItem == null)
+                return;
+
             scriptTextBox.Lines = ScriptManager.Load(scriptList.SelectedItem.ToString());
+        }
+
+        private void NewScript(object sender, EventArgs e)
+        {
+            if (InputBox.Show("Script name"))
+            {
+                var name = InputBox.GetString();
+                ScriptManager.New(name);
+                ScriptManager.Populate(scriptList);
+                scriptList.SelectedIndex = scriptList.Items.IndexOf(name);
+            }
+        }
+
+        private void SaveScript(object sender, EventArgs e)
+        {
+            if (scriptList.SelectedItem == null)
+                return;
+
+            ScriptManager.Save((string)scriptList.SelectedItem);
+        }
+
+        private void DeleteScript(object sender, EventArgs e)
+        {
+            if (scriptList.SelectedItem == null)
+                return;
+
+            ScriptManager.Delete((string)scriptList.SelectedItem);
+            ScriptManager.Populate(scriptList);
+        }
+
+        private void ScriptTextChanged(object sender, EventArgs e)
+        {
+            if (scriptList.SelectedItem == null)
+                return;
+
+            ScriptManager.Update((string)scriptList.SelectedItem, scriptTextBox.Lines);
         }
     }
 }

@@ -728,6 +728,12 @@ namespace Assistant
             this.addMacroVariable = new System.Windows.Forms.Button();
             this.macroVariables = new System.Windows.Forms.ListBox();
             this.scriptsTab = new System.Windows.Forms.TabPage();
+            this.scriptSetKey = new System.Windows.Forms.Button();
+            this.scriptRecord = new System.Windows.Forms.Button();
+            this.scriptDelete = new System.Windows.Forms.Button();
+            this.scriptSave = new System.Windows.Forms.Button();
+            this.scriptNew = new System.Windows.Forms.Button();
+            this.scriptList = new System.Windows.Forms.ListBox();
             this.scriptTextBox = new System.Windows.Forms.TextBox();
             this.scriptStart = new System.Windows.Forms.Button();
             this.screenshotTab = new System.Windows.Forms.TabPage();
@@ -773,12 +779,6 @@ namespace Assistant
             this.linkMain = new System.Windows.Forms.LinkLabel();
             this.label21 = new System.Windows.Forms.Label();
             this.aboutVer = new System.Windows.Forms.Label();
-            this.scriptList = new System.Windows.Forms.ListBox();
-            this.scriptNew = new System.Windows.Forms.Button();
-            this.scriptSave = new System.Windows.Forms.Button();
-            this.scriptDelete = new System.Windows.Forms.Button();
-            this.scriptRecord = new System.Windows.Forms.Button();
-            this.scriptSetKey = new System.Windows.Forms.Button();
             this.tabs.SuspendLayout();
             this.generalTab.SuspendLayout();
             this.subGeneralTab.SuspendLayout();
@@ -4068,7 +4068,7 @@ namespace Assistant
             this.macroVariables.Size = new System.Drawing.Size(153, 199);
             this.macroVariables.TabIndex = 1;
             // 
-            // scriptsPage
+            // scriptsTab
             // 
             this.scriptsTab.Controls.Add(this.scriptSetKey);
             this.scriptsTab.Controls.Add(this.scriptRecord);
@@ -4084,6 +4084,64 @@ namespace Assistant
             this.scriptsTab.TabIndex = 13;
             this.scriptsTab.Text = "Scripts";
             // 
+            // scriptSetKey
+            // 
+            this.scriptSetKey.Location = new System.Drawing.Point(437, 67);
+            this.scriptSetKey.Name = "scriptSetKey";
+            this.scriptSetKey.Size = new System.Drawing.Size(75, 23);
+            this.scriptSetKey.TabIndex = 7;
+            this.scriptSetKey.Text = "Set Key";
+            this.scriptSetKey.UseVisualStyleBackColor = true;
+            // 
+            // scriptRecord
+            // 
+            this.scriptRecord.Location = new System.Drawing.Point(437, 38);
+            this.scriptRecord.Name = "scriptRecord";
+            this.scriptRecord.Size = new System.Drawing.Size(75, 23);
+            this.scriptRecord.TabIndex = 6;
+            this.scriptRecord.Text = "Record";
+            this.scriptRecord.UseVisualStyleBackColor = true;
+            // 
+            // scriptDelete
+            // 
+            this.scriptDelete.Location = new System.Drawing.Point(3, 295);
+            this.scriptDelete.Name = "scriptDelete";
+            this.scriptDelete.Size = new System.Drawing.Size(60, 24);
+            this.scriptDelete.TabIndex = 5;
+            this.scriptDelete.Text = "Delete";
+            this.scriptDelete.UseVisualStyleBackColor = true;
+            this.scriptDelete.Click += new System.EventHandler(this.DeleteScript);
+            // 
+            // scriptSave
+            // 
+            this.scriptSave.Location = new System.Drawing.Point(68, 265);
+            this.scriptSave.Name = "scriptSave";
+            this.scriptSave.Size = new System.Drawing.Size(60, 24);
+            this.scriptSave.TabIndex = 4;
+            this.scriptSave.Text = "Save";
+            this.scriptSave.UseVisualStyleBackColor = true;
+            this.scriptSave.Click += new System.EventHandler(this.SaveScript);
+            // 
+            // scriptNew
+            // 
+            this.scriptNew.Location = new System.Drawing.Point(2, 265);
+            this.scriptNew.Name = "scriptNew";
+            this.scriptNew.Size = new System.Drawing.Size(60, 24);
+            this.scriptNew.TabIndex = 3;
+            this.scriptNew.Text = "New";
+            this.scriptNew.UseVisualStyleBackColor = true;
+            this.scriptNew.Click += new System.EventHandler(this.NewScript);
+            // 
+            // scriptList
+            // 
+            this.scriptList.FormattingEnabled = true;
+            this.scriptList.ItemHeight = 15;
+            this.scriptList.Location = new System.Drawing.Point(3, 9);
+            this.scriptList.Name = "scriptList";
+            this.scriptList.Size = new System.Drawing.Size(132, 244);
+            this.scriptList.TabIndex = 2;
+            this.scriptList.SelectedIndexChanged += new System.EventHandler(this.ScriptSelected);
+            // 
             // scriptTextBox
             // 
             this.scriptTextBox.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -4092,6 +4150,7 @@ namespace Assistant
             this.scriptTextBox.Name = "scriptTextBox";
             this.scriptTextBox.Size = new System.Drawing.Size(287, 313);
             this.scriptTextBox.TabIndex = 1;
+            this.scriptTextBox.TextChanged += new System.EventHandler(this.ScriptTextChanged);
             // 
             // scriptStart
             // 
@@ -4101,7 +4160,7 @@ namespace Assistant
             this.scriptStart.TabIndex = 0;
             this.scriptStart.Text = "Start";
             this.scriptStart.UseVisualStyleBackColor = true;
-            this.scriptStart.Click += StartStopScript;
+            this.scriptStart.Click += new System.EventHandler(this.StartStopScript);
             // 
             // screenshotTab
             // 
@@ -4576,61 +4635,6 @@ namespace Assistant
             this.aboutVer.TabIndex = 14;
             this.aboutVer.Text = "Razor v{0}";
             this.aboutVer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // scriptList
-            // 
-            this.scriptList.FormattingEnabled = true;
-            this.scriptList.ItemHeight = 15;
-            this.scriptList.Location = new System.Drawing.Point(3, 9);
-            this.scriptList.Name = "";
-            this.scriptList.Size = new System.Drawing.Size(132, 244);
-            this.scriptList.TabIndex = 2;
-            this.scriptList.SelectedIndexChanged += ScriptSelected;
-            // 
-            // newScript
-            // 
-            this.scriptNew.Location = new System.Drawing.Point(2, 265);
-            this.scriptNew.Name = "scriptNew";
-            this.scriptNew.Size = new System.Drawing.Size(60, 24);
-            this.scriptNew.TabIndex = 3;
-            this.scriptNew.Text = "New";
-            this.scriptNew.UseVisualStyleBackColor = true;
-            // 
-            // scriptSave
-            // 
-            this.scriptSave.Location = new System.Drawing.Point(68, 265);
-            this.scriptSave.Name = "scriptSave";
-            this.scriptSave.Size = new System.Drawing.Size(60, 24);
-            this.scriptSave.TabIndex = 4;
-            this.scriptSave.Text = "Save";
-            this.scriptSave.UseVisualStyleBackColor = true;
-            // 
-            // scriptDelete
-            // 
-            this.scriptDelete.Location = new System.Drawing.Point(3, 295);
-            this.scriptDelete.Name = "scriptDelete";
-            this.scriptDelete.Size = new System.Drawing.Size(60, 24);
-            this.scriptDelete.TabIndex = 5;
-            this.scriptDelete.Text = "Delete";
-            this.scriptDelete.UseVisualStyleBackColor = true;
-            // 
-            // scriptRecord
-            // 
-            this.scriptRecord.Location = new System.Drawing.Point(437, 38);
-            this.scriptRecord.Name = "scriptRecord";
-            this.scriptRecord.Size = new System.Drawing.Size(75, 23);
-            this.scriptRecord.TabIndex = 6;
-            this.scriptRecord.Text = "Record";
-            this.scriptRecord.UseVisualStyleBackColor = true;
-            // 
-            // scriptSetKey
-            // 
-            this.scriptSetKey.Location = new System.Drawing.Point(437, 67);
-            this.scriptSetKey.Name = "scriptSetKey";
-            this.scriptSetKey.Size = new System.Drawing.Size(75, 23);
-            this.scriptSetKey.TabIndex = 7;
-            this.scriptSetKey.Text = "Set Key";
-            this.scriptSetKey.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 

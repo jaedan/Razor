@@ -11,6 +11,7 @@ namespace Assistant.Scripts
     {
         private class ScriptSource
         {
+            public string FilePath { get;}
             public string Name { get; }
             public string[] Lines { get; set; }
 
@@ -21,6 +22,7 @@ namespace Assistant.Scripts
 
                 var fname = Path.GetFileName(path);
 
+                FilePath = path;
                 Name = fname.Substring(0, fname.Length - 4);
                 Lines = File.ReadLines(path).ToArray();
             }
@@ -97,18 +99,37 @@ namespace Assistant.Scripts
             _pauseEndTime = DateTime.MinValue;
         }
 
-        public static void Save(string name, string[] lines)
+        public static void Save(string name)
         {
             var dirPath = Config.GetUserDirectory("Scripts");
 
             Engine.EnsureDirectory(dirPath);
 
-            foreach (var ss in _scripts.Values)
+            if (_scripts.TryGetValue(name, out ScriptSource ss))
             {
-                var path = Path.Combine(dirPath, ss.Name, ".uos");
-
-                File.WriteAllLines(path, ss.Lines);
+                File.WriteAllLines(Path.Combine(dirPath, $"{ss.Name}.uos"), ss.Lines);
             }
+        }
+
+        public static void New(string name)
+        {
+            var dirPath = Config.GetUserDirectory("Scripts");
+
+            Engine.EnsureDirectory(dirPath);
+
+            var path = Path.Combine(dirPath, $"{name}.uos");
+
+            if (!File.Exists(path))
+                File.Create(path).Close();
+            else
+            {
+                MessageBox.Show($"A script with that name already exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            ScriptSource ss = new ScriptSource(path);
+
+            _scripts.Add(name, ss);
         }
 
         public static string[] Load(string name)
@@ -116,12 +137,26 @@ namespace Assistant.Scripts
             return _scripts[name].Lines;
         }
 
+        public static void Update(string name, string[] lines)
+        {
+            if (_scripts.TryGetValue(name, out ScriptSource ss))
+                ss.Lines = lines;
+        }
+
+        public static void Delete(string name)
+        {
+            if (_scripts.TryGetValue(name, out ScriptSource ss))
+            {
+                File.Delete(ss.FilePath);
+                _scripts.Remove(name);
+            }
+        }
+
         public static void Populate(ListBox list)
         {
+            list.Items.Clear();
             foreach (var ss in _scripts.Values)
-            {
                 list.Items.Add(ss.Name);
-            }
         }
     }
 }

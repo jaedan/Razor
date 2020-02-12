@@ -107,7 +107,7 @@ namespace Assistant.Scripts
 
             if (_scripts.TryGetValue(name, out ScriptSource ss))
             {
-                File.WriteAllLines(Path.Combine(dirPath, $"{ss.Name}.uos"), ss.Lines);
+                File.WriteAllLines(ss.FilePath, ss.Lines);
             }
         }
 

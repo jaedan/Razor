@@ -452,7 +452,7 @@ namespace Assistant.Scripts
             if (!ScriptManager.Pause(args[1].AsInt()))
                 return true;
 
-            if (Journal.Contains(args[0].AsString()))
+            if (Journal.ContainsSafe(args[0].AsString()))
             {
                 ScriptManager.Unpause();
                 return true;

@@ -74,7 +74,7 @@ namespace Assistant.Scripts
                 return 0;
             }
 
-            if (args.Length == 1 && Journal.Contains(args[0].AsString()))
+            if (args.Length == 1 && Journal.ContainsSafe(args[0].AsString()))
                 return 1;
 
             // TODO:

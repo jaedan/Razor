@@ -62,6 +62,15 @@ namespace Assistant
             _entries.Clear();
         }
 
+        public static bool ContainsSafe(string text)
+        {
+            return _entries.Any(
+                (JournalEntry entry) => 
+                    entry.Value.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1 && 
+                    (entry.Type == MessageType.System || 
+                    entry.Type == MessageType.Label));
+        }
+
         public static bool Contains(string text)
         {
             return _entries.Any((JournalEntry entry) => entry.Value.IndexOf(text, StringComparison.OrdinalIgnoreCase) != -1);

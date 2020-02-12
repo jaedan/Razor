@@ -4150,7 +4150,7 @@ namespace Assistant
             this.scriptTextBox.Name = "scriptTextBox";
             this.scriptTextBox.Size = new System.Drawing.Size(287, 313);
             this.scriptTextBox.TabIndex = 1;
-            this.scriptTextBox.TextChanged += new System.EventHandler(this.ScriptTextChanged);
+            this.scriptTextBox.Leave += new System.EventHandler(this.ScriptTextLostFocus);
             // 
             // scriptStart
             // 

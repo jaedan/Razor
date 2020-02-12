@@ -6100,7 +6100,7 @@ namespace Assistant
             ScriptManager.Populate(scriptList);
         }
 
-        private void ScriptTextChanged(object sender, EventArgs e)
+        private void ScriptTextLostFocus(object sender, EventArgs e)
         {
             if (scriptList.SelectedItem == null)
                 return;

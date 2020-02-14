@@ -294,6 +294,8 @@ namespace Assistant
             return count;
         }
 
+        public int ItemCount => m_Items.Count;
+
         public object Container
         {
             get

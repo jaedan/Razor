@@ -134,7 +134,7 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("messagebox", MessageBox);
             Interpreter.RegisterCommandHandler("mapuo", DummyCommand);
             Interpreter.RegisterCommandHandler("clickscreen", DummyCommand);
-            Interpreter.RegisterCommandHandler("paperdoll", DummyCommand);
+            Interpreter.RegisterCommandHandler("paperdoll", Paperdoll);
             Interpreter.RegisterCommandHandler("helpbutton", DummyCommand);
             Interpreter.RegisterCommandHandler("guildbutton", DummyCommand);
             Interpreter.RegisterCommandHandler("questsbutton", DummyCommand);
@@ -751,6 +751,19 @@ namespace Assistant.Scripts
                 World.Player.Say(Config.GetInt("SysColor"), args[0].AsString());
             else
                 World.Player.Say(Utility.ToInt32(args[1].AsString(), 0), args[0].AsString());
+
+            return true;
+        }
+
+        private static bool Paperdoll(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length > 1)
+                ScriptManager.Error("Usage: paperdoll [serial]");
+            else
+            {
+                uint serial = args.Length == 0 ? World.Player.Serial.Value : args[0].AsSerial();
+                Client.Instance.SendToServer(new DoubleClick(serial));
+            }
 
             return true;
         }

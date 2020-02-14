@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using UOScript;
@@ -40,7 +41,7 @@ namespace Assistant.Scripts
         {
             // Expressions
             Interpreter.RegisterExpressionHandler("findalias", FindAlias);
-            Interpreter.RegisterExpressionHandler("contents", DummyExpression);
+            Interpreter.RegisterExpressionHandler("contents", Contents);
             Interpreter.RegisterExpressionHandler("inregion", DummyExpression);
             Interpreter.RegisterExpressionHandler("skill", SkillExpression);
             Interpreter.RegisterExpressionHandler("findobject", DummyExpression);
@@ -71,6 +72,36 @@ namespace Assistant.Scripts
             Interpreter.RegisterExpressionHandler("x", X);
             Interpreter.RegisterExpressionHandler("y", Y);
             Interpreter.RegisterExpressionHandler("z", Z);
+        }
+
+        private static int Contents(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length < 1)
+            {
+                ScriptManager.Error("Usage: contents (serial)");
+                return 0;
+            }
+
+            uint serial;
+
+            try
+            {
+                serial = args[0].AsSerial();
+            }
+            catch (RunTimeError)
+            {
+                ScriptManager.Error("Usage: Invalid serial");
+                return 0;
+            }
+
+            Item container = World.FindItem(serial);
+            if (container == null || !container.IsContainer)
+            {
+                ScriptManager.Error("Serial not found or is not a container.");
+                return 0;
+            }
+
+            return container.ItemCount;
         }
 
         private static int FindAlias(string expression, Argument[] args, bool quiet)

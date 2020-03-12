@@ -64,8 +64,8 @@ namespace Assistant.Scripts
             Interpreter.RegisterExpressionHandler("listexists", ListExists);
             Interpreter.RegisterExpressionHandler("list", ListLength);
             Interpreter.RegisterExpressionHandler("inlist", InList);
-            Interpreter.RegisterExpressionHandler("timer", DummyExpression);
-            Interpreter.RegisterExpressionHandler("timerexists", DummyExpression);
+            Interpreter.RegisterExpressionHandler("timer", TimerValue);
+            Interpreter.RegisterExpressionHandler("timerexists", TimerExists);
 
             // Player Attributes
             Interpreter.RegisterExpressionHandler("mana", Mana);
@@ -350,6 +350,30 @@ namespace Assistant.Scripts
                 return 1;
 
             return 0;
+        }
+
+        private static int TimerValue(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 1)
+            {
+                ScriptManager.Error("Usage: timer ('timer name')");
+                return 0;
+            }
+
+            var ts = Interpreter.GetTimer(args[0].AsString());
+
+            return (int)ts.TotalMilliseconds;
+        }
+
+        private static bool TimerExists(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 1)
+            {
+                ScriptManager.Error("Usage: timerexists ('timer name')");
+                return false;
+            }
+
+            return Interpreter.TimerExists(args[0].AsString());
         }
 
         private static int Mana(string expression, Argument[] args, bool quiet)

@@ -177,9 +177,9 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("targettileoffset", DummyCommand);
             Interpreter.RegisterCommandHandler("targettilerelative", DummyCommand);
             Interpreter.RegisterCommandHandler("cleartargetqueue", DummyCommand);
-            Interpreter.RegisterCommandHandler("settimer", DummyCommand);
-            Interpreter.RegisterCommandHandler("removetimer", DummyCommand);
-            Interpreter.RegisterCommandHandler("createtimer", DummyCommand);
+            Interpreter.RegisterCommandHandler("settimer", SetTimer);
+            Interpreter.RegisterCommandHandler("removetimer", RemoveTimer);
+            Interpreter.RegisterCommandHandler("createtimer", CreateTimer);
         }
 
         private static bool Fly(string command, Argument[] args, bool quiet, bool force)
@@ -941,6 +941,43 @@ namespace Assistant.Scripts
                     DressList._Temporary.Items.Add(item.Serial);
             }
 
+            return true;
+        }
+
+        private static bool SetTimer(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length != 2)
+            {
+                ScriptManager.Error("Usage: settimer (timer name) (value)");
+                return true;
+            }
+
+
+            Interpreter.SetTimer(args[0].AsString(), args[1].AsInt());
+            return true;
+        }
+
+        private static bool RemoveTimer(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length != 1)
+            {
+                ScriptManager.Error("Usage: removetimer (timer name)");
+                return true;
+            }
+
+            Interpreter.RemoveTimer(args[0].AsString());
+            return true;
+        }
+
+        private static bool CreateTimer(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length != 1)
+            {
+                ScriptManager.Error("Usage: createtimer (timer name)");
+                return true;
+            }
+
+            Interpreter.CreateTimer(args[0].AsString());
             return true;
         }
     }

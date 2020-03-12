@@ -44,6 +44,55 @@ namespace Assistant.Scripts
             Interpreter.RegisterExpressionHandler("contents", Contents);
             Interpreter.RegisterExpressionHandler("inregion", DummyExpression);
             Interpreter.RegisterExpressionHandler("skill", SkillExpression);
+            Interpreter.RegisterExpressionHandler("x", X);
+            Interpreter.RegisterExpressionHandler("y", Y);
+            Interpreter.RegisterExpressionHandler("z", Z);
+            Interpreter.RegisterExpressionHandler("physical", DummyExpression);
+            Interpreter.RegisterExpressionHandler("fire", DummyExpression);
+            Interpreter.RegisterExpressionHandler("cold", DummyExpression);
+            Interpreter.RegisterExpressionHandler("poison", DummyExpression);
+            Interpreter.RegisterExpressionHandler("energy", DummyExpression);
+            Interpreter.RegisterExpressionHandler("str", DummyExpression);
+            Interpreter.RegisterExpressionHandler("dex", DummyExpression);
+            Interpreter.RegisterExpressionHandler("int", DummyExpression);
+            Interpreter.RegisterExpressionHandler("hits", DummyExpression);
+            Interpreter.RegisterExpressionHandler("maxhits", DummyExpression);
+            Interpreter.RegisterExpressionHandler("diffhits", DummyExpression);
+            Interpreter.RegisterExpressionHandler("stam", DummyExpression);
+            Interpreter.RegisterExpressionHandler("maxstam", DummyExpression);
+            Interpreter.RegisterExpressionHandler("mana", Mana);
+            Interpreter.RegisterExpressionHandler("maxmana", DummyExpression);
+            Interpreter.RegisterExpressionHandler("usequeue", DummyExpression);
+            Interpreter.RegisterExpressionHandler("dressing", DummyExpression);
+            Interpreter.RegisterExpressionHandler("organizing", DummyExpression);
+            Interpreter.RegisterExpressionHandler("followers", DummyExpression);
+            Interpreter.RegisterExpressionHandler("maxfollowers", DummyExpression);
+            Interpreter.RegisterExpressionHandler("gold", DummyExpression);
+            Interpreter.RegisterExpressionHandler("hidden", DummyExpression);
+            Interpreter.RegisterExpressionHandler("luck", DummyExpression);
+            Interpreter.RegisterExpressionHandler("tithingpoints", DummyExpression);
+            Interpreter.RegisterExpressionHandler("weight", DummyExpression);
+            Interpreter.RegisterExpressionHandler("maxweight", DummyExpression);
+            Interpreter.RegisterExpressionHandler("diffweight", DummyExpression);
+            Interpreter.RegisterExpressionHandler("serial", DummyExpression);
+            Interpreter.RegisterExpressionHandler("graphic", DummyExpression);
+            Interpreter.RegisterExpressionHandler("color", DummyExpression);
+            Interpreter.RegisterExpressionHandler("amount", DummyExpression);
+            Interpreter.RegisterExpressionHandler("name", DummyExpression);
+            Interpreter.RegisterExpressionHandler("dead", DummyExpression);
+            Interpreter.RegisterExpressionHandler("direction", DummyExpression);
+            Interpreter.RegisterExpressionHandler("flying", DummyExpression);
+            Interpreter.RegisterExpressionHandler("paralyzed", DummyExpression);
+            Interpreter.RegisterExpressionHandler("poisoned", DummyExpression);
+            Interpreter.RegisterExpressionHandler("mounted", DummyExpression);
+            Interpreter.RegisterExpressionHandler("yellowhits", DummyExpression);
+            Interpreter.RegisterExpressionHandler("criminal", DummyExpression);
+            Interpreter.RegisterExpressionHandler("enemy", DummyExpression);
+            Interpreter.RegisterExpressionHandler("friend", DummyExpression);
+            Interpreter.RegisterExpressionHandler("gray", DummyExpression);
+            Interpreter.RegisterExpressionHandler("innocent", DummyExpression);
+            Interpreter.RegisterExpressionHandler("invulnerable", DummyExpression);
+            Interpreter.RegisterExpressionHandler("murderer", DummyExpression);
             Interpreter.RegisterExpressionHandler("findobject", DummyExpression);
             Interpreter.RegisterExpressionHandler("distance", DummyExpression);
             Interpreter.RegisterExpressionHandler("inrange", DummyExpression);
@@ -64,14 +113,12 @@ namespace Assistant.Scripts
             Interpreter.RegisterExpressionHandler("listexists", ListExists);
             Interpreter.RegisterExpressionHandler("list", ListLength);
             Interpreter.RegisterExpressionHandler("inlist", InList);
+            Interpreter.RegisterExpressionHandler("targetexists", DummyExpression);
+            Interpreter.RegisterExpressionHandler("waitingfortarget", DummyExpression);
             Interpreter.RegisterExpressionHandler("timer", TimerValue);
             Interpreter.RegisterExpressionHandler("timerexists", TimerExists);
 
-            // Player Attributes
-            Interpreter.RegisterExpressionHandler("mana", Mana);
-            Interpreter.RegisterExpressionHandler("x", X);
-            Interpreter.RegisterExpressionHandler("y", Y);
-            Interpreter.RegisterExpressionHandler("z", Z);
+
         }
 
         private static int Contents(string expression, Argument[] args, bool quiet)

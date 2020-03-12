@@ -31,7 +31,6 @@ using Assistant.Scripts;
 using Assistant.UI;
 using OverheadMessages = Assistant.Core.OverheadMessages;
 using ContainerLabels = Assistant.Core.ContainerLabels;
-using Assistant.Scripts;
 
 namespace Assistant
 {

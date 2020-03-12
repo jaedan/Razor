@@ -81,7 +81,7 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("usetype", UseType);
             Interpreter.RegisterCommandHandler("useobject", UseObject);
             Interpreter.RegisterCommandHandler("useonce", UseOnce);
-            Interpreter.RegisterCommandHandler("cleanusequeue", CleanUseQueue);
+            Interpreter.RegisterCommandHandler("clearuseonce", CleanUseQueue);
             Interpreter.RegisterCommandHandler("moveitem", MoveItem);
             Interpreter.RegisterCommandHandler("moveitemoffset", DummyCommand);
             Interpreter.RegisterCommandHandler("movetype", DummyCommand);
@@ -177,6 +177,18 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("targettileoffset", DummyCommand);
             Interpreter.RegisterCommandHandler("targettilerelative", DummyCommand);
             Interpreter.RegisterCommandHandler("cleartargetqueue", DummyCommand);
+            Interpreter.RegisterCommandHandler("autotargetlast", DummyCommand);
+            Interpreter.RegisterCommandHandler("autotargetself", DummyCommand);
+            Interpreter.RegisterCommandHandler("autotargetobject", DummyCommand);
+            Interpreter.RegisterCommandHandler("autotargettype", DummyCommand);
+            Interpreter.RegisterCommandHandler("autotargettile", DummyCommand);
+            Interpreter.RegisterCommandHandler("autotargettileoffset", DummyCommand);
+            Interpreter.RegisterCommandHandler("autotargettilerelative", DummyCommand);
+            Interpreter.RegisterCommandHandler("autotargetghost", DummyCommand);
+            Interpreter.RegisterCommandHandler("autotargetground", DummyCommand);
+            Interpreter.RegisterCommandHandler("cancelautotarget", DummyCommand);
+            Interpreter.RegisterCommandHandler("getenemy", DummyCommand);
+            Interpreter.RegisterCommandHandler("getfriend", DummyCommand);
             Interpreter.RegisterCommandHandler("settimer", SetTimer);
             Interpreter.RegisterCommandHandler("removetimer", RemoveTimer);
             Interpreter.RegisterCommandHandler("createtimer", CreateTimer);

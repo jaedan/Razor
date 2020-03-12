@@ -392,7 +392,7 @@ namespace Assistant
                 if (text[0] != commandToggle)
                 {
                     Macros.MacroManager.Action(new Macros.SpeechAction(type, hue, font, lang, keys, text));
-                    ScriptManager.AddToScript($"say \'{text}\'");
+                    ScriptManager.AddToScript($"msg \'{text}\'");
                 }
                 else
                 {

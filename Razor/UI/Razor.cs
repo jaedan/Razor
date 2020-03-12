@@ -2337,12 +2337,12 @@ namespace Assistant
                 return (Macro) macroTree.SelectedNode.Tag;
         }
 
-        public ScriptManager.RazorScript GetScriptSel()
+        public ScriptManager.SteamScript GetScriptSel()
         {
-            if (scriptList.SelectedItem == null || !(scriptList.SelectedItem is ScriptManager.RazorScript))
+            if (scriptList.SelectedItem == null || !(scriptList.SelectedItem is ScriptManager.SteamScript))
                 return null;
             else
-                return (ScriptManager.RazorScript) scriptList.SelectedItem;
+                return (ScriptManager.SteamScript) scriptList.SelectedItem;
         }
 
         public void playMacro_Click(object sender, System.EventArgs e)
@@ -6187,11 +6187,11 @@ namespace Assistant
         {
             if (scriptList.SelectedIndex < 0)
             {
-                string filePath = $"{ScriptManager.ScriptPath}\\auto-{Guid.NewGuid().ToString().Substring(0, 4)}.razor";
+                string filePath = $"{ScriptManager.ScriptPath}\\auto-{Guid.NewGuid().ToString().Substring(0, 4)}.uos";
 
                 File.WriteAllText(filePath, scriptEditor.Text);
 
-                ScriptManager.RazorScript script = new ScriptManager.RazorScript
+                ScriptManager.SteamScript script = new ScriptManager.SteamScript
                 {
                     Lines = File.ReadAllLines(filePath),
                     Name = Path.GetFileNameWithoutExtension(filePath),
@@ -6202,7 +6202,7 @@ namespace Assistant
 
                 for (int i = 0; i < scriptList.Items.Count; i++)
                 {
-                    ScriptManager.RazorScript scriptItem = (ScriptManager.RazorScript) scriptList.Items[i];
+                    ScriptManager.SteamScript scriptItem = (ScriptManager.SteamScript) scriptList.Items[i];
                     if (scriptItem.Name.Equals(script.Name))
                     {
                         scriptList.SelectedIndex = i;
@@ -6214,7 +6214,7 @@ namespace Assistant
             {
                 int curIndex = scriptList.SelectedIndex;
 
-                ScriptManager.RazorScript script = (ScriptManager.RazorScript) scriptList.SelectedItem;
+                ScriptManager.SteamScript script = (ScriptManager.SteamScript) scriptList.SelectedItem;
                 File.WriteAllText(script.Path, scriptEditor.Text);
 
                 ScriptManager.RedrawScripts();
@@ -6229,7 +6229,7 @@ namespace Assistant
                 return;
 
             scriptEditor.Text =
-                File.ReadAllText(Path.Combine(ScriptManager.ScriptPath, $"{scriptList.SelectedItem}.razor"));
+                File.ReadAllText(Path.Combine(ScriptManager.ScriptPath, $"{scriptList.SelectedItem}.uos"));
         }
 
         private void recordScript_Click(object sender, EventArgs e)
@@ -6255,7 +6255,7 @@ namespace Assistant
 
         private void newScript_Click(object sender, EventArgs e)
         {
-            if (InputBox.Show(this, "New Razor Script", "Enter the name of the script"))
+            if (InputBox.Show(this, "New Steam Script", "Enter the name of the script"))
             {
                 string name = InputBox.GetString();
                 if (string.IsNullOrEmpty(name) || name.IndexOfAny(Path.GetInvalidPathChars()) != -1 ||
@@ -6266,7 +6266,7 @@ namespace Assistant
                     return;
                 }
 
-                string path = Path.Combine(ScriptManager.ScriptPath, $"{name}.razor");
+                string path = Path.Combine(ScriptManager.ScriptPath, $"{name}.uos");
 
                 if (File.Exists(path))
                 {
@@ -6277,7 +6277,7 @@ namespace Assistant
 
                 File.CreateText(path).Close();
 
-                ScriptManager.RazorScript script = new ScriptManager.RazorScript
+                ScriptManager.SteamScript script = new ScriptManager.SteamScript
                 {
                     Lines = File.ReadAllLines(path),
                     Name = name,
@@ -6309,7 +6309,7 @@ namespace Assistant
             if (scriptList.SelectedIndex < 0)
                 return;
 
-            ScriptManager.RazorScript script = (ScriptManager.RazorScript) scriptList.SelectedItem;
+            ScriptManager.SteamScript script = (ScriptManager.SteamScript) scriptList.SelectedItem;
 
             if (MessageBox.Show(this, Language.Format(LocString.DelConf, $"{scriptList.SelectedItem}"),
                     "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -6334,7 +6334,7 @@ namespace Assistant
             {
                 Engine.MainWindow.SafeAction(s =>
                 {
-                    ScriptManager.RazorScript script = GetScriptSel();
+                    ScriptManager.SteamScript script = GetScriptSel();
 
                     tabs.SelectedTab = hotkeysTab;
 
@@ -6641,9 +6641,9 @@ namespace Assistant
                     return;
                 }
 
-                ScriptManager.RazorScript script = (ScriptManager.RazorScript) scriptList.SelectedItem;
+                ScriptManager.SteamScript script = (ScriptManager.SteamScript) scriptList.SelectedItem;
 
-                string newScriptPath = Path.Combine(ScriptManager.ScriptPath, $"{name}.razor");
+                string newScriptPath = Path.Combine(ScriptManager.ScriptPath, $"{name}.uos");
 
                 if (File.Exists(newScriptPath))
                 {

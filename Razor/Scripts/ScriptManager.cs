@@ -97,11 +97,11 @@ namespace Assistant.Scripts
         {
             HotKey.Add(HKCategory.Scripts, LocString.StopScript, new HotKeyCallback(HotkeyStopScript));
 
-            Scripts = new List<RazorScript>();
+            Scripts = new List<SteamScript>();
 
             LoadScripts();
 
-            foreach (RazorScript script in Scripts)
+            foreach (SteamScript script in Scripts)
             {
                 AddHotkey(script.Name);
             }
@@ -135,11 +135,11 @@ namespace Assistant.Scripts
 
         public static void PlayScript(string scriptName)
         {
-            foreach (RazorScript razorScript in Scripts)
+            foreach (SteamScript script in Scripts)
             {
-                if (razorScript.Name.Equals(scriptName, StringComparison.OrdinalIgnoreCase))
+                if (script.Name.Equals(scriptName, StringComparison.OrdinalIgnoreCase))
                 {
-                    PlayScript(razorScript.Lines);
+                    PlayScript(script.Lines);
                     break;
                 }
             }
@@ -200,7 +200,7 @@ namespace Assistant.Scripts
             Timer.Stop();
         }
 
-        public class RazorScript
+        public class SteamScript
         {
             public string Path { get; set; }
             public string[] Lines { get; set; }
@@ -212,15 +212,15 @@ namespace Assistant.Scripts
             }
         }
 
-        public static List<RazorScript> Scripts { get; set; }
+        public static List<SteamScript> Scripts { get; set; }
 
         public static void LoadScripts()
         {
             Scripts.Clear();
 
-            foreach (string file in Directory.GetFiles(ScriptPath, "*.razor"))
+            foreach (string file in Directory.GetFiles(ScriptPath, "*.uos"))
             {
-                Scripts.Add(new RazorScript
+                Scripts.Add(new SteamScript
                 {
                     Lines = File.ReadAllLines(file),
                     Name = Path.GetFileNameWithoutExtension(file),
@@ -259,32 +259,9 @@ namespace Assistant.Scripts
             return false;
         }
 
-        private static int GetScriptIndex(string script)
-        {
-            for (int i = 0; i < Scripts.Count; i++)
-            {
-                if (Scripts[i].Name.Equals(script, StringComparison.OrdinalIgnoreCase))
-                    return i;
-            }
-
-            return -1;
-        }
-
         public static void Error(string message, string scriptname = "")
         {
             World.Player?.SendMessage(MsgLevel.Error, $"Script '{scriptname}' error => {message}");
-        }
-
-        public static List<ASTNode> ParseArguments(ref ASTNode node)
-        {
-            List<ASTNode> args = new List<ASTNode>();
-            while (node != null)
-            {
-                args.Add(node);
-                node = node.Next();
-            }
-
-            return args;
         }
 
         private delegate void SetHighlightLineDelegate(int iline, Color color);
@@ -300,252 +277,262 @@ namespace Assistant.Scripts
             ScriptEditor.Invalidate();
         }
 
-        private static FastColoredTextBoxNS.AutocompleteMenu _autoCompleteMenu;
+        private static AutocompleteMenu _autoCompleteMenu;
+
+        private static string BuildToolTip(string signature, string description,
+                                           string example)
+        {
+            string tooltip = string.Empty;
+
+            tooltip += "Signature: ";
+
+            tooltip += "\n    " + signature;
+
+            tooltip += "\nDescription:";
+
+            tooltip += "\n    " + description;
+
+            tooltip += "\nExample:";
+
+            tooltip += "\n    " + example;
+
+            return tooltip;
+        }
 
         public static void InitScriptEditor()
         {
             _autoCompleteMenu = new AutocompleteMenu(ScriptEditor);
-            //_autoCompleteMenu.Items.ImageList = imageList2;
             _autoCompleteMenu.SearchPattern = @"[\w\.:=!<>]";
             _autoCompleteMenu.AllowTabKey = true;
             _autoCompleteMenu.ToolTipDuration = 5000;
             _autoCompleteMenu.AppearInterval = 100;
 
-            #region Keywords
-
-            string[] keywords =
+            var autocompletes = new List<AutocompleteItem>()
             {
-                "if", "elseif", "else", "endif", "while", "endwhile", "for", "endfor", "break", "continue", "stop",
-                "replay", "not", "and", "or"
+                new AutocompleteItem("if"),
+                new AutocompleteItem("elseif"),
+                new AutocompleteItem("else"),
+                new AutocompleteItem("endif"),
+                new AutocompleteItem("while"),
+                new AutocompleteItem("endwhile"),
+                new AutocompleteItem("for"),
+                new AutocompleteItem("foreach"),
+                new AutocompleteItem("in"),
+                new AutocompleteItem("endfor"),
+                new AutocompleteItem("break"),
+                new AutocompleteItem("continue"),
+                new AutocompleteItem("stop"),
+                new AutocompleteItem("replay"),
+                new AutocompleteItem("loop"),
+                new AutocompleteItem("not"),
+                new AutocompleteItem("and"),
+                new AutocompleteItem("or"),
+                new AutocompleteItem("fly") { ImageIndex = 2, ToolTipTitle = "fly", ToolTipText = BuildToolTip("fly", "Start or stop flying.", "fly") },
+                new AutocompleteItem("land") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("setability") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("attack") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("clearhands") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("clickobject") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("bandageself") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("usetype") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("useobject") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("useonce") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("clearuseonce") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("moveitem") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("moveitemoffset") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("movetype") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("movetypeoffset") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("walk") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("turn") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("run") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("useskill") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("feed") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("rename") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("shownames") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("togglehands") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("equipitem") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("togglemounted") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("equipwand") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("buy") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("sell") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("clearbuy") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("clearsell") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("organizer") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("autoloot") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("dress") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("undress") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("dressconfig") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("toggleautoloot") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("togglescavenger") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("counter") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("unsetalias") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("setalias") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("promptalias") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("waitforgump") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("replygump") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("closegump") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("clearjournal") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("waitforjournal") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("poplist") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("pushlist") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("removelist") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("createlist") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("clearlist") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("info") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("pause") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("ping") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("playmacro") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("playsound") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("resync") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("snapshot") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("hotkeys") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("where") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("messagebox") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("mapuo") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("clickscreen") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("paperdoll") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("helpbutton") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("guildbutton") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("questsbutton") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("logoutbutton") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("virtue") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("msg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("headmsg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("partymsg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("guildmsg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("allymsg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("whispermsg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("yellmsg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("sysmsg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("chatmsg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("emotemsg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("promptmsg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("timermsg") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("waitforprompt") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("cancelprompt") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("addfriend") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("removefriend") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("contextmenu") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("waitforcontext") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("ignoreobject") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("clearignorelist") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("setskill") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("waitforproperties") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("autocolorpick") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("waitforcontents") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("miniheal") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("bigheal") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("cast") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("chivalryheal") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("waitfortarget") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("canceltarget") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("target") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("targettype") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("targetground") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("targettile") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("targettileoffset") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("targettilerelative") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("cleartargetqueue") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("autotargetlast") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("autotargetself") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("autotargetobject") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("autotargettype") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("autotargettile") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("autotargettileoffset") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("autotargettilerelative") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("autotargetghost") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("autotargetground") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("cancelautotarget") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("getenemy") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("getfriend") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("settimer") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("removetimer") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("createtimer") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("findalias") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("contents") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("inregion") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("skill") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("x") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("y") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("z") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("physical") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("fire") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("cold") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("poison") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("energy") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("str") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("dex") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("int") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("hits") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("maxhits") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("diffhits") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("stam") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("maxstam") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("mana") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("maxmana") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("usequeue") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("dressing") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("organizing") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("followers") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("maxfollowers") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("gold") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("hidden") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("luck") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("tithingpoints") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("weight") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("maxweight") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("diffweight") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("serial") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("graphic") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("color") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("amount") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("name") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("dead") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("direction") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("flying") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("paralyzed") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("poisoned") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("mounted") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("yellowhits") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("criminal") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("enemy") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("friend") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("gray") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("innocent") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("invulnerable") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("murderer") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("findobject") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("distance") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("inrange") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("buffexists") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("property") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("findtype") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("findlayer") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("skillstate") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("counttype") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("counttypeground") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("findwand") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("inparty") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("infriendslist") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("war") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("ingump") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("gumpexists") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("injournal") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("listexists") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("list") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("inlist") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("targetexists") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("waitingfortarget") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("timer") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
+                new AutocompleteItem("timerexists") { ImageIndex = 2, ToolTipTitle = "", ToolTipText = "" },
             };
 
-            #endregion
-
-            #region Commands auto-complete
-
-            string[] commands =
-            {
-                "cast", "dress", "undress", "dressconfig", "target", "targettype", "targetrelloc", "dress", "drop",
-                "waitfortarget", "wft", "dclick", "dclicktype", "dclickvar", "usetype", "useobject", "droprelloc",
-                "lift", "lifttype", "waitforgump", "gumpresponse", "gumpclose", "menu", "menuresponse", "waitformenu",
-                "promptresponse", "waitforprompt", "hotkey", "say", "msg", "overhead", "sysmsg", "wait", "pause",
-                "waitforstat", "setability", "setlasttarget", "lasttarget", "setvar", "skill", "useskill", "walk",
-                "script", "attack", "useonce", "organizer", "org", "organize", "restock", "scav", "scavenger", "potion"
-            };
-
-            #endregion
-
-            Dictionary<string, ToolTipDescriptions> descriptionCommands = new Dictionary<string, ToolTipDescriptions>();
-
-            #region DropTips
-
-            ToolTipDescriptions tooltip = new ToolTipDescriptions("drop", new[] {"drop (serial) (x y z/layername)"},
-                "N/A", "Drop a specific item on the location or on you", "drop 0x42ABD 234 521 0\ndrop 0x42ABD Helm");
-            descriptionCommands.Add("drop", tooltip);
-
-            #endregion
-
-            #region DressTips
-
-            #endregion
-
-            #region TargetTips
-
-            tooltip = new ToolTipDescriptions("target", new[] {"target (serial) [x] [y] [z]"}, "N/A",
-                "Target a specific item or mobile OR target a specific x, y, z location",
-                "target 0x345A\ntarget 1563 2452 0");
-            descriptionCommands.Add("target", tooltip);
-
-            tooltip = new ToolTipDescriptions("targettype", new[] {"targettype (isMobile) (graphic)"}, "N/A",
-                "Target a specific type of item/mobile", "targettype true 0x43");
-            descriptionCommands.Add("targettype", tooltip);
-
-            tooltip = new ToolTipDescriptions("targetrelloc", new[] {"targetrelloc (x-offset) (y-offset)"}, "N/A",
-                "Target a relative location based on your location", "targetrelloc -4 6");
-            descriptionCommands.Add("targetrelloc", tooltip);
-
-            #endregion
-
-            #region DClickTips
-
-            #endregion
-
-            #region MovingTips
-
-            #endregion
-
-            #region GumpTips
-
-            #endregion
-
-            #region MenuTips
-
-            #endregion
-
-            #region PromptTips
-
-            #endregion
-
-            #region HotKeyTips
-
-            #endregion
-
-            #region MessageTips
-
-            #endregion
-
-            #region WaitPauseTips
-
-            #endregion
-
-            #region DressTips
-
-            #endregion
-
-            #region MiscTips
-
-            #endregion
-
-
-            List<AutocompleteItem> items = new List<AutocompleteItem>();
-
-            foreach (var item in keywords)
-                items.Add(new AutocompleteItem(item));
-
-            foreach (var item in commands)
-            {
-                descriptionCommands.TryGetValue(item, out ToolTipDescriptions element);
-
-                if (element != null)
-                {
-                    items.Add(new MethodAutocompleteItemAdvance(item)
-                    {
-                        ImageIndex = 2,
-                        ToolTipTitle = element.Title,
-                        ToolTipText = element.ToolTipDescription()
-                    });
-                }
-                else
-                {
-                    items.Add(new MethodAutocompleteItemAdvance(item)
-                    {
-                        ImageIndex = 2
-                    });
-                }
-            }
-
-            _autoCompleteMenu.Items.SetAutocompleteItems(items);
+            _autoCompleteMenu.Items.SetAutocompleteItems(autocompletes);
             _autoCompleteMenu.Items.MaximumSize =
                 new Size(_autoCompleteMenu.Items.Width + 20, _autoCompleteMenu.Items.Height);
             _autoCompleteMenu.Items.Width = _autoCompleteMenu.Items.Width + 20;
 
             ScriptEditor.Language = FastColoredTextBoxNS.Language.Razor;
-        }
-
-        public class ToolTipDescriptions
-        {
-            public string Title;
-            public string[] Parameters;
-            public string Returns;
-            public string Description;
-            public string Example;
-
-            public ToolTipDescriptions(string title, string[] parameter, string returns, string description,
-                string example)
-            {
-                Title = title;
-                Parameters = parameter;
-                Returns = returns;
-                Description = description;
-                Example = example;
-            }
-
-            public string ToolTipDescription()
-            {
-                string complete_description = string.Empty;
-
-                complete_description += "Parameter(s): ";
-
-                foreach (string parameter in Parameters)
-                    complete_description += "\n\t" + parameter;
-
-                complete_description += "\nReturns: " + Returns;
-
-                complete_description += "\nDescription:";
-
-                complete_description += "\n\t" + Description;
-
-                complete_description += "\nExample(s):";
-
-                complete_description += "\n\t" + Example;
-
-                return complete_description;
-            }
-        }
-
-        public class MethodAutocompleteItemAdvance : MethodAutocompleteItem
-        {
-            string firstPart;
-            string lastPart;
-
-            public MethodAutocompleteItemAdvance(string text)
-                : base(text)
-            {
-                var i = text.LastIndexOf(' ');
-                if (i < 0)
-                    firstPart = text;
-                else
-                {
-                    firstPart = text.Substring(0, i);
-                    lastPart = text.Substring(i + 1);
-                }
-            }
-
-            public override CompareResult Compare(string fragmentText)
-            {
-                int i = fragmentText.LastIndexOf(' ');
-
-                if (i < 0)
-                {
-                    if (firstPart.StartsWith(fragmentText) && string.IsNullOrEmpty(lastPart))
-                        return CompareResult.VisibleAndSelected;
-                    //if (firstPart.ToLower().Contains(fragmentText.ToLower()))
-                    //  return CompareResult.Visible;
-                }
-                else
-                {
-                    var fragmentFirstPart = fragmentText.Substring(0, i);
-                    var fragmentLastPart = fragmentText.Substring(i + 1);
-
-
-                    if (firstPart != fragmentFirstPart)
-                        return CompareResult.Hidden;
-
-                    if (lastPart != null && lastPart.StartsWith(fragmentLastPart))
-                        return CompareResult.VisibleAndSelected;
-
-                    if (lastPart != null && lastPart.ToLower().Contains(fragmentLastPart.ToLower()))
-                        return CompareResult.Visible;
-                }
-
-                return CompareResult.Hidden;
-            }
-
-            public override string GetTextForReplace()
-            {
-                if (lastPart == null)
-                    return firstPart;
-
-                return firstPart + " " + lastPart;
-            }
-
-            public override string ToString()
-            {
-                if (lastPart == null)
-                    return firstPart;
-
-                return lastPart;
-            }
         }
 
         public static void RedrawScripts()
@@ -562,7 +549,7 @@ namespace Assistant.Scripts
 
                 LoadScripts();
 
-                foreach (RazorScript script in Scripts)
+                foreach (SteamScript script in Scripts)
                 {
                     if (script != null)
                         s.Items.Add(script);

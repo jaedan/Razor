@@ -80,6 +80,11 @@ namespace Assistant.Scripts
                         }
                     }
                 }
+                catch(RunTimeError ex)
+                {
+                    Error(string.Format("Script Error On Line {0}: {1}", ex.Node.LineNumber, ex.Message));
+                    Interpreter.StopScript();
+                }
                 catch (Exception ex)
                 {
                     Error(ex.Message);
@@ -159,7 +164,38 @@ namespace Assistant.Scripts
             SetVariableActive = false;
 
             Script script = new Script(Lexer.Lex(lines));
-            Interpreter.StartScript(script);
+
+            try
+            {
+                if (Interpreter.StartScript(script))
+                {
+                    if (ScriptRunning == false)
+                    {
+                        World.Player?.SendMessage(LocString.ScriptPlaying);
+                        Assistant.Engine.MainWindow.LockScriptUI(true);
+                        ScriptRunning = true;
+                    }
+                }
+                else
+                {
+                    if (ScriptRunning)
+                    {
+                        World.Player?.SendMessage(LocString.ScriptFinished);
+                        Assistant.Engine.MainWindow.LockScriptUI(false);
+                        ScriptRunning = false;
+                    }
+                }
+            }
+            catch (RunTimeError ex)
+            {
+                Error(string.Format("Script Error On Line {0}: {1}", ex.Node.LineNumber, ex.Message));
+                Interpreter.StopScript();
+            }
+            catch (Exception ex)
+            {
+                Error(ex.Message);
+                Interpreter.StopScript();
+            }
         }
 
         private static ScriptTimer Timer { get; }

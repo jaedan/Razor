@@ -456,7 +456,7 @@ namespace Assistant.Scripts
         }
 
         // WIP
-        private static int SkillExpression(string expression, Argument[] args, bool quiet)
+        private static double SkillExpression(string expression, Argument[] args, bool quiet)
         {
             if (args.Length < 1)
                 throw new ArgumentException("Usage: skill (name)");

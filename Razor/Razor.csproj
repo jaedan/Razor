@@ -395,6 +395,7 @@
     <Compile Include="UI\SplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="UI\SyntaxHighlighting.cs" />
     <Compile Include="UI\WelcomeForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -4190,7 +4190,7 @@ namespace Assistant
             this.scriptEditor.Font = new System.Drawing.Font("Consolas", 9.75F);
             this.scriptEditor.ForeColor = System.Drawing.Color.White;
             this.scriptEditor.IsReplaceMode = false;
-            this.scriptEditor.Language = FastColoredTextBoxNS.Language.Razor;
+            this.scriptEditor.Language = FastColoredTextBoxNS.Language.Custom;
             this.scriptEditor.LeftBracket = '(';
             this.scriptEditor.LeftBracket2 = '[';
             this.scriptEditor.LineNumberColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(144)))), ((int)(((byte)(175)))));

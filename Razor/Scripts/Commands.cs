@@ -367,18 +367,82 @@ namespace Assistant.Scripts
             return true;
         }
 
+        private static Dictionary<string, Direction> _Directions = new Dictionary<string, Direction>()
+        {
+            { "north", Direction.North },
+            { "northeast", Direction.Right },
+            { "right", Direction.Right },
+            { "east", Direction.East },
+            { "southeast", Direction.Down },
+            { "down", Direction.Down },
+            { "south", Direction.South },
+            { "southwest", Direction.Left },
+            { "left", Direction.Left },
+            { "west", Direction.West },
+            { "northwest", Direction.Up },
+            { "up", Direction.Up }
+        };
         private static bool Walk(string command, Argument[] args, bool quiet, bool force)
         {
+            if (args.Length < 1)
+            {
+                ScriptManager.Error("Usage: walk ('direction name')");
+                return true;
+            }
+
+            if (ScriptManager.LastWalk + TimeSpan.FromSeconds(0.4) >= DateTime.UtcNow)
+            {
+                return false;
+            }
+
+            ScriptManager.LastWalk = DateTime.UtcNow;
+
+            if(_Directions.TryGetValue(args[0].AsString().ToLower(), out Direction dir))
+                Client.Instance?.RequestMove(dir);
+
             return true;
         }
 
         private static bool Turn(string command, Argument[] args, bool quiet, bool force)
         {
+            if (args.Length < 1)
+            {
+                ScriptManager.Error("Usage: turn ('direction name')");
+                return true;
+            }
+
+            if (_Directions.TryGetValue(args[0].AsString().ToLower(), out Direction dir))
+            {
+                if(World.Player != null && (World.Player.Direction & Direction.Mask) != dir)
+                    Client.Instance?.RequestMove(dir);
+            }
+
             return true;
         }
 
         private static bool Run(string command, Argument[] args, bool quiet, bool force)
         {
+            if (args.Length < 1)
+            {
+                ScriptManager.Error("Usage: run ('direction name')");
+                return true;
+            }
+
+            if (ScriptManager.LastWalk + TimeSpan.FromSeconds(0.2) >= DateTime.UtcNow)
+            {
+                return false;
+            }
+
+            ScriptManager.LastWalk = DateTime.UtcNow;
+
+            if (_Directions.TryGetValue(args[0].AsString().ToLower(), out Direction dir))
+            {
+                if(Client.IsOSI)
+                    Client.Instance?.RequestMove(dir);
+                else
+                    Client.Instance?.RequestMove(dir & Direction.Running);
+            }
+
             return true;
         }
 

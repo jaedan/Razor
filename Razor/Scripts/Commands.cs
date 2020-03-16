@@ -416,8 +416,7 @@ namespace Assistant.Scripts
 
             uint targetSerial = args[0].AsSerial();
 
-            if (Client.Instance.ClientRunning)
-                Client.Instance.SendToServer(new RenameReq(targetSerial, args[1].AsString()));
+            Client.Instance.SendToServer(new RenameReq(targetSerial, args[1].AsString()));
             return true;
         }
 
@@ -630,7 +629,7 @@ namespace Assistant.Scripts
 
         public static bool EquipItem(string command, Argument[] args, bool quiet, bool force)
         {
-            if (!Client.Instance.ClientRunning || World.Player == null)
+            if (World.Player == null)
                 return true;
 
             if (args.Length < 2)
@@ -669,8 +668,7 @@ namespace Assistant.Scripts
 
         private static bool Resync(string command, Argument[] args, bool quiet, bool force)
         {
-            if (Client.Instance.ClientRunning)
-                Client.Instance.SendToServer(new ResyncReq());
+            Client.Instance.SendToServer(new ResyncReq());
 
             return true;
         }
@@ -689,9 +687,6 @@ namespace Assistant.Scripts
         {
             if (args.Length == 0)
                 throw new RunTimeError(null, "Usage: msg ('text') [color]");
-
-            if (!Client.Instance.ClientRunning)
-                return true;
 
             if (args.Length == 1)
                 World.Player.Say(Config.GetInt("SysColor"), args[0].AsString());
@@ -716,11 +711,6 @@ namespace Assistant.Scripts
         {
             if (args.Length == 0)
                 throw new RunTimeError(null, "Usage: cast 'spell' [serial]");
-
-            if (!Client.Instance.ClientRunning)
-            {
-                return true;
-            }
 
             Spell spell;
 
@@ -766,9 +756,6 @@ namespace Assistant.Scripts
             if (args.Length == 0)
                 throw new RunTimeError(null, "Usage: headmsg ('text') [color] [serial]");
 
-            if (!Client.Instance.ClientRunning)
-                return true;
-
             if (args.Length == 1)
                 World.Player.OverheadMessage(Config.GetInt("SysColor"), args[0].AsString());
             else
@@ -795,9 +782,6 @@ namespace Assistant.Scripts
             if (args.Length == 0)
                 throw new RunTimeError(null, "Usage: sysmsg ('text') [color]");
 
-            if (!Client.Instance.ClientRunning)
-                return true;
-
             if (args.Length == 1)
                 World.Player.SendMessage(Config.GetInt("SysColor"), args[0].AsString());
             else if (args.Length == 2)
@@ -808,9 +792,6 @@ namespace Assistant.Scripts
 
         public static bool DressCommand(string command, Argument[] args, bool quiet, bool force)
         {
-            if (!Client.Instance.ClientRunning)
-                return true;
-
             //we're using a named dresslist or a temporary dresslist?
             if (args.Length == 0)
             {
@@ -833,9 +814,6 @@ namespace Assistant.Scripts
 
         public static bool UnDressCommand(string command, Argument[] args, bool quiet, bool force)
         {
-            if (!Client.Instance.ClientRunning)
-                return true;
-
             //we're using a named dresslist or a temporary dresslist?
             if (args.Length == 0)
             {
@@ -858,9 +836,6 @@ namespace Assistant.Scripts
 
         public static bool DressConfig(string command, Argument[] args, bool quiet, bool force)
         {
-            if (!Client.Instance.ClientRunning)
-                return true;
-
             if (DressList._Temporary == null)
                 DressList._Temporary = new DressList("dressconfig");
 

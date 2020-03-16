@@ -61,6 +61,16 @@ namespace Assistant.Scripts
             {
                 try
                 {
+                    if (!Client.Instance.ClientRunning)
+                    {
+                        if (ScriptRunning)
+                        {
+                            ScriptRunning = false;
+                            Interpreter.StopScript();
+                        }
+                        return;
+                    }
+
                     if (Interpreter.ExecuteScript())
                     {
                         if (ScriptRunning == false)
@@ -165,6 +175,9 @@ namespace Assistant.Scripts
 
             SetLastTargetActive = false;
             SetVariableActive = false;
+
+            if (!Client.Instance.ClientRunning)
+                return;
 
             Script script = new Script(Lexer.Lex(lines));
 

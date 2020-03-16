@@ -951,7 +951,7 @@ namespace Assistant
         {
             int direction;
 
-            switch (m_Dir)
+            switch ((m_Dir & Direction.Mask))
             {
                 case Direction.Down:
                     direction = (int) KeyboardDir.Down;

@@ -563,7 +563,7 @@ namespace Assistant
 
         internal override void RequestMove(Direction m_Dir)
         {
-            _requestMove((int) m_Dir, true);
+            _requestMove((int)(m_Dir & Direction.Mask), (m_Dir & Direction.Running) != 0);
         }
 
         public void OnFocusGained()

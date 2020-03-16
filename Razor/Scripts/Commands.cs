@@ -349,31 +349,31 @@ namespace Assistant.Scripts
             return true;
         }
 
-        private static Dictionary<string, int> UsableSkills = new Dictionary<string, int>()
+        private static HashSet<int> _usableSkills = new HashSet<int>()
         {
-            { "anatomy", 1 }, // anatomy
-            { "animallore", 2 }, // animal lore
-            { "itemidentification", 3 }, // item identification
-            { "armslore", 4 }, // arms lore
-            { "begging", 6 }, // begging
-            { "peacemaking", 9 }, // peacemaking
-            { "cartography", 12 }, // cartography
-            { "detectinghidden", 14 }, // detect hidden
-            { "discordance", 15 }, // Discordance
-            { "evaluatingintelligence", 16 }, // evaluate intelligence
-            { "forensicevaluation", 19 }, // forensic evaluation
-            { "hiding", 21 }, // hiding
-            { "provocation", 22 }, // provocation
-            { "inscription", 23 }, // inscription
-            { "poisoning", 30 }, // poisoning
-            { "spiritspeak", 32 }, // spirit speak
-            { "stealing", 33 }, // stealing
-            { "taming", 35 }, // taming
-            { "tasteidentification", 36 }, // taste id
-            { "tracking", 38 }, // tracking
-            { "meditation", 46 }, // Meditation
-            { "stealth", 47 }, // Stealth
-            { "removetrap", 48 } // RemoveTrap
+            1, // anatomy
+            2, // animal lore
+            3, // item identification
+            4, // arms lore
+            6, // begging
+            9, // peacemaking
+            12, // cartography
+            14, // detect hidden
+            15, // Discordance
+            16, // evaluate intelligence
+            19, // forensic evaluation
+            21, // hiding
+            22, // provocation
+            23, // inscription
+            30, // poisoning
+            32, // spirit speak
+            33, // stealing
+            35, // taming
+            36, // taste id
+            38, // tracking
+            46, // Meditation
+            47, // Stealth
+            48 // RemoveTrap
         };
 
         private static bool UseSkill(string command, Argument[] args, bool quiet, bool force)
@@ -382,9 +382,17 @@ namespace Assistant.Scripts
                 throw new RunTimeError(null, "Usage: useskill ('skill name'/'last')");
 
             if (args[0].AsString() == "last")
+            {
                 Client.Instance.SendToServer(new UseSkill(World.Player.LastSkill));
-            else if (UsableSkills.TryGetValue(args[0].AsString(), out int skillId))
-                Client.Instance.SendToServer(new UseSkill(skillId));
+                return true;
+            }
+
+            var skill = ScriptManager.GetSkill(args[0].AsString());
+
+            if (!_usableSkills.Contains(skill.Index))
+                throw new RunTimeError(null, "That skill  is not usable");
+
+            Client.Instance.SendToServer(new UseSkill(skill.Index));
 
             return true;
         }

@@ -42,10 +42,7 @@ namespace Assistant.Scripts
         private static bool RestockAgentCommand(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length < 1)
-            {
-                ScriptManager.Error("Usage: restock (number) ['set']");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: restock (number) ['set']");
 
             int agentNum = args[0].AsInt();
 
@@ -107,10 +104,7 @@ namespace Assistant.Scripts
         private static bool OrganizerAgentCommand(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length < 1)
-            {
-                ScriptManager.Error("Usage: organizer (number) ['set']");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: organizer (number) ['set']");
 
             int agentNum = args[0].AsInt();
 
@@ -139,10 +133,7 @@ namespace Assistant.Scripts
         private static bool ScavAgentCommand(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length < 1)
-            {
-                ScriptManager.Error("Usage: scavenger ['clear'/'add'/'on'/'off'/'set']");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: scavenger ['clear'/'add'/'on'/'off'/'set']");
 
             bool clear = false;
             bool add = false;

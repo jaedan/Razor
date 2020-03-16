@@ -82,12 +82,15 @@ namespace Assistant.Scripts
                 }
                 catch(RunTimeError ex)
                 {
-                    Error(string.Format("Script Error On Line {0}: {1}", ex.Node.LineNumber, ex.Message));
+                    if (ex.Node != null)
+                        World.Player?.SendMessage(MsgLevel.Error, string.Format("Script Error On Line {0}: {1}", ex.Node.LineNumber, ex.Message));
+                    else
+                        World.Player?.SendMessage(MsgLevel.Error, string.Format("Script Error: {0}", ex.Message));
                     Interpreter.StopScript();
                 }
                 catch (Exception ex)
                 {
-                    Error(ex.Message);
+                    World.Player?.SendMessage(MsgLevel.Error, ex.Message);
                     Interpreter.StopScript();
                 }
             }
@@ -188,12 +191,15 @@ namespace Assistant.Scripts
             }
             catch (RunTimeError ex)
             {
-                Error(string.Format("Script Error On Line {0}: {1}", ex.Node.LineNumber, ex.Message));
+                if (ex.Node != null)
+                    World.Player?.SendMessage(MsgLevel.Error, string.Format("Script Error On Line {0}: {1}", ex.Node.LineNumber, ex.Message));
+                else
+                    World.Player?.SendMessage(MsgLevel.Error, string.Format("Script Error: {0}", ex.Message));
                 Interpreter.StopScript();
             }
             catch (Exception ex)
             {
-                Error(ex.Message);
+                World.Player?.SendMessage(MsgLevel.Error, ex.Message);
                 Interpreter.StopScript();
             }
         }
@@ -293,11 +299,6 @@ namespace Assistant.Scripts
             }
 
             return false;
-        }
-
-        public static void Error(string message, string scriptname = "")
-        {
-            World.Player?.SendMessage(MsgLevel.Error, $"Script '{scriptname}' error => {message}");
         }
 
         private delegate void SetHighlightLineDelegate(int iline, Color color);

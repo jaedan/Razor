@@ -196,7 +196,7 @@ namespace Assistant.Scripts
 
         private static bool Fly(string command, Argument[] args, bool quiet, bool force)
         {
-            return true;
+            throw new RunTimeError(null, "Command is not yet implemented");
         }
 
         private static bool Land(string command, Argument[] args, bool quiet, bool force)
@@ -208,10 +208,7 @@ namespace Assistant.Scripts
         private static bool SetAbility(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length < 1 || !abilities.Contains(args[0].AsString()))
-            {
-                ScriptManager.Error("Usage: setability ('primary'/'secondary'/'stun'/'disarm') ['on'/'off']");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: setability ('primary'/'secondary'/'stun'/'disarm') ['on'/'off']");
 
             if (args.Length == 2 && args[1].AsString() == "on" || args.Length == 1)
             {
@@ -251,10 +248,7 @@ namespace Assistant.Scripts
         private static bool ClearHands(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0 || !hands.Contains(args[0].AsString()))
-            {
-                ScriptManager.Error("Usage: clearhands ('left'/'right'/'both')");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: clearhands ('left'/'right'/'both')");
 
             switch (args[0].AsString())
             {
@@ -275,10 +269,7 @@ namespace Assistant.Scripts
         private static bool ClickObject(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0)
-            {
-                ScriptManager.Error("Usage: clickobject (serial)");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: clickobject (serial)");
 
             uint serial = args[0].AsSerial();
             Client.Instance.SendToServer(new SingleClick(serial));
@@ -320,18 +311,12 @@ namespace Assistant.Scripts
         private static bool UseObject(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0)
-            {
-                ScriptManager.Error("Usage: useobject (serial)");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: useobject (serial)");
 
             Serial serial = args[0].AsSerial();
 
             if (!serial.IsValid)
-            {
-                ScriptManager.Error("useobject - invalid serial");
-                return true;
-            }
+                throw new RunTimeError(null, "useobject - invalid serial");
 
             Client.Instance.SendToServer(new DoubleClick(serial));
 
@@ -350,10 +335,7 @@ namespace Assistant.Scripts
         private static bool MoveItem(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length < 2)
-            {
-                ScriptManager.Error("Usage: moveitem (serial) (destination) [(x, y, z)] [amount]");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: moveitem (serial) (destination) [(x, y, z)] [amount]");
 
             uint serial = args[0].AsSerial();
             uint destination = args[1].AsSerial();
@@ -412,10 +394,7 @@ namespace Assistant.Scripts
         private static bool UseSkill(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0)
-            {
-                ScriptManager.Error("Usage: useskill ('skill name'/'last')");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: useskill ('skill name'/'last')");
 
             if (args[0].AsString() == "last")
                 Client.Instance.SendToServer(new UseSkill(World.Player.LastSkill));
@@ -433,10 +412,7 @@ namespace Assistant.Scripts
         private static bool Rename(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length != 2)
-            {
-                ScriptManager.Error("Usage: rename (serial) ('name')");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: rename (serial) ('name')");
 
             uint targetSerial = args[0].AsSerial();
 
@@ -448,10 +424,7 @@ namespace Assistant.Scripts
         private static bool SetAlias(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length != 2)
-            {
-                ScriptManager.Error("Usage: setalias ('name') [serial]");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: setalias ('name') [serial]");
 
             Interpreter.SetAlias(args[0].AsString(), args[1].AsSerial());
 
@@ -488,10 +461,7 @@ namespace Assistant.Scripts
         private static bool WaitForGump(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length < 2)
-            {
-                ScriptManager.Error("Usage: waitforgump (gump id/'any') (timeout)");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: waitforgump (gump id/'any') (timeout)");
 
             bool any = args[0].AsString() == "any";
 
@@ -522,10 +492,7 @@ namespace Assistant.Scripts
         private static bool WaitForJournal(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length < 2)
-            {
-                ScriptManager.Error("Usage: waitforjournal ('text') (timeout) ['author'/'system']");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: waitforjournal ('text') (timeout) ['author'/'system']");
 
             if (!Journal.ContainsSafe(args[0].AsString()))
             {
@@ -539,10 +506,7 @@ namespace Assistant.Scripts
         private static bool PopList(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length != 2)
-            {
-                ScriptManager.Error("Usage: poplist ('list name') ('element value'/'front'/'back')");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: poplist ('list name') ('element value'/'front'/'back')");
 
             if (args[1].AsString() == "front")
             {
@@ -572,10 +536,7 @@ namespace Assistant.Scripts
         private static bool PushList(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length < 2 || args.Length > 3)
-            {
-                ScriptManager.Error("Usage: pushlist ('list name') ('element value') ['front'/'back']");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: pushlist ('list name') ('element value') ['front'/'back']");
 
             bool front = false;
             if (args.Length == 3)
@@ -592,10 +553,7 @@ namespace Assistant.Scripts
         private static bool RemoveList(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length != 1)
-            {
-                ScriptManager.Error("Usage: removelist ('list name')");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: removelist ('list name')");
 
             Interpreter.DestroyList(args[0].AsString());
 
@@ -605,10 +563,7 @@ namespace Assistant.Scripts
         private static bool CreateList(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length != 1)
-            {
-                ScriptManager.Error("Usage: createlist ('list name')");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: createlist ('list name')");
 
             Interpreter.CreateList(args[0].AsString());
 
@@ -618,10 +573,7 @@ namespace Assistant.Scripts
         private static bool ClearList(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length != 1)
-            {
-                ScriptManager.Error("Usage: clearlist ('list name')");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: clearlist ('list name')");
 
             Interpreter.ClearList(args[0].AsString());
 
@@ -631,10 +583,7 @@ namespace Assistant.Scripts
         private static bool UnsetAlias(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0)
-            {
-                ScriptManager.Error("Usage: unsetalias (string)");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: unsetalias (string)");
 
             Interpreter.SetAlias(args[0].AsString(), 0);
 
@@ -669,10 +618,7 @@ namespace Assistant.Scripts
         public static bool ToggleHands(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0)
-            {
-                ScriptManager.Error("Usage: togglehands ('left'/'right')");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: togglehands ('left'/'right')");
 
             if (args[0].AsString() == "left")
                 Dress.ToggleLeft();
@@ -688,10 +634,7 @@ namespace Assistant.Scripts
                 return true;
 
             if (args.Length < 2)
-            {
-                ScriptManager.Error("Usage: equipitem (serial) (layer)");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: equipitem (serial) (layer)");
 
             Item equip = World.FindItem(args[0].AsSerial());
             byte layer = (byte)Utility.ToInt32(args[1].AsString(), 0);
@@ -711,10 +654,7 @@ namespace Assistant.Scripts
         private static bool Pause(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0)
-            {
-                ScriptManager.Error("Usage: pause (timeout)");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: pause (timeout)");
 
             Interpreter.Pause(args[0].AsUInt());
             return true;
@@ -738,10 +678,7 @@ namespace Assistant.Scripts
         private static bool MessageBox(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length != 2)
-            {
-                ScriptManager.Error("Usage: messagebox ('title') ('body')");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: messagebox ('title') ('body')");
 
             System.Windows.Forms.MessageBox.Show(args[0].AsString(), args[1].AsString());
 
@@ -751,10 +688,7 @@ namespace Assistant.Scripts
         public static bool Msg(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0)
-            {
-                ScriptManager.Error("Usage: msg ('text') [color]");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: msg ('text') [color]");
 
             if (!Client.Instance.ClientRunning)
                 return true;
@@ -770,12 +704,10 @@ namespace Assistant.Scripts
         private static bool Paperdoll(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length > 1)
-                ScriptManager.Error("Usage: paperdoll [serial]");
-            else
-            {
-                uint serial = args.Length == 0 ? World.Player.Serial.Value : args[0].AsSerial();
-                Client.Instance.SendToServer(new DoubleClick(serial));
-            }
+                throw new RunTimeError(null, "Usage: paperdoll [serial]");
+
+            uint serial = args.Length == 0 ? World.Player.Serial.Value : args[0].AsSerial();
+            Client.Instance.SendToServer(new DoubleClick(serial));
 
             return true;
         }
@@ -783,10 +715,7 @@ namespace Assistant.Scripts
         public static bool Cast(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0)
-            {
-                ScriptManager.Error("Usage: cast 'spell' [serial]");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: cast 'spell' [serial]");
 
             if (!Client.Instance.ClientRunning)
             {
@@ -811,11 +740,11 @@ namespace Assistant.Scripts
                         Targeting.Target(s);
                     }
                     else if (!quiet)
-                        ScriptManager.Error("cast - invalid serial or alias");
+                        throw new RunTimeError(null, "cast - invalid serial or alias");
                 }
             }
             else if (!quiet)
-                ScriptManager.Error("cast - spell name or number not valid");
+                throw new RunTimeError(null, "cast - spell name or number not valid");
 
             return true;
         }
@@ -823,10 +752,7 @@ namespace Assistant.Scripts
         private static bool WaitForTarget(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length != 1)
-            {
-                ScriptManager.Error("Usage: waitfortarget (timeout)");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: waitfortarget (timeout)");
 
             if (Targeting.HasTarget)
                 return true;
@@ -838,10 +764,7 @@ namespace Assistant.Scripts
         public static bool HeadMsg(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0)
-            {
-                ScriptManager.Error("Usage: headmsg ('text') [color] [serial]");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: headmsg ('text') [color] [serial]");
 
             if (!Client.Instance.ClientRunning)
                 return true;
@@ -870,10 +793,7 @@ namespace Assistant.Scripts
         public static bool SysMsg(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length == 0)
-            {
-                ScriptManager.Error("Usage: sysmsg ('text') [color]");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: sysmsg ('text') [color]");
 
             if (!Client.Instance.ClientRunning)
                 return true;
@@ -897,7 +817,7 @@ namespace Assistant.Scripts
                 if (DressList._Temporary != null)
                     DressList._Temporary.Dress();
                 else if (!quiet)
-                    ScriptManager.Error("No dresslist specified and no temporary dressconfig present - usage: dress ['dresslist']");
+                    throw new RunTimeError(null, "No dresslist specified and no temporary dressconfig present - usage: dress ['dresslist']");
             }
             else
             {
@@ -905,7 +825,7 @@ namespace Assistant.Scripts
                 if (d != null)
                     d.Dress();
                 else if (!quiet)
-                    ScriptManager.Error($"dresslist {args[0].AsString()} not found");
+                    throw new RunTimeError(null, $"dresslist {args[0].AsString()} not found");
             }
 
             return true;
@@ -922,7 +842,7 @@ namespace Assistant.Scripts
                 if (DressList._Temporary != null)
                     DressList._Temporary.Undress();
                 else if (!quiet)
-                    ScriptManager.Error("No dresslist specified and no temporary dressconfig present - usage: undress ['dresslist']");
+                    throw new RunTimeError(null, "No dresslist specified and no temporary dressconfig present - usage: undress ['dresslist']");
             }
             else
             {
@@ -930,7 +850,7 @@ namespace Assistant.Scripts
                 if (d != null)
                     d.Undress();
                 else if (!quiet)
-                    ScriptManager.Error($"dresslist {args[0].AsString()} not found");
+                    throw new RunTimeError(null, $"dresslist {args[0].AsString()} not found");
             }
 
             return true;
@@ -959,10 +879,7 @@ namespace Assistant.Scripts
         private static bool SetTimer(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length != 2)
-            {
-                ScriptManager.Error("Usage: settimer (timer name) (value)");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: settimer (timer name) (value)");
 
 
             Interpreter.SetTimer(args[0].AsString(), args[1].AsInt());
@@ -972,10 +889,7 @@ namespace Assistant.Scripts
         private static bool RemoveTimer(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length != 1)
-            {
-                ScriptManager.Error("Usage: removetimer (timer name)");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: removetimer (timer name)");
 
             Interpreter.RemoveTimer(args[0].AsString());
             return true;
@@ -984,10 +898,7 @@ namespace Assistant.Scripts
         private static bool CreateTimer(string command, Argument[] args, bool quiet, bool force)
         {
             if (args.Length != 1)
-            {
-                ScriptManager.Error("Usage: createtimer (timer name)");
-                return true;
-            }
+                throw new RunTimeError(null, "Usage: createtimer (timer name)");
 
             Interpreter.CreateTimer(args[0].AsString());
             return true;

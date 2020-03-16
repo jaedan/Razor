@@ -124,29 +124,15 @@ namespace Assistant.Scripts
         private static int Contents(string expression, Argument[] args, bool quiet)
         {
             if (args.Length < 1)
-            {
-                ScriptManager.Error("Usage: contents (serial)");
-                return 0;
-            }
+                throw new RunTimeError(null, "Usage: contents (serial)");
 
             uint serial;
 
-            try
-            {
-                serial = args[0].AsSerial();
-            }
-            catch (RunTimeError)
-            {
-                ScriptManager.Error("Usage: Invalid serial");
-                return 0;
-            }
+            serial = args[0].AsSerial();
 
             Item container = World.FindItem(serial);
             if (container == null || !container.IsContainer)
-            {
-                ScriptManager.Error("Serial not found or is not a container.");
-                return 0;
-            }
+                throw new RunTimeError(null, "Serial not found or is not a container.");
 
             return container.ItemCount;
         }
@@ -154,7 +140,7 @@ namespace Assistant.Scripts
         private static int FindAlias(string expression, Argument[] args, bool quiet)
         {
             if (args.Length < 1)
-                ScriptManager.Error("Usage: findalias (string)");
+                throw new RunTimeError(null, "Usage: findalias (string)");
 
             uint serial = Interpreter.GetAlias(args[0].AsString());
 
@@ -167,35 +153,15 @@ namespace Assistant.Scripts
         private static int FindType(string expression, Argument[] args, bool quiet)
         {
             if (args.Length < 1)
-            {
-                ScriptManager.Error("Usage: findtype (graphic) [color] [source] [amount] [range or search level]");
-                return 0;
-            }
+                throw new RunTimeError(null, "Usage: findtype (graphic) [color] [source] [amount] [range or search level]");
 
             string graphicString = args[0].AsString();
-            uint graphicId;
-            try
-            {
-                graphicId = args[0].AsUInt();
-            }
-            catch (RunTimeError)
-            {
-                ScriptManager.Error("Invalid: graphic id");
-                return 0;
-            }
+            uint graphicId = args[0].AsUInt();
 
             uint? color = null;
             if (args.Length >= 2 && args[1].AsString().ToLower() != "any")
             {
-                try
-                {
-                    color = args[1].AsUInt();
-                }
-                catch (RunTimeError)
-                {
-                    ScriptManager.Error("Invalid: color 'any' if unsure.");
-                    return 0;
-                }
+                color = args[1].AsUInt();
             }
 
             string sourceStr = null;
@@ -206,44 +172,20 @@ namespace Assistant.Scripts
                 sourceStr = args[2].AsString().ToLower();
                 if (sourceStr != "world" && sourceStr != "any" && sourceStr != "ground")
                 {
-                    try
-                    {
-                        source = args[2].AsSerial();
-                    }
-                    catch (RunTimeError)
-                    {
-                        ScriptManager.Error("Invalid: source id (serial).");
-                        return 0;
-                    }
+                    source = args[2].AsSerial();
                 }
             }
 
             uint? amount = null;
             if (args.Length >= 4 && args[3].AsString().ToLower() != "any")
             {
-                try
-                {
-                    amount = args[3].AsUInt();
-                }
-                catch (RunTimeError)
-                {
-                    ScriptManager.Error("Invalid: amount 'any' if unsure.");
-                    return 0;
-                }
+                amount = args[3].AsUInt();
             }
 
             uint? range = null;
             if (args.Length >= 5 && args[4].AsString().ToLower() != "any")
             {
-                try
-                {
-                    range = args[4].AsUInt();
-                }
-                catch (RunTimeError)
-                {
-                    ScriptManager.Error("Invalid: range 'any' or remove if unsure.");
-                    return 0;
-                }
+                range = args[4].AsUInt();
             }
 
             List<Serial> list = new List<Serial>();
@@ -319,13 +261,9 @@ namespace Assistant.Scripts
                     }
                 }
                 else if (container == null)
-                {
-                    ScriptManager.Error($"Script Error: Couldn't find source '{sourceStr}'");
-                }
+                    throw new RunTimeError(null, $"Script Error: Couldn't find source '{sourceStr}'");
                 else if (!container.IsContainer)
-                {
-                    ScriptManager.Error($"Script Error: Source '{sourceStr}' is not a container!");
-                }
+                    throw new RunTimeError(null, $"Script Error: Source '{sourceStr}' is not a container!");
             }
 
             if (list.Count > 0)
@@ -336,9 +274,7 @@ namespace Assistant.Scripts
             }
 
             if (!quiet)
-            {
-                ScriptManager.Error($"Script Error: Couldn't find '{graphicString}'");
-            }
+                throw new RunTimeError(null, $"Script Error: Couldn't find '{graphicString}'");
 
             return 0;
         }
@@ -346,10 +282,7 @@ namespace Assistant.Scripts
         private static int InJournal(string expression, Argument[] args, bool quiet)
         {
             if (args.Length == 0)
-            {
-                ScriptManager.Error("Usage: injournal ('text') ['author'/'system']");
-                return 0;
-            }
+                throw new RunTimeError(null, "Usage: injournal ('text') ['author'/'system']");
 
             if (args.Length == 1 && Journal.ContainsSafe(args[0].AsString()))
                 return 1;
@@ -363,10 +296,7 @@ namespace Assistant.Scripts
         private static int ListExists(string expression, Argument[] args, bool quiet)
         {
             if (args.Length != 1)
-            {
-                ScriptManager.Error("Usage: listexists ('list name')");
-                return 0;
-            }
+                throw new RunTimeError(null, "Usage: listexists ('list name')");
 
             if (Interpreter.ListExists(args[0].AsString()))
                 return 1;
@@ -377,10 +307,7 @@ namespace Assistant.Scripts
         private static int ListLength(string expression, Argument[] args, bool quiet)
         {
             if (args.Length != 1)
-            {
-                ScriptManager.Error("Usage: list ('list name') (operator) (value)");
-                return 0;
-            }
+                throw new RunTimeError(null, "Usage: list ('list name') (operator) (value)");
 
             return Interpreter.ListLength(args[0].AsString());
         }
@@ -388,10 +315,7 @@ namespace Assistant.Scripts
         private static int InList(string expression, Argument[] args, bool quiet)
         {
             if (args.Length != 1)
-            {
-                ScriptManager.Error("Usage: inlist ('list name')");
-                return 0;
-            }
+                throw new RunTimeError(null, "Usage: inlist ('list name')");
 
             if (Interpreter.ListContains(args[0].AsString(), args[1]))
                 return 1;
@@ -402,10 +326,7 @@ namespace Assistant.Scripts
         private static int TimerValue(string expression, Argument[] args, bool quiet)
         {
             if (args.Length != 1)
-            {
-                ScriptManager.Error("Usage: timer ('timer name')");
-                return 0;
-            }
+                throw new RunTimeError(null, "Usage: timer ('timer name')");
 
             var ts = Interpreter.GetTimer(args[0].AsString());
 
@@ -415,10 +336,7 @@ namespace Assistant.Scripts
         private static bool TimerExists(string expression, Argument[] args, bool quiet)
         {
             if (args.Length != 1)
-            {
-                ScriptManager.Error("Usage: timerexists ('timer name')");
-                return false;
-            }
+                throw new RunTimeError(null, "Usage: timerexists ('timer name')");
 
             return Interpreter.TimerExists(args[0].AsString());
         }

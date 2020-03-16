@@ -31,10 +31,8 @@ namespace Assistant.Scripts
 {
     public static class Commands
     {
-        private static bool DummyCommand(string command, Argument[] args, bool quiet, bool force)
+        private static bool UnimplementedCommand(string command, Argument[] args, bool quiet, bool force)
         {
-            Console.WriteLine("Executing command {0} {1}", command, args);
-
             World.Player?.SendMessage(MsgLevel.Info, $"Unimplemented command {command}");
 
             return true;
@@ -71,8 +69,8 @@ namespace Assistant.Scripts
         public static void Register()
         {
             // Commands. From UOSteam Documentation
-            Interpreter.RegisterCommandHandler("fly", Fly);
-            Interpreter.RegisterCommandHandler("land", Land);
+            Interpreter.RegisterCommandHandler("fly", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("land", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("setability", SetAbility);
             Interpreter.RegisterCommandHandler("attack", Attack);
             Interpreter.RegisterCommandHandler("clearhands", ClearHands);
@@ -83,9 +81,9 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("useonce", UseOnce);
             Interpreter.RegisterCommandHandler("clearuseonce", CleanUseQueue);
             Interpreter.RegisterCommandHandler("moveitem", MoveItem);
-            Interpreter.RegisterCommandHandler("moveitemoffset", DummyCommand);
-            Interpreter.RegisterCommandHandler("movetype", DummyCommand);
-            Interpreter.RegisterCommandHandler("movetypeoffset", DummyCommand);
+            Interpreter.RegisterCommandHandler("moveitemoffset", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("movetype", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("movetypeoffset", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("walk", Walk);
             Interpreter.RegisterCommandHandler("turn", Turn);
             Interpreter.RegisterCommandHandler("run", Run);
@@ -95,26 +93,26 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("shownames", ShowNames);
             Interpreter.RegisterCommandHandler("togglehands", ToggleHands);
             Interpreter.RegisterCommandHandler("equipitem", EquipItem);
-            Interpreter.RegisterCommandHandler("togglemounted", DummyCommand);
-            Interpreter.RegisterCommandHandler("equipwand", DummyCommand);
-            Interpreter.RegisterCommandHandler("buy", DummyCommand);
-            Interpreter.RegisterCommandHandler("sell", DummyCommand);
-            Interpreter.RegisterCommandHandler("clearbuy", DummyCommand);
-            Interpreter.RegisterCommandHandler("clearsell", DummyCommand);
-            Interpreter.RegisterCommandHandler("organizer", DummyCommand);
+            Interpreter.RegisterCommandHandler("togglemounted", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("equipwand", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("buy", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("sell", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("clearbuy", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("clearsell", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("organizer", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("autoloot", Deprecated);
             Interpreter.RegisterCommandHandler("dress", DressCommand);
             Interpreter.RegisterCommandHandler("undress", UnDressCommand);
             Interpreter.RegisterCommandHandler("dressconfig", DressConfig);
             Interpreter.RegisterCommandHandler("toggleautoloot", Deprecated);
             Interpreter.RegisterCommandHandler("togglescavenger", ToggleScavenger);
-            Interpreter.RegisterCommandHandler("counter", DummyCommand);
+            Interpreter.RegisterCommandHandler("counter", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("unsetalias", UnsetAlias);
             Interpreter.RegisterCommandHandler("setalias", SetAlias);
             Interpreter.RegisterCommandHandler("promptalias", PromptAlias);
             Interpreter.RegisterCommandHandler("waitforgump", WaitForGump);
-            Interpreter.RegisterCommandHandler("replygump", DummyCommand);
-            Interpreter.RegisterCommandHandler("closegump", DummyCommand);
+            Interpreter.RegisterCommandHandler("replygump", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("closegump", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("clearjournal", ClearJournal);
             Interpreter.RegisterCommandHandler("waitforjournal", WaitForJournal);
             Interpreter.RegisterCommandHandler("poplist", PopList);
@@ -122,86 +120,76 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("removelist", RemoveList);
             Interpreter.RegisterCommandHandler("createlist", CreateList);
             Interpreter.RegisterCommandHandler("clearlist", ClearList);
-            Interpreter.RegisterCommandHandler("info", DummyCommand);
+            Interpreter.RegisterCommandHandler("info", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("pause", Pause);
             Interpreter.RegisterCommandHandler("ping", Ping);
-            Interpreter.RegisterCommandHandler("playmacro", DummyCommand);
-            Interpreter.RegisterCommandHandler("playsound", DummyCommand);
+            Interpreter.RegisterCommandHandler("playmacro", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("playsound", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("resync", Resync);
-            Interpreter.RegisterCommandHandler("snapshot", DummyCommand);
-            Interpreter.RegisterCommandHandler("hotkeys", DummyCommand);
-            Interpreter.RegisterCommandHandler("where", DummyCommand);
+            Interpreter.RegisterCommandHandler("snapshot", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("hotkeys", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("where", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("messagebox", MessageBox);
-            Interpreter.RegisterCommandHandler("mapuo", DummyCommand);
-            Interpreter.RegisterCommandHandler("clickscreen", DummyCommand);
+            Interpreter.RegisterCommandHandler("mapuo", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("clickscreen", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("paperdoll", Paperdoll);
-            Interpreter.RegisterCommandHandler("helpbutton", DummyCommand);
-            Interpreter.RegisterCommandHandler("guildbutton", DummyCommand);
-            Interpreter.RegisterCommandHandler("questsbutton", DummyCommand);
-            Interpreter.RegisterCommandHandler("logoutbutton", DummyCommand);
-            Interpreter.RegisterCommandHandler("virtue", DummyCommand);
+            Interpreter.RegisterCommandHandler("helpbutton", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("guildbutton", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("questsbutton", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("logoutbutton", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("virtue", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("msg", Msg);
             Interpreter.RegisterCommandHandler("headmsg", HeadMsg);
-            Interpreter.RegisterCommandHandler("partymsg", DummyCommand);
-            Interpreter.RegisterCommandHandler("guildmsg", DummyCommand);
-            Interpreter.RegisterCommandHandler("allymsg", DummyCommand);
-            Interpreter.RegisterCommandHandler("whispermsg", DummyCommand);
-            Interpreter.RegisterCommandHandler("yellmsg", DummyCommand);
+            Interpreter.RegisterCommandHandler("partymsg", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("guildmsg", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("allymsg", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("whispermsg", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("yellmsg", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("sysmsg", SysMsg);
-            Interpreter.RegisterCommandHandler("chatmsg", DummyCommand);
-            Interpreter.RegisterCommandHandler("emotemsg", DummyCommand);
-            Interpreter.RegisterCommandHandler("promptmsg", DummyCommand);
-            Interpreter.RegisterCommandHandler("timermsg", DummyCommand);
-            Interpreter.RegisterCommandHandler("waitforprompt", DummyCommand);
-            Interpreter.RegisterCommandHandler("cancelprompt", DummyCommand);
-            Interpreter.RegisterCommandHandler("addfriend", DummyCommand);
-            Interpreter.RegisterCommandHandler("removefriend", DummyCommand);
-            Interpreter.RegisterCommandHandler("contextmenu", DummyCommand);
-            Interpreter.RegisterCommandHandler("waitforcontext", DummyCommand);
-            Interpreter.RegisterCommandHandler("ignoreobject", DummyCommand);
-            Interpreter.RegisterCommandHandler("clearignorelist", DummyCommand);
-            Interpreter.RegisterCommandHandler("setskill", DummyCommand);
-            Interpreter.RegisterCommandHandler("waitforproperties", DummyCommand);
-            Interpreter.RegisterCommandHandler("autocolorpick", DummyCommand);
-            Interpreter.RegisterCommandHandler("waitforcontents", DummyCommand);
-            Interpreter.RegisterCommandHandler("miniheal", DummyCommand);
-            Interpreter.RegisterCommandHandler("bigheal", DummyCommand);
+            Interpreter.RegisterCommandHandler("chatmsg", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("emotemsg", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("promptmsg", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("timermsg", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("waitforprompt", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("cancelprompt", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("addfriend", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("removefriend", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("contextmenu", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("waitforcontext", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("ignoreobject", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("clearignorelist", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("setskill", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("waitforproperties", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("autocolorpick", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("waitforcontents", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("miniheal", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("bigheal", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("cast", Cast);
-            Interpreter.RegisterCommandHandler("chivalryheal", DummyCommand);
+            Interpreter.RegisterCommandHandler("chivalryheal", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("waitfortarget", WaitForTarget);
-            Interpreter.RegisterCommandHandler("canceltarget", DummyCommand);
-            Interpreter.RegisterCommandHandler("target", DummyCommand);
-            Interpreter.RegisterCommandHandler("targettype", DummyCommand);
-            Interpreter.RegisterCommandHandler("targetground", DummyCommand);
-            Interpreter.RegisterCommandHandler("targettile", DummyCommand);
-            Interpreter.RegisterCommandHandler("targettileoffset", DummyCommand);
-            Interpreter.RegisterCommandHandler("targettilerelative", DummyCommand);
-            Interpreter.RegisterCommandHandler("cleartargetqueue", DummyCommand);
-            Interpreter.RegisterCommandHandler("autotargetlast", DummyCommand);
-            Interpreter.RegisterCommandHandler("autotargetself", DummyCommand);
-            Interpreter.RegisterCommandHandler("autotargetobject", DummyCommand);
-            Interpreter.RegisterCommandHandler("autotargettype", DummyCommand);
-            Interpreter.RegisterCommandHandler("autotargettile", DummyCommand);
-            Interpreter.RegisterCommandHandler("autotargettileoffset", DummyCommand);
-            Interpreter.RegisterCommandHandler("autotargettilerelative", DummyCommand);
-            Interpreter.RegisterCommandHandler("autotargetghost", DummyCommand);
-            Interpreter.RegisterCommandHandler("autotargetground", DummyCommand);
-            Interpreter.RegisterCommandHandler("cancelautotarget", DummyCommand);
-            Interpreter.RegisterCommandHandler("getenemy", DummyCommand);
-            Interpreter.RegisterCommandHandler("getfriend", DummyCommand);
+            Interpreter.RegisterCommandHandler("canceltarget", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("target", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("targettype", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("targetground", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("targettile", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("targettileoffset", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("targettilerelative", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("cleartargetqueue", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("autotargetlast", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("autotargetself", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("autotargetobject", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("autotargettype", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("autotargettile", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("autotargettileoffset", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("autotargettilerelative", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("autotargetghost", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("autotargetground", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("cancelautotarget", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("getenemy", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("getfriend", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("settimer", SetTimer);
             Interpreter.RegisterCommandHandler("removetimer", RemoveTimer);
             Interpreter.RegisterCommandHandler("createtimer", CreateTimer);
-        }
-
-        private static bool Fly(string command, Argument[] args, bool quiet, bool force)
-        {
-            throw new RunTimeError(null, "Command is not yet implemented");
-        }
-
-        private static bool Land(string command, Argument[] args, bool quiet, bool force)
-        {
-            return true;
         }
 
         private static string[] abilities = new string[4] { "primary", "secondary", "stun", "disarm" };

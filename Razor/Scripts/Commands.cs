@@ -279,9 +279,6 @@ namespace Assistant.Scripts
 
         private static bool BandageSelf(string command, Argument[] args, bool quiet, bool force)
         {
-            if (World.Player == null)
-                return true;
-
             Item pack = World.Player.Backpack;
             if (pack != null)
             {
@@ -591,9 +588,6 @@ namespace Assistant.Scripts
 
         private static bool ShowNames(string command, Argument[] args, bool quiet, bool force)
         {
-            if (World.Player == null)
-                return true;
-
             if (args.Length == 0 || args[0].AsString() == "mobiles")
             {
                 foreach (Mobile m in World.MobilesInRange())
@@ -629,9 +623,6 @@ namespace Assistant.Scripts
 
         public static bool EquipItem(string command, Argument[] args, bool quiet, bool force)
         {
-            if (World.Player == null)
-                return true;
-
             if (args.Length < 2)
                 throw new RunTimeError(null, "Usage: equipitem (serial) (layer)");
 

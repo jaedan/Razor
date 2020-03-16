@@ -343,33 +343,21 @@ namespace Assistant.Scripts
 
         private static int Mana(string expression, Argument[] args, bool quiet)
         {
-            if (World.Player == null)
-                return 0;
-
             return World.Player.Mana;
         }
 
         private static int X(string expression, Argument[] args, bool quiet)
         {
-            if (World.Player == null)
-                return 0;
-
             return World.Player.Position.X;
         }
 
         private static int Y(string expression, Argument[] args, bool quiet)
         {
-            if (World.Player == null)
-                return 0;
-
             return World.Player.Position.Y;
         }
 
         private static int Z(string expression, Argument[] args, bool quiet)
         {
-            if (World.Player == null)
-                return 0;
-
             return World.Player.Position.Z;
         }
 
@@ -378,9 +366,6 @@ namespace Assistant.Scripts
         {
             if (args.Length < 1)
                 throw new ArgumentException("Usage: skill (name)");
-
-            if (World.Player == null)
-                return 0;
 
             return 0;
         }

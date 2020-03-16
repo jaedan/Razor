@@ -46,9 +46,6 @@ namespace Assistant.Scripts
 
         private static uint Mount(string alias)
         {
-            if (World.Player == null)
-                return 0;
-
             var mount = World.Player.GetItemOnLayer(Layer.Mount);
 
             if (mount == null)
@@ -59,9 +56,6 @@ namespace Assistant.Scripts
 
         private static uint RightHand(string alias)
         {
-            if (World.Player == null)
-                return 0;
-
             Item i = World.Player.GetItemOnLayer(Layer.RightHand);
 
             if (i == null)
@@ -72,9 +66,6 @@ namespace Assistant.Scripts
 
         private static uint LeftHand(string alias)
         {
-            if (World.Player == null)
-                return 0;
-
             Item i = World.Player.GetItemOnLayer(Layer.LeftHand);
 
             if (i == null)
@@ -85,7 +76,7 @@ namespace Assistant.Scripts
 
         private static uint Backpack(string alias)
         {
-            if (World.Player == null || World.Player.Backpack == null)
+            if (World.Player.Backpack == null)
                 return 0;
 
             return World.Player.Backpack.Serial;
@@ -133,9 +124,6 @@ namespace Assistant.Scripts
 
         private static uint Self(string alias)
         {
-            if (World.Player == null)
-                return 0;
-
             return World.Player.Serial;
         }
     }

@@ -61,7 +61,7 @@ namespace Assistant.Scripts
             {
                 try
                 {
-                    if (!Client.Instance.ClientRunning)
+                    if (!Client.Instance.ClientRunning || World.Player == null)
                     {
                         if (ScriptRunning)
                         {
@@ -177,6 +177,9 @@ namespace Assistant.Scripts
             SetVariableActive = false;
 
             if (!Client.Instance.ClientRunning)
+                return;
+
+            if (World.Player == null)
                 return;
 
             Script script = new Script(Lexer.Lex(lines));

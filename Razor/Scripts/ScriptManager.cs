@@ -34,9 +34,9 @@ namespace Assistant.Scripts
     {
         public static bool Recording { get; set; }
 
-        public static bool Running => ScriptRunning;
+        private static Script _queuedScript = null;
 
-        private static bool ScriptRunning { get; set; }
+        public static bool Running { get; set; }
 
         public static DateTime LastWalk { get; set; }
 
@@ -63,30 +63,46 @@ namespace Assistant.Scripts
                 {
                     if (!Client.Instance.ClientRunning || World.Player == null)
                     {
-                        if (ScriptRunning)
+                        if (ScriptManager.Running)
                         {
-                            ScriptRunning = false;
+                            ScriptManager.Running = false;
                             Interpreter.StopScript();
                         }
                         return;
                     }
 
-                    if (Interpreter.ExecuteScript())
+                    bool running;
+
+                    if (_queuedScript != null)
                     {
-                        if (ScriptRunning == false)
+                        // Starting a new script. This relies on the atomicity for references in CLR
+                        var script = _queuedScript;
+
+                        running = Interpreter.StartScript(script);
+
+                        _queuedScript = null;
+                    }
+                    else
+                    {
+                        running = Interpreter.ExecuteScript();
+                    }
+
+                    if (running)
+                    {
+                        if (ScriptManager.Running == false)
                         {
                             World.Player?.SendMessage(LocString.ScriptPlaying);
                             Assistant.Engine.MainWindow.LockScriptUI(true);
-                            ScriptRunning = true;
+                            ScriptManager.Running = true;
                         }
                     }
                     else
                     {
-                        if (ScriptRunning)
+                        if (ScriptManager.Running)
                         {
                             World.Player?.SendMessage(LocString.ScriptFinished);
                             Assistant.Engine.MainWindow.LockScriptUI(false);
-                            ScriptRunning = false;
+                            ScriptManager.Running = false;
                         }
                     }
                 }
@@ -148,6 +164,7 @@ namespace Assistant.Scripts
 
         public static void StopScript()
         {
+            Running = false;
             Interpreter.StopScript();
         }
 
@@ -176,6 +193,9 @@ namespace Assistant.Scripts
             SetLastTargetActive = false;
             SetVariableActive = false;
 
+            if (_queuedScript != null)
+                return;
+
             if (!Client.Instance.ClientRunning)
                 return;
 
@@ -184,40 +204,7 @@ namespace Assistant.Scripts
 
             Script script = new Script(Lexer.Lex(lines));
 
-            try
-            {
-                if (Interpreter.StartScript(script))
-                {
-                    if (ScriptRunning == false)
-                    {
-                        World.Player?.SendMessage(LocString.ScriptPlaying);
-                        Assistant.Engine.MainWindow.LockScriptUI(true);
-                        ScriptRunning = true;
-                    }
-                }
-                else
-                {
-                    if (ScriptRunning)
-                    {
-                        World.Player?.SendMessage(LocString.ScriptFinished);
-                        Assistant.Engine.MainWindow.LockScriptUI(false);
-                        ScriptRunning = false;
-                    }
-                }
-            }
-            catch (RunTimeError ex)
-            {
-                if (ex.Node != null)
-                    World.Player?.SendMessage(MsgLevel.Error, string.Format("Script Error On Line {0}: {1}", ex.Node.LineNumber, ex.Message));
-                else
-                    World.Player?.SendMessage(MsgLevel.Error, string.Format("Script Error: {0}", ex.Message));
-                Interpreter.StopScript();
-            }
-            catch (Exception ex)
-            {
-                World.Player?.SendMessage(MsgLevel.Error, ex.Message);
-                Interpreter.StopScript();
-            }
+            _queuedScript = script;
         }
 
         private static ScriptTimer Timer { get; }

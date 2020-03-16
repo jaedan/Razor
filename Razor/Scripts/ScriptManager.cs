@@ -614,5 +614,73 @@ namespace Assistant.Scripts
                 s.EndUpdate();
             });
         }
+
+        private static Dictionary<string, int> _skillMap = new Dictionary<string, int>()
+        {
+            { "alchemy", 0 },
+            { "anatomy", 1 },
+            { "animallore", 2 }, { "animal lore", 2 },
+            { "itemidentification", 3 }, {"itemid", 3 }, { "item identification", 3 }, { "item id", 3 },
+            { "armslore", 4 }, { "arms lore", 4 },
+            { "parry", 5 }, { "parrying", 5 },
+            { "begging", 6 },
+            { "blacksmith", 7 }, { "blacksmithing", 7 },
+            { "fletching", 8 }, { "bowcraft", 8 },
+            { "peacemaking", 9 }, { "peace", 9 }, { "peacemake", 9 },
+            { "camping", 10 }, { "camp", 10 },
+            { "carpentry", 11 },
+            { "cartography", 12 },
+            { "cooking", 13 }, { "cook", 13 },
+            { "detectinghidden", 14 }, { "detect", 14 }, { "detecthidden", 14 }, { "detecting hidden", 14 }, { "detect hidden", 14 },
+            { "discordance", 15 }, { "discord", 15 }, { "enticement", 15 }, { "entice", 15 },
+            { "evaluatingintelligence", 16 }, { "evalint", 16 }, { "eval", 16 }, { "evaluating intelligence", 16 },
+            { "healing", 17 },
+            { "fishing", 18 },
+            { "forensicevaluation", 19 }, { "forensiceval", 19 }, { "forensics", 19 },
+            { "herding", 20 },
+            { "hiding", 21 },
+            { "provocation", 22 }, { "provo", 22 },
+            { "inscription", 23 }, { "scribe", 23 },
+            { "lockpicking", 24 },
+            { "magery", 25 }, { "mage", 25 },
+            { "magicresist", 26 }, { "resist", 26 }, { "resistingspells", 26 },
+            { "tactics", 27 },
+            { "snooping", 28 }, { "snoop", 28 },
+            { "musicianship", 29 }, { "music", 29 },
+            { "poisoning", 30 },
+            { "archery", 31 },
+            { "spiritspeak", 32 },
+            { "stealing", 33 },
+            { "tailoring", 34 },
+            { "taming", 35 }, { "animaltaming", 35 }, { "animal taming", 35 },
+            { "tasteidentification", 36 }, { "tasteid", 36 },
+            { "tinkering", 37 },
+            { "tracking", 38 },
+            { "veterinary", 39 }, { "vet", 39 },
+            { "swords", 40 }, { "swordsmanship", 40 },
+            { "macing", 41 }, { "macefighting", 41 }, { "mace fighting", 41 },
+            { "fencing", 42 },
+            { "wrestling", 43 },
+            { "lumberjacking", 44 },
+            { "mining", 45 },
+            { "meditation", 46 },
+            { "stealth", 47 },
+            { "removetrap", 48 },
+            { "necromancy", 49 }, { "necro", 49 },
+            { "focus", 50 },
+            { "chivalry", 51 },
+            { "bushido", 52 },
+            { "ninjitsu", 53 },
+            { "spellweaving", 54 },
+        };
+
+        // Convert steam-compatible skill names to Skills
+        public static Skill GetSkill(string skillName)
+        {
+            if (_skillMap.TryGetValue(skillName.ToLower(), out var id))
+                return World.Player.Skills[id];
+
+            throw new RunTimeError(null, $"Unknown skill name: {skillName}");
+        }
     }
 }

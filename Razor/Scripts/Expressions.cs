@@ -361,13 +361,14 @@ namespace Assistant.Scripts
             return World.Player.Position.Z;
         }
 
-        // WIP
         private static double SkillExpression(string expression, Argument[] args, bool quiet)
         {
             if (args.Length < 1)
-                throw new ArgumentException("Usage: skill (name)");
+                throw new RunTimeError(null, "Usage: skill (name)");
 
-            return 0;
+            var skill = ScriptManager.GetSkill(args[0].AsString());
+
+            return skill.Value;
         }
     }
 }

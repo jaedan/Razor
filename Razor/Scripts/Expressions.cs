@@ -137,17 +137,14 @@ namespace Assistant.Scripts
             return container.ItemCount;
         }
 
-        private static int FindAlias(string expression, Argument[] args, bool quiet)
+        private static bool FindAlias(string expression, Argument[] args, bool quiet)
         {
             if (args.Length < 1)
                 throw new RunTimeError(null, "Usage: findalias (string)");
 
             uint serial = Interpreter.GetAlias(args[0].AsString());
 
-            if (serial == uint.MaxValue)
-                return 0;
-
-            return 1;
+            return serial != uint.MaxValue;
         }
 
         private static int FindType(string expression, Argument[] args, bool quiet)

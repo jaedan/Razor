@@ -423,31 +423,27 @@ namespace Assistant.Scripts
             return true;
         }
 
+
         private static bool _hasPrompt = false;
-        private static string _nextPromptAliasName = "";
-        private static void OnPromptAliasTarget(bool location, Serial serial, Point3D p, ushort gfxid)
-        {
-            Interpreter.SetAlias(_nextPromptAliasName, serial);
-        }
 
         private static bool PromptAlias(string command, Argument[] args, bool quiet, bool force)
         {
+            Interpreter.Pause(60000);
+
             if (!_hasPrompt)
             {
                 _hasPrompt = true;
-                _nextPromptAliasName = args[0].AsString();
-                Targeting.OneTimeTarget(OnPromptAliasTarget);
+                Targeting.OneTimeTarget((location, serial, p, gfxid) =>
+                {
+                    Interpreter.SetAlias(args[0].AsString(), serial);
+                    Interpreter.Unpause();
+                });
                 return false;
             }
 
-            if (!Targeting.HasTarget)
-            {
-                _hasPrompt = false;
-                _nextPromptAliasName = "";
-                return true;
-            }
-
-            return false;
+            // The only way to get here is via timeout.
+            // TODO: False - it comes here regardless. Check that alias is valid before throwing.
+            throw new RunTimeError(null, "Did not respond to target prompt quickly enough");
         }
 
         private static bool WaitForGump(string command, Argument[] args, bool quiet, bool force)

@@ -18,107 +18,103 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using UOScript;
-using Assistant;
 
 namespace Assistant.Scripts
 {
     public static class Expressions
     {
-        private static int DummyExpression(string expression, Argument[] args, bool quiet)
-        {
-            Console.WriteLine("Executing expression {0} {1}", expression, args);
-
-            return 0;
-        }
-
         public static void Register()
         {
             // Expressions
             Interpreter.RegisterExpressionHandler("findalias", FindAlias);
             Interpreter.RegisterExpressionHandler("contents", Contents);
-            Interpreter.RegisterExpressionHandler("inregion", DummyExpression);
+            Interpreter.RegisterExpressionHandler("inregion", InRegion);
             Interpreter.RegisterExpressionHandler("skill", SkillExpression);
             Interpreter.RegisterExpressionHandler("x", X);
             Interpreter.RegisterExpressionHandler("y", Y);
             Interpreter.RegisterExpressionHandler("z", Z);
-            Interpreter.RegisterExpressionHandler("physical", DummyExpression);
-            Interpreter.RegisterExpressionHandler("fire", DummyExpression);
-            Interpreter.RegisterExpressionHandler("cold", DummyExpression);
-            Interpreter.RegisterExpressionHandler("poison", DummyExpression);
-            Interpreter.RegisterExpressionHandler("energy", DummyExpression);
-            Interpreter.RegisterExpressionHandler("str", DummyExpression);
-            Interpreter.RegisterExpressionHandler("dex", DummyExpression);
-            Interpreter.RegisterExpressionHandler("int", DummyExpression);
-            Interpreter.RegisterExpressionHandler("hits", DummyExpression);
-            Interpreter.RegisterExpressionHandler("maxhits", DummyExpression);
-            Interpreter.RegisterExpressionHandler("diffhits", DummyExpression);
-            Interpreter.RegisterExpressionHandler("stam", DummyExpression);
-            Interpreter.RegisterExpressionHandler("maxstam", DummyExpression);
+            Interpreter.RegisterExpressionHandler("physical", Physical);
+            Interpreter.RegisterExpressionHandler("fire", Fire);
+            Interpreter.RegisterExpressionHandler("cold", Cold);
+            Interpreter.RegisterExpressionHandler("poison", Poison);
+            Interpreter.RegisterExpressionHandler("energy", Energy);
+            Interpreter.RegisterExpressionHandler("str", Str);
+            Interpreter.RegisterExpressionHandler("dex", Dex);
+            Interpreter.RegisterExpressionHandler("int", Int);
+            Interpreter.RegisterExpressionHandler("hits", Hits);
+            Interpreter.RegisterExpressionHandler("maxhits", MaxHits);
+            Interpreter.RegisterExpressionHandler("diffhits", DiffHits);
+            Interpreter.RegisterExpressionHandler("stam", Stam);
+            Interpreter.RegisterExpressionHandler("maxstam", MaxStam);
             Interpreter.RegisterExpressionHandler("mana", Mana);
-            Interpreter.RegisterExpressionHandler("maxmana", DummyExpression);
-            Interpreter.RegisterExpressionHandler("usequeue", DummyExpression);
-            Interpreter.RegisterExpressionHandler("dressing", DummyExpression);
-            Interpreter.RegisterExpressionHandler("organizing", DummyExpression);
-            Interpreter.RegisterExpressionHandler("followers", DummyExpression);
-            Interpreter.RegisterExpressionHandler("maxfollowers", DummyExpression);
-            Interpreter.RegisterExpressionHandler("gold", DummyExpression);
-            Interpreter.RegisterExpressionHandler("hidden", DummyExpression);
-            Interpreter.RegisterExpressionHandler("luck", DummyExpression);
-            Interpreter.RegisterExpressionHandler("tithingpoints", DummyExpression);
-            Interpreter.RegisterExpressionHandler("weight", DummyExpression);
-            Interpreter.RegisterExpressionHandler("maxweight", DummyExpression);
-            Interpreter.RegisterExpressionHandler("diffweight", DummyExpression);
-            Interpreter.RegisterExpressionHandler("serial", DummyExpression);
-            Interpreter.RegisterExpressionHandler("graphic", DummyExpression);
-            Interpreter.RegisterExpressionHandler("color", DummyExpression);
-            Interpreter.RegisterExpressionHandler("amount", DummyExpression);
-            Interpreter.RegisterExpressionHandler("name", DummyExpression);
-            Interpreter.RegisterExpressionHandler("dead", DummyExpression);
-            Interpreter.RegisterExpressionHandler("direction", DummyExpression);
-            Interpreter.RegisterExpressionHandler("flying", DummyExpression);
-            Interpreter.RegisterExpressionHandler("paralyzed", DummyExpression);
-            Interpreter.RegisterExpressionHandler("poisoned", DummyExpression);
-            Interpreter.RegisterExpressionHandler("mounted", DummyExpression);
-            Interpreter.RegisterExpressionHandler("yellowhits", DummyExpression);
-            Interpreter.RegisterExpressionHandler("criminal", DummyExpression);
-            Interpreter.RegisterExpressionHandler("enemy", DummyExpression);
-            Interpreter.RegisterExpressionHandler("friend", DummyExpression);
-            Interpreter.RegisterExpressionHandler("gray", DummyExpression);
-            Interpreter.RegisterExpressionHandler("innocent", DummyExpression);
-            Interpreter.RegisterExpressionHandler("invulnerable", DummyExpression);
-            Interpreter.RegisterExpressionHandler("murderer", DummyExpression);
-            Interpreter.RegisterExpressionHandler("findobject", DummyExpression);
-            Interpreter.RegisterExpressionHandler("distance", DummyExpression);
-            Interpreter.RegisterExpressionHandler("inrange", DummyExpression);
-            Interpreter.RegisterExpressionHandler("buffexists", DummyExpression);
-            Interpreter.RegisterExpressionHandler("property", DummyExpression);
+            Interpreter.RegisterExpressionHandler("maxmana", MaxMana);
+            Interpreter.RegisterExpressionHandler("usequeue", UseQueue);
+            Interpreter.RegisterExpressionHandler("dressing", Dressing);
+            Interpreter.RegisterExpressionHandler("organizing", Organizing);
+            Interpreter.RegisterExpressionHandler("followers", Followers);
+            Interpreter.RegisterExpressionHandler("maxfollowers", MaxFollowers);
+            Interpreter.RegisterExpressionHandler("gold", Gold);
+            Interpreter.RegisterExpressionHandler("hidden", Hidden);
+            Interpreter.RegisterExpressionHandler("luck", Luck);
+            Interpreter.RegisterExpressionHandler("tithingpoints", TithingPoints);
+            Interpreter.RegisterExpressionHandler("weight", Weight);
+            Interpreter.RegisterExpressionHandler("maxweight", MaxWeight);
+            Interpreter.RegisterExpressionHandler("diffweight", DiffWeight);
+            Interpreter.RegisterExpressionHandler("serial", Serial);
+            Interpreter.RegisterExpressionHandler("graphic", Graphic);
+            Interpreter.RegisterExpressionHandler("color", Color);
+            Interpreter.RegisterExpressionHandler("amount", Amount);
+            Interpreter.RegisterExpressionHandler("name", Name);
+            Interpreter.RegisterExpressionHandler("dead", Dead);
+            Interpreter.RegisterExpressionHandler("direction", Direction);
+            Interpreter.RegisterExpressionHandler("flying", Flying);
+            Interpreter.RegisterExpressionHandler("paralyzed", Paralyzed);
+            Interpreter.RegisterExpressionHandler("poisoned", Poisoned);
+            Interpreter.RegisterExpressionHandler("mounted", Mounted);
+            Interpreter.RegisterExpressionHandler("yellowhits", YellowHits);
+            Interpreter.RegisterExpressionHandler("criminal", Criminal);
+            Interpreter.RegisterExpressionHandler("enemy", Enemy);
+            Interpreter.RegisterExpressionHandler("friend", Friend);
+            Interpreter.RegisterExpressionHandler("gray", Gray);
+            Interpreter.RegisterExpressionHandler("innocent", Innocent);
+            Interpreter.RegisterExpressionHandler("invulnerable", Invulnerable);
+            Interpreter.RegisterExpressionHandler("murderer", Murderer);
+            Interpreter.RegisterExpressionHandler("findobject", FindObject);
+            Interpreter.RegisterExpressionHandler("distance", Distance);
+            Interpreter.RegisterExpressionHandler("inrange", InRange);
+            Interpreter.RegisterExpressionHandler("buffexists", BuffExists);
+            Interpreter.RegisterExpressionHandler("property", Property);
             Interpreter.RegisterExpressionHandler("findtype", FindType);
-            Interpreter.RegisterExpressionHandler("findlayer", DummyExpression);
-            Interpreter.RegisterExpressionHandler("skillstate", DummyExpression);
-            Interpreter.RegisterExpressionHandler("counttype", DummyExpression);
-            Interpreter.RegisterExpressionHandler("counttypeground", DummyExpression);
-            Interpreter.RegisterExpressionHandler("findwand", DummyExpression);
-            Interpreter.RegisterExpressionHandler("inparty", DummyExpression);
-            Interpreter.RegisterExpressionHandler("infriendslist", DummyExpression);
-            Interpreter.RegisterExpressionHandler("war", DummyExpression);
-            Interpreter.RegisterExpressionHandler("ingump", DummyExpression);
-            Interpreter.RegisterExpressionHandler("gumpexists", DummyExpression);
+            Interpreter.RegisterExpressionHandler("findlayer", FindLayer);
+            Interpreter.RegisterExpressionHandler("skillstate", SkillState);
+            Interpreter.RegisterExpressionHandler("counttype", CountType);
+            Interpreter.RegisterExpressionHandler("counttypeground", CountTypeGround);
+            Interpreter.RegisterExpressionHandler("findwand", FindWand);
+            Interpreter.RegisterExpressionHandler("inparty", InParty);
+            Interpreter.RegisterExpressionHandler("infriendslist", InFriendsList);
+            Interpreter.RegisterExpressionHandler("war", War);
+            Interpreter.RegisterExpressionHandler("ingump", InGump);
+            Interpreter.RegisterExpressionHandler("gumpexists", GumpExists);
             Interpreter.RegisterExpressionHandler("injournal", InJournal);
             Interpreter.RegisterExpressionHandler("listexists", ListExists);
             Interpreter.RegisterExpressionHandler("list", ListLength);
             Interpreter.RegisterExpressionHandler("inlist", InList);
-            Interpreter.RegisterExpressionHandler("targetexists", DummyExpression);
-            Interpreter.RegisterExpressionHandler("waitingfortarget", DummyExpression);
+            Interpreter.RegisterExpressionHandler("targetexists", TargetExists);
+            Interpreter.RegisterExpressionHandler("waitingfortarget", WaitingForTarget);
             Interpreter.RegisterExpressionHandler("timer", TimerValue);
             Interpreter.RegisterExpressionHandler("timerexists", TimerExists);
+        }
 
+        private static bool FindAlias(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length < 1)
+                throw new RunTimeError(null, "Usage: findalias (string)");
 
+            uint serial = Interpreter.GetAlias(args[0].AsString());
+
+            return serial != uint.MaxValue;
         }
 
         private static int Contents(string expression, Argument[] args, bool quiet)
@@ -137,15 +133,89 @@ namespace Assistant.Scripts
             return container.ItemCount;
         }
 
-        private static bool FindAlias(string expression, Argument[] args, bool quiet)
+        private static bool InRegion(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+
+        private static double SkillExpression(string expression, Argument[] args, bool quiet)
         {
             if (args.Length < 1)
-                throw new RunTimeError(null, "Usage: findalias (string)");
+                throw new RunTimeError(null, "Usage: skill (name)");
 
-            uint serial = Interpreter.GetAlias(args[0].AsString());
+            var skill = ScriptManager.GetSkill(args[0].AsString());
 
-            return serial != uint.MaxValue;
+            return skill.Value;
         }
+
+        private static int X(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Position.X;
+        }
+
+        private static int Y(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Position.Y;
+        }
+
+        private static int Z(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Position.Z;
+        }
+
+        private static int Physical(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Fire(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Cold(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Poison(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Energy(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Str(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Dex(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Int(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Hits(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int MaxHits(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int DiffHits(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Stam(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int MaxStam(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+
+        private static int Mana(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Mana;
+        }
+
+        private static int MaxMana(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool UseQueue(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Dressing(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Organizing(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Followers(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int MaxFollowers(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Gold(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Hidden(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Luck(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int TithingPoints(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Weight(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int MaxWeight(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int DiffWeight(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static uint Serial(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Graphic(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Color(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Amount(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static string Name(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Dead(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Direction(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Flying(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Paralyzed(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Poisoned(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Mounted(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool YellowHits(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Criminal(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Enemy(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Friend(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Gray(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Innocent(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Invulnerable(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Murderer(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool FindObject(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Distance(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool InRange(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool BuffExists(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Property(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
 
         private static bool FindType(string expression, Argument[] args, bool quiet)
         {
@@ -276,6 +346,17 @@ namespace Assistant.Scripts
             return false;
         }
 
+        private static bool FindLayer(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool SkillState(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int CountType(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int CountTypeGround(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool FindWand(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool InParty(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool InFriendsList(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool War(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool InGump(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool GumpExists(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+
         private static bool InJournal(string expression, Argument[] args, bool quiet)
         {
             if (args.Length == 0)
@@ -320,6 +401,9 @@ namespace Assistant.Scripts
             return false;
         }
 
+        private static bool TargetExists(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool WaitingForTarget(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+
         private static int TimerValue(string expression, Argument[] args, bool quiet)
         {
             if (args.Length != 1)
@@ -336,36 +420,6 @@ namespace Assistant.Scripts
                 throw new RunTimeError(null, "Usage: timerexists ('timer name')");
 
             return Interpreter.TimerExists(args[0].AsString());
-        }
-
-        private static int Mana(string expression, Argument[] args, bool quiet)
-        {
-            return World.Player.Mana;
-        }
-
-        private static int X(string expression, Argument[] args, bool quiet)
-        {
-            return World.Player.Position.X;
-        }
-
-        private static int Y(string expression, Argument[] args, bool quiet)
-        {
-            return World.Player.Position.Y;
-        }
-
-        private static int Z(string expression, Argument[] args, bool quiet)
-        {
-            return World.Player.Position.Z;
-        }
-
-        private static double SkillExpression(string expression, Argument[] args, bool quiet)
-        {
-            if (args.Length < 1)
-                throw new RunTimeError(null, "Usage: skill (name)");
-
-            var skill = ScriptManager.GetSkill(args[0].AsString());
-
-            return skill.Value;
         }
     }
 }

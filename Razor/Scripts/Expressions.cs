@@ -147,7 +147,7 @@ namespace Assistant.Scripts
             return serial != uint.MaxValue;
         }
 
-        private static int FindType(string expression, Argument[] args, bool quiet)
+        private static bool FindType(string expression, Argument[] args, bool quiet)
         {
             if (args.Length < 1)
                 throw new RunTimeError(null, "Usage: findtype (graphic) [color] [source] [amount] [range or search level]");
@@ -266,39 +266,39 @@ namespace Assistant.Scripts
             if (list.Count > 0)
             {
                 Serial found = list[Utility.Random(list.Count)];
-                Interpreter.RegisterAliasHandler("found", delegate { return found; });
-                return 1;
+                Interpreter.SetAlias("found", found);
+                return true;
             }
 
             if (!quiet)
-                throw new RunTimeError(null, $"Script Error: Couldn't find '{graphicString}'");
+                World.Player?.SendMessage(MsgLevel.Warning, $"Script Error: Couldn't find '{graphicString}'");
 
-            return 0;
+            return false;
         }
 
-        private static int InJournal(string expression, Argument[] args, bool quiet)
+        private static bool InJournal(string expression, Argument[] args, bool quiet)
         {
             if (args.Length == 0)
                 throw new RunTimeError(null, "Usage: injournal ('text') ['author'/'system']");
 
             if (args.Length == 1 && Journal.ContainsSafe(args[0].AsString()))
-                return 1;
+                return true;
 
             // TODO:
             // handle second argument
 
-            return 0;
+            return false;
         }
 
-        private static int ListExists(string expression, Argument[] args, bool quiet)
+        private static bool ListExists(string expression, Argument[] args, bool quiet)
         {
             if (args.Length != 1)
                 throw new RunTimeError(null, "Usage: listexists ('list name')");
 
             if (Interpreter.ListExists(args[0].AsString()))
-                return 1;
+                return true;
 
-            return 0;
+            return false;
         }
 
         private static int ListLength(string expression, Argument[] args, bool quiet)
@@ -309,15 +309,15 @@ namespace Assistant.Scripts
             return Interpreter.ListLength(args[0].AsString());
         }
 
-        private static int InList(string expression, Argument[] args, bool quiet)
+        private static bool InList(string expression, Argument[] args, bool quiet)
         {
             if (args.Length != 1)
                 throw new RunTimeError(null, "Usage: inlist ('list name')");
 
             if (Interpreter.ListContains(args[0].AsString(), args[1]))
-                return 1;
+                return true;
 
-            return 0;
+            return false;
         }
 
         private static int TimerValue(string expression, Argument[] args, bool quiet)

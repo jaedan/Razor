@@ -160,51 +160,162 @@ namespace Assistant.Scripts
             return World.Player.Position.Z;
         }
 
-        private static int Physical(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Fire(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Cold(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Poison(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Energy(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Str(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Dex(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Int(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Hits(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int MaxHits(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int DiffHits(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Stam(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int MaxStam(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Physical(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.AR;
+        }
+
+        private static int Fire(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.FireResistance;
+        }
+
+        private static int Cold(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.ColdResistance;
+        }
+
+        private static int Poison(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.PoisonResistance;
+        }
+
+        private static int Energy(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.EnergyResistance;
+        }
+
+        private static int Str(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Str;
+        }
+
+        private static int Dex(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Dex;
+        }
+
+        private static int Int(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Int;
+        }
+
+        private static int Hits(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Hits;
+        }
+
+        private static int MaxHits(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.HitsMax;
+        }
+
+        private static int DiffHits(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.HitsMax - World.Player.Hits;
+        }
+
+        private static int Stam(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Stam;
+        }
+
+        private static int MaxStam(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.StamMax;
+        }
 
         private static int Mana(string expression, Argument[] args, bool quiet)
         {
             return World.Player.Mana;
         }
 
-        private static int MaxMana(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int MaxMana(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.ManaMax;
+        }
+
         private static bool UseQueue(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static bool Dressing(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static bool Organizing(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Followers(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int MaxFollowers(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Gold(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool Hidden(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Luck(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int TithingPoints(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Weight(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int MaxWeight(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int DiffWeight(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int Followers(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Followers;
+        }
+
+        private static int MaxFollowers(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.FollowersMax;
+        }
+
+        private static uint Gold(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Gold;
+        }
+
+        private static bool Hidden(string expression, Argument[] args, bool quiet)
+        {
+            return !World.Player.Visible;
+        }
+
+        private static int Luck(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Luck;
+        }
+
+        private static int TithingPoints(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Tithe;
+        }
+
+        private static int Weight(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Weight;
+        }
+
+        private static int MaxWeight(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.MaxWeight;
+        }
+
+        private static int DiffWeight(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.MaxWeight - World.Player.Weight;
+        }
+
         private static uint Serial(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static int Graphic(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static int Color(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static int Amount(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static string Name(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool Dead(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Direction(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static string Name(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Name;
+        }
+
+        private static bool Dead(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.IsGhost;
+        }
+
+        private static int Direction(string expression, Argument[] args, bool quiet)
+        {
+            return (int)World.Player.Direction;
+        }
+
         private static bool Flying(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static bool Paralyzed(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool Poisoned(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Poisoned(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.Poisoned;
+        }
+
         private static bool Mounted(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static bool YellowHits(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool Criminal(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Criminal(string expression, Argument[] args, bool quiet)
+        {
+            return World.Player.CriminalTime > 0;
+        }
+
         private static bool Enemy(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static bool Friend(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static bool Gray(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
@@ -347,7 +458,23 @@ namespace Assistant.Scripts
         }
 
         private static bool FindLayer(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool SkillState(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static string SkillState(string expression, Argument[] args, bool quiet)
+        {
+            var skill = ScriptManager.GetSkill(args[0].AsString());
+
+            switch (skill.Lock)
+            {
+                case LockType.Down:
+                    return "down";
+                case LockType.Up:
+                    return "up";
+                case LockType.Locked:
+                    return "locked";
+            }
+
+            return "unknown";
+        }
+
         private static int CountType(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static int CountTypeGround(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static bool FindWand(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }

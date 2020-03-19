@@ -66,9 +66,12 @@ namespace Assistant
         private bool m_Poisoned;
         private bool m_Blessed;
         private bool m_Warmode;
+        private bool m_Flying;
+        private bool m_Paralyzed;
+
+        private bool m_Dead;
 
         //new
-        private bool m_Unknown;
         private bool m_Unknown2;
         private bool m_Unknown3;
 
@@ -259,6 +262,18 @@ namespace Assistant
             set { m_Blessed = value; }
         }
 
+        public bool Paralyzed
+        {
+            get { return m_Paralyzed;  }
+            set { m_Paralyzed = value;  }
+        }
+
+        public bool Flying
+        {
+            get { return m_Flying; }
+            set { m_Flying = value; }
+        }
+
         public bool IsGhost
         {
             get
@@ -294,11 +309,6 @@ namespace Assistant
         }
 
         //new
-        public bool Unknown
-        {
-            get { return m_Unknown; }
-            set { m_Unknown = value; }
-        }
 
         public bool Unknown2
         {
@@ -544,10 +554,16 @@ namespace Assistant
         {
             int flags = 0x0;
 
+            if (m_Paralyzed)
+                flags |= 0x01;
+
             if (m_Female)
                 flags |= 0x02;
 
-            if (m_Poisoned)
+            if (m_Poisoned && !PacketHandlers.UseNewStatus)
+                flags |= 0x04;
+
+            if (m_Flying)
                 flags |= 0x04;
 
             if (m_Blessed)
@@ -558,9 +574,6 @@ namespace Assistant
 
             if (!m_Visible)
                 flags |= 0x80;
-
-            if (m_Unknown)
-                flags |= 0x01;
 
             if (m_Unknown2)
                 flags |= 0x10;
@@ -575,8 +588,10 @@ namespace Assistant
         {
             if (!PacketHandlers.UseNewStatus)
                 m_Poisoned = (flags & 0x04) != 0;
+            else
+                m_Flying = (flags & 0x04) != 0;
 
-            m_Unknown = (flags & 0x01) != 0; //new
+            m_Paralyzed = (flags & 0x01) != 0; //new
             m_Female = (flags & 0x02) != 0;
             m_Blessed = (flags & 0x08) != 0;
             m_Unknown2 = (flags & 0x10) != 0; //new

@@ -20,6 +20,9 @@
 
 using System.Collections.Generic;
 using UOScript;
+using Assistant;
+using Assistant.Core;
+using Assistant.Agents;
 
 namespace Assistant.Scripts
 {
@@ -147,17 +150,59 @@ namespace Assistant.Scripts
 
         private static int X(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.Position.X;
+            if (args.Length == 0)
+                return World.Player.Position.X;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: x [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return 0;
+            }
+
+            return mobile.Position.X;
         }
 
         private static int Y(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.Position.Y;
+            if (args.Length == 0)
+                return World.Player.Position.Y;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: y [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return 0;
+            }
+
+            return mobile.Position.Y;
         }
 
         private static int Z(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.Position.Z;
+            if (args.Length == 0)
+                return World.Player.Position.Z;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: z [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return 0;
+            }
+
+            return mobile.Position.Z;
         }
 
         private static int Physical(string expression, Argument[] args, bool quiet)
@@ -202,37 +247,135 @@ namespace Assistant.Scripts
 
         private static int Hits(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.Hits;
+            if (args.Length == 0)
+                return World.Player.Hits;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: hits [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return 0;
+            }
+
+            return mobile.Hits;
         }
 
         private static int MaxHits(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.HitsMax;
+            if (args.Length == 0)
+                return World.Player.HitsMax;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: maxhits [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return 0;
+            }
+
+            return mobile.HitsMax;
         }
 
         private static int DiffHits(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.HitsMax - World.Player.Hits;
+            if (args.Length == 0)
+                return World.Player.HitsMax - World.Player.Hits;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: diffhits [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return 0;
+            }
+
+            return mobile.HitsMax - mobile.Hits;
         }
 
         private static int Stam(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.Stam;
+            if (args.Length == 0)
+                return World.Player.Stam;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: stam [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return 0;
+            }
+
+            return mobile.Stam;
         }
 
         private static int MaxStam(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.StamMax;
+            if (args.Length == 0)
+                return World.Player.StamMax;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: maxstam [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return 0;
+            }
+
+            return mobile.StamMax;
         }
 
         private static int Mana(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.Mana;
+            if (args.Length == 0)
+                return World.Player.Mana;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: mana [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return 0;
+            }
+
+            return mobile.Mana;
         }
 
         private static int MaxMana(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.ManaMax;
+            if (args.Length == 0)
+                return World.Player.ManaMax;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: maxmana [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return 0;
+            }
+
+            return mobile.ManaMax;
         }
 
         private static bool UseQueue(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
@@ -283,45 +426,456 @@ namespace Assistant.Scripts
             return World.Player.MaxWeight - World.Player.Weight;
         }
 
-        private static uint Serial(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Graphic(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Color(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static int Amount(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static uint Serial(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: serial (alias)");
+
+            return args[0].AsSerial();
+        }
+
+        private static int Graphic(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.Body;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: graphic [serial]");
+
+            Serial serial = args[0].AsSerial();
+
+            if (!serial.IsValid)
+            {
+                ScriptManager.Error(expression, "serial invalid");
+                return 0;
+            }
+
+            if (serial.IsItem)
+            {
+                Item item = World.FindItem(serial);
+
+                if (item == null)
+                {
+                    ScriptManager.Error(expression, "item not found");
+                    return 0;
+                }
+
+                return item.ItemID;
+            }
+            else
+            {
+                Mobile mobile = World.FindMobile(serial);
+
+                if (mobile == null)
+                {
+                    ScriptManager.Error(expression, "mobile not found");
+                    return 0;
+                }
+ 
+                return mobile.Body;
+            }
+        }
+
+        private static int Color(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: color (serial)");
+
+            Serial serial = args[0].AsSerial();
+
+            if (!serial.IsValid)
+            {
+                ScriptManager.Error(expression, "serial invalid");
+                return 0;
+            }
+
+            if (serial.IsItem)
+            {
+                Item item = World.FindItem(serial);
+
+                if (item == null)
+                {
+                    ScriptManager.Error(expression, "item not found");
+                    return 0;
+                }
+
+                return item.Hue;
+            }
+            else
+            {
+                Mobile mobile = World.FindMobile(serial);
+
+                if (mobile == null)
+                {
+                    ScriptManager.Error(expression, "mobile not found");
+                    return 0;
+                }
+
+                return mobile.Hue;
+            }
+        }
+
+        private static int Amount(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: amount (serial)");
+
+            Serial serial = args[0].AsSerial();
+
+            if (!serial.IsValid || serial.IsMobile)
+            {
+                ScriptManager.Error(expression, "serial invalid");
+                return 0;
+            }
+
+            Item item = World.FindItem(serial);
+
+            if (item == null)
+            {
+                ScriptManager.Error(expression, "item not found");
+                return 0;
+            }
+
+            return item.Amount;
+        }
         private static string Name(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.Name;
+            if (args.Length == 0)
+                return World.Player.Name;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: name [serial]");
+
+            Serial serial = args[0].AsSerial();
+
+            if (!serial.IsValid)
+            {
+                ScriptManager.Error(expression, "serial invalid");
+                return string.Empty;
+            }
+
+            if (serial.IsItem)
+            {
+                Item item = World.FindItem(serial);
+
+                if (item == null)
+                {
+                    ScriptManager.Error(expression, "item not found");
+                    return string.Empty;
+                }
+
+                return item.Name;
+            }
+            else
+            {
+                Mobile mobile = World.FindMobile(serial);
+
+                if (mobile == null)
+                {
+                    ScriptManager.Error(expression, "mobile not found");
+                    return string.Empty;
+                }
+
+                return mobile.Name;
+            }
         }
 
         private static bool Dead(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.IsGhost;
+            if (args.Length == 0)
+                return World.Player.IsGhost;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: dead [serial]");
+
+            Serial serial = args[0].AsSerial();
+
+            if (!serial.IsValid || serial.IsItem)
+            {
+                ScriptManager.Error(expression, "serial invalid");
+                return false;
+            }
+
+            Mobile mobile = World.FindMobile(serial);
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found");
+                return false;
+            }
+
+            return mobile.IsGhost;
         }
 
         private static int Direction(string expression, Argument[] args, bool quiet)
         {
-            return (int)World.Player.Direction;
+            if (args.Length == 0)
+                return (int) World.Player.Direction;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: direction [serial]");
+
+            Serial serial = args[0].AsSerial();
+
+            if (!serial.IsValid || serial.IsItem)
+            {
+                ScriptManager.Error(expression, "serial invalid");
+                return 0;
+            }
+
+            Mobile mobile = World.FindMobile(serial);
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found");
+                return 0;
+            }
+
+            return (int)mobile.Direction;
         }
 
-        private static bool Flying(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool Paralyzed(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Flying(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.Flying;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: flying [serial]");
+
+            Serial serial = args[0].AsSerial();
+
+            if (!serial.IsValid || serial.IsItem)
+            {
+                ScriptManager.Error(expression, "serial invalid");
+                return false;
+            }
+
+            Mobile mobile = World.FindMobile(serial);
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found");
+                return false;
+            }
+
+            return mobile.Flying;
+        }
+
+        private static bool Paralyzed(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.Paralyzed;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: flying [serial]");
+
+            Serial serial = args[0].AsSerial();
+
+            if (!serial.IsValid || serial.IsItem)
+            {
+                ScriptManager.Error(expression, "serial invalid");
+                return false;
+            }
+
+            Mobile mobile = World.FindMobile(serial);
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found");
+                return false;
+            }
+
+            return mobile.Paralyzed;
+        }
+
         private static bool Poisoned(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.Poisoned;
+            if (args.Length == 0)
+                return World.Player.Poisoned;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: poisoned [serial]");
+
+            Serial serial = args[0].AsSerial();
+
+            if (!serial.IsValid || serial.IsItem)
+            {
+                ScriptManager.Error(expression, "serial invalid");
+                return false;
+            }
+
+            Mobile mobile = World.FindMobile(serial);
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found");
+                return false;
+            }
+
+            return mobile.Poisoned;
         }
 
         private static bool Mounted(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool YellowHits(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool Criminal(string expression, Argument[] args, bool quiet)
+        private static bool YellowHits(string expression, Argument[] args, bool quiet)
         {
-            return World.Player.CriminalTime > 0;
+            if (args.Length == 0)
+                return World.Player.Blessed;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: yellowhits [serial]");
+
+            Serial serial = args[0].AsSerial();
+
+            if (!serial.IsValid || serial.IsItem)
+            {
+                ScriptManager.Error(expression, "serial invalid");
+                return false;
+            }
+
+            Mobile mobile = World.FindMobile(serial);
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found");
+                return false;
+            }
+
+            return mobile.Blessed;
         }
 
-        private static bool Enemy(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool Friend(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool Gray(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool Innocent(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool Invulnerable(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool Murderer(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool Criminal(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.Notoriety == 0x4;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: criminal [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return false;
+            }
+
+            return mobile.Notoriety == 0x4;
+        }
+
+        private static bool Enemy(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.Notoriety == 0x5;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: enemy [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return false;
+            }
+
+            return mobile.Notoriety == 0x5;
+        }
+
+        private static bool Friend(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.Notoriety == 0x2;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: friend [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return false;
+            }
+
+            return mobile.Notoriety == 0x2;
+        }
+
+        private static bool Gray(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.Notoriety == 0x3;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: gray [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return false;
+            }
+
+            return mobile.Notoriety == 0x3;
+        }
+
+        private static bool Innocent(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.Notoriety == 0x1;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: innocent [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return false;
+            }
+
+            return mobile.Notoriety == 0x1;
+        }
+
+        private static bool Invulnerable(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.Notoriety == 0x7;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: invulnerable [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return false;
+            }
+
+            return mobile.Notoriety == 0x7;
+        }
+
+        private static bool Murderer(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.Notoriety == 0x6;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: murderer [serial]");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return false;
+            }
+
+            return mobile.Notoriety == 0x6;
+        }
+
         private static bool FindObject(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static int Distance(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static bool InRange(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
@@ -457,7 +1011,24 @@ namespace Assistant.Scripts
             return false;
         }
 
-        private static bool FindLayer(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool FindLayer(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 2)
+                throw new RunTimeError(null, "Usage: findlayer (serial) (layer)");
+
+            var mobile = World.FindMobile(args[0].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return false;
+            }
+
+            Item layeredItem = mobile.GetItemOnLayer((Layer) args[1].AsInt());
+
+            return layeredItem != null;
+        }
+
         private static string SkillState(string expression, Argument[] args, bool quiet)
         {
             var skill = ScriptManager.GetSkill(args[0].AsString());
@@ -478,9 +1049,55 @@ namespace Assistant.Scripts
         private static int CountType(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static int CountTypeGround(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static bool FindWand(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool InParty(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+
+        private static bool InParty(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.InParty;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: inparty [serial]");
+
+            var mobile = World.FindMobile(args[1].AsSerial());
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found.");
+                return false;
+            }
+
+            return mobile.InParty;
+        }
+
         private static bool InFriendsList(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
-        private static bool War(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+
+        private static bool War(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length == 0)
+                return World.Player.Warmode;
+
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: war [serial]");
+
+            Serial serial = args[0].AsSerial();
+
+            if (!serial.IsValid || serial.IsItem)
+            {
+                ScriptManager.Error(expression, "serial invalid");
+                return false;
+            }
+
+            Mobile mobile = World.FindMobile(serial);
+
+            if (mobile == null)
+            {
+                ScriptManager.Error(expression, "mobile not found");
+                return false;
+            }
+
+            return mobile.Warmode;
+        }
+
         private static bool InGump(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static bool GumpExists(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
 
@@ -528,7 +1145,11 @@ namespace Assistant.Scripts
             return false;
         }
 
-        private static bool TargetExists(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static bool TargetExists(string expression, Argument[] args, bool quiet)
+        {
+            return Targeting.HasTarget;
+        }
+
         private static bool WaitingForTarget(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
 
         private static int TimerValue(string expression, Argument[] args, bool quiet)

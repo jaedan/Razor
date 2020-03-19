@@ -207,6 +207,11 @@ namespace Assistant.Scripts
             _queuedScript = script;
         }
 
+        public static void Error(string statement, string message)
+        {
+            World.Player?.SendMessage(MsgLevel.Error, $"{statement}: {message}");
+        }
+
         private static ScriptTimer Timer { get; }
 
         static ScriptManager()

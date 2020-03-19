@@ -33,9 +33,7 @@ namespace Assistant.Scripts
     {
         private static bool UnimplementedCommand(string command, Argument[] args, bool quiet, bool force)
         {
-            World.Player?.SendMessage(MsgLevel.Info, $"Unimplemented command {command}");
-
-            return true;
+            throw new RunTimeError(null, $"Unimplemented command {command}");
         }
 
         private static bool Deprecated(string command, Argument[] args, bool quiet, bool force)
@@ -167,13 +165,13 @@ namespace Assistant.Scripts
             Interpreter.RegisterCommandHandler("cast", Cast);
             Interpreter.RegisterCommandHandler("chivalryheal", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("waitfortarget", WaitForTarget);
-            Interpreter.RegisterCommandHandler("canceltarget", UnimplementedCommand);
-            Interpreter.RegisterCommandHandler("target", UnimplementedCommand);
-            Interpreter.RegisterCommandHandler("targettype", UnimplementedCommand);
-            Interpreter.RegisterCommandHandler("targetground", UnimplementedCommand);
-            Interpreter.RegisterCommandHandler("targettile", UnimplementedCommand);
-            Interpreter.RegisterCommandHandler("targettileoffset", UnimplementedCommand);
-            Interpreter.RegisterCommandHandler("targettilerelative", UnimplementedCommand);
+            Interpreter.RegisterCommandHandler("canceltarget", CancelTarget);
+            Interpreter.RegisterCommandHandler("target", Target);
+            Interpreter.RegisterCommandHandler("targettype", TargetType);
+            Interpreter.RegisterCommandHandler("targetground", TargetGround);
+            Interpreter.RegisterCommandHandler("targettile", TargetTile);
+            Interpreter.RegisterCommandHandler("targettileoffset", TargetTileOffset);
+            Interpreter.RegisterCommandHandler("targettilerelative", TargetTileRelative);
             Interpreter.RegisterCommandHandler("cleartargetqueue", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("autotargetlast", UnimplementedCommand);
             Interpreter.RegisterCommandHandler("autotargetself", UnimplementedCommand);
@@ -466,7 +464,7 @@ namespace Assistant.Scripts
                     return true;
             }
 
-            Interpreter.Timeout(args[1].AsUInt());
+            Interpreter.Timeout(args[1].AsUInt(), () => { return true; });
             return false;
         }
 
@@ -484,7 +482,7 @@ namespace Assistant.Scripts
 
             if (!Journal.ContainsSafe(args[0].AsString()))
             {
-                Interpreter.Timeout(args[1].AsUInt());
+                Interpreter.Timeout(args[1].AsUInt(), () => { return true; });
                 return false;
             }
 
@@ -730,8 +728,226 @@ namespace Assistant.Scripts
             if (Targeting.HasTarget)
                 return true;
 
-            Interpreter.Timeout(args[0].AsUInt());
+            Interpreter.Timeout(args[0].AsUInt(), () => { return true; });
             return false;
+        }
+
+        private static bool CancelTarget(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length != 0)
+                throw new RunTimeError(null, "Usage: canceltarget");
+
+            if (Targeting.HasTarget)
+                Targeting.CancelOneTimeTarget();
+
+            return true;
+        }
+
+        private static bool Target(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: target (serial)");
+
+            if (!Targeting.HasTarget)
+                ScriptManager.Error(command, "No target cursor available. Consider using waitfortarget.");
+            else
+                Targeting.Target(args[0].AsSerial());
+
+            return true;
+        }
+
+        private static bool TargetType(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length < 1 || args.Length > 3)
+                throw new RunTimeError(null, "Usage: targettype (graphic) [color] [range]");
+
+            if (!Targeting.HasTarget)
+            {
+                ScriptManager.Error(command, "No target cursor available. Consider using waitfortarget.");
+                return true;
+            }
+
+            var graphic = args[0].AsInt();
+
+            uint serial = Serial.MinusOne;
+
+            switch (args.Length)
+            {
+                case 1:
+                    // Only graphic
+                    serial = World.FindItemByType(graphic).Serial;
+                    break;
+                case 2:
+                    {
+                        // graphic and color
+                        var color = args[1].AsUShort();
+                        foreach (var item in World.Items.Values)
+                        {
+                            if (item.ItemID.Value == graphic && item.Hue == color)
+                            {
+                                serial = item.Serial;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                case 3:
+                    {
+                        // graphic, color, range
+                        var color = args[1].AsUShort();
+                        var range = args[2].AsInt();
+                        foreach (var item in World.Items.Values)
+                        {
+                            if (item.ItemID.Value == graphic && item.Hue == color && Utility.Distance(item.Position, World.Player.Position) < range)
+                            {
+                                serial = item.Serial;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+
+            }
+
+            if (serial == Serial.MinusOne)
+                throw new RunTimeError(null, "Unable to find suitable target");
+
+            Targeting.Target(serial);
+            return true;
+        }
+
+        private static bool TargetGround(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length < 1 || args.Length > 3)
+                throw new RunTimeError(null, "Usage: targetground (graphic) [color] [range]");
+
+            throw new RunTimeError(null, $"Unimplemented command {command}");
+        }
+
+        private static bool TargetTile(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (!(args.Length == 1 || args.Length == 3))
+                throw new RunTimeError(null, "Usage: targettile ('last'/'current'/(x y z))");
+
+            if (!Targeting.HasTarget)
+            {
+                ScriptManager.Error(command, "No target cursor available. Consider using waitfortarget.");
+                return true;
+            }
+
+            Point3D position = Point3D.MinusOne;
+
+            switch (args.Length)
+            {
+                case 1:
+                    {
+                        var alias = args[0].AsString();
+                        if (alias == "last")
+                        {
+                            if (Targeting.LastTargetInfo.Type != 1)
+                                throw new RunTimeError(null, "Last target was not a ground target");
+
+                            position = new Point3D(Targeting.LastTargetInfo.X, Targeting.LastTargetInfo.Y, Targeting.LastTargetInfo.Z);
+                        }
+                        else if (alias == "current")
+                        {
+                            position = World.Player.Position;
+                        }
+                        break;
+                    }
+                case 3:
+                    position = new Point3D(args[0].AsInt(), args[1].AsInt(), args[2].AsInt());
+                    break;
+            }
+
+            if (position == Point3D.MinusOne)
+                throw new RunTimeError(null, "Usage: targettile ('last'/'current'/(x y z))");
+
+            Targeting.Target(position);
+            return true;
+        }
+
+        private static bool TargetTileOffset(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length != 3)
+                throw new RunTimeError(null, "Usage: targettileoffset (x y z)");
+
+            if (!Targeting.HasTarget)
+            {
+                ScriptManager.Error(command, "No target cursor available. Consider using waitfortarget.");
+                return true;
+            }
+
+            var position = World.Player.Position;
+
+            position.X += args[0].AsInt();
+            position.Y += args[1].AsInt();
+            position.Z += args[2].AsInt();
+
+            Targeting.Target(position);
+            return true;
+        }
+
+        private static bool TargetTileRelative(string command, Argument[] args, bool quiet, bool force)
+        {
+            if (args.Length != 2)
+                throw new RunTimeError(null, "Usage: targettilerelative (serial) (range). Range may be negative.");
+
+            if (!Targeting.HasTarget)
+            {
+                ScriptManager.Error(command, "No target cursor available. Consider using waitfortarget.");
+                return true;
+            }
+
+            var serial = args[0].AsSerial();
+            var range = args[1].AsInt();
+
+            var mobile = World.FindMobile(serial);
+
+            if (mobile == null)
+            {
+                /* TODO: Search items if mobile not found. Although this isn't very useful. */
+                ScriptManager.Error(command, "item or mobile not found.");
+                return true;
+            }
+
+            var position = mobile.Position;
+
+            switch (mobile.Direction)
+            {
+                case Direction.North:
+                    position.Y -= range;
+                    break;
+                case Direction.Right:
+                    position.X += range;
+                    position.Y -= range;
+                    break;
+                case Direction.East:
+                    position.X += range;
+                    break;
+                case Direction.Down:
+                    position.X += range;
+                    position.Y += range;
+                    break;
+                case Direction.South:
+                    position.Y += range;
+                    break;
+                case Direction.Left:
+                    position.X -= range;
+                    position.Y += range;
+                    break;
+                case Direction.West:
+                    position.X -= range;
+                    break;
+                case Direction.Up:
+                    position.X -= range;
+                    position.Y -= range;
+                    break;
+            }
+
+            Targeting.Target(position);
+
+            return true;
         }
 
         public static bool HeadMsg(string command, Argument[] args, bool quiet, bool force)

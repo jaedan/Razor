@@ -577,7 +577,7 @@ namespace Assistant.Scripts
                 new Size(_autoCompleteMenu.Items.Width + 20, _autoCompleteMenu.Items.Height);
             _autoCompleteMenu.Items.Width = _autoCompleteMenu.Items.Width + 20;
 
-            ScriptEditor.Language = FastColoredTextBoxNS.Language.Razor;
+            ScriptEditor.Language = FastColoredTextBoxNS.Language.Custom;
         }
 
         public static void RedrawScripts()

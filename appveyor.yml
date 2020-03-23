@@ -12,6 +12,8 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+install:
+- cmd: git submodule update --init
 before_build:
 - cmd: nuget restore Razor.sln
 build:
@@ -19,14 +21,14 @@ build:
   verbosity: minimal
 test: off
 artifacts:
-- path: bin\Win32\Release
+- path: bin\x64\Release
   name: RazorSE-dev
 deploy:
 - provider: GitHub
   release: RazorSE-dev
   description: Auto-build by AppVeyor\n\nThis is built automatically after each commit to master, so it may contain bugs and/or unfinished features. Use at your own risk.\n\nOfficial releases will be listed here and given proper version numbers with release notes.
   auth_token:
-    secure: 8F11pQiKmjN7rkwx4TfXay3Z3Ocj+5zpKGeXWYuK/LLGY8HCtFYoXzmGzlePwDwX
+    secure: M4cbbL2lbfYZDL5oMaOtZVTchZ1cWi1DN2nCuwhelFwgYEKwIG2gd+KVyw4LzCD1
   prerelease: true
   force_update: true
 skip_commits:

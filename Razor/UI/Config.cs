@@ -228,7 +228,7 @@ namespace Assistant
             AddProperty("ShowDamageTakenOverhead", false);
 
             AddProperty("ShowInRazorTitleBar", false);
-            AddProperty("RazorTitleBarText", "{name} on {account} ({profile} - {shard}) - Razor v{version}");
+            AddProperty("RazorTitleBarText", "{name} on {account} ({profile} - {shard}) - RazorSE v{version}");
 
             AddProperty("EnableUOAAPI", true);
             AddProperty("UOAMPath", string.Empty);

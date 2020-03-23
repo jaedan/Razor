@@ -1,4 +1,4 @@
-version: 1.6.3.{build}
+version: 1.0.0.{build}
 branches:
   only:
   - master
@@ -20,10 +20,10 @@ build:
 test: off
 artifacts:
 - path: bin\Win32\Release
-  name: Razor-dev-preview
+  name: RazorSE-dev
 deploy:
 - provider: GitHub
-  release: Razor-dev-preview
+  release: RazorSE-dev
   description: Auto-build by AppVeyor\n\nThis is built automatically after each commit to master, so it may contain bugs and/or unfinished features. Use at your own risk.\n\nOfficial releases will be listed here and given proper version numbers with release notes.
   auth_token:
     secure: 8F11pQiKmjN7rkwx4TfXay3Z3Ocj+5zpKGeXWYuK/LLGY8HCtFYoXzmGzlePwDwX
@@ -31,7 +31,7 @@ deploy:
   force_update: true
 skip_commits:
   message: /\[chore\]/
-  files:    
+  files:
     - help/
     - docs/
     - '**/*.md'

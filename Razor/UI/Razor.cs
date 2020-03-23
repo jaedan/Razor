@@ -3874,7 +3874,7 @@ namespace Assistant
             string str = Language.GetControlText(this.Name);
             if (string.IsNullOrEmpty(str))
             {
-                str = "Razor v{0}";
+                str = "RazorSE v{0}";
             }
 
             str = string.Format(str, Engine.Version);
@@ -4728,7 +4728,7 @@ namespace Assistant
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://www.uorenaissance.com");
+            Process.Start("http://github.com/jaedan/razor");
         }
 
         private void targetByTypeDifferent_CheckedChanged(object sender, EventArgs e)
@@ -5304,7 +5304,7 @@ namespace Assistant
             sb.AppendLine(string.Empty);
             sb.AppendLine("{name} - Character name");
             sb.AppendLine("{shard} - Shard/Server name");
-            sb.AppendLine("{version} - Razor version");
+            sb.AppendLine("{version} - RazorSE version");
             sb.AppendLine("{profile} - Selected profile name");
             sb.AppendLine("{account} - Account name");
 
@@ -6453,7 +6453,7 @@ namespace Assistant
 
         private void linkScriptGuide_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://www.uor-razor.com/guide/");
+            Process.Start("https://raw.githubusercontent.com/jaedan/Razor/master/UOSteamDocumentation.pdf");
         }
 
         private void autoSaveScript_CheckedChanged(object sender, EventArgs e)

@@ -4,7 +4,7 @@
 
 Razor is a free tool designed to help with simple tasks while playing Ultima Online.
 
-## Outlands Community Edition
+## Razor (Steam Edition)
 
 The goal of this project is to build a suitable replacement for the Steam assistant. The work is based on the excellent [updates to Razor made for UO:R](https://github.com/markdwags/razor), replacing "razor script" with steam-compatible scripting instead.
 

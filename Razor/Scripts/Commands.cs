@@ -332,7 +332,7 @@ namespace Assistant.Scripts
             return true;
         }
 
-        private static Dictionary<string, Direction> _Directions = new Dictionary<string, Direction>()
+        private static Dictionary<string, Direction> _directions = new Dictionary<string, Direction>()
         {
             { "north", Direction.North },
             { "northeast", Direction.Right },
@@ -347,66 +347,67 @@ namespace Assistant.Scripts
             { "northwest", Direction.Up },
             { "up", Direction.Up }
         };
+
+        // Milliseconds per tile
+        private static readonly TimeSpan WALK_MS = TimeSpan.FromMilliseconds(400);
+        private static readonly TimeSpan RUN_MS = TimeSpan.FromMilliseconds(200);
+        private static readonly TimeSpan MOUNTED_WALK_MS = TimeSpan.FromMilliseconds(200);
+        private static readonly TimeSpan MOUNTED_RUN_MS = TimeSpan.FromMilliseconds(100);
+
         private static bool Walk(string command, Argument[] args, bool quiet, bool force)
         {
-            if (args.Length < 1)
-            {
-                ScriptManager.Error("Usage: walk ('direction name')");
-                return true;
-            }
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: walk ('direction name')");
 
-            if (ScriptManager.LastWalk + TimeSpan.FromSeconds(0.4) >= DateTime.UtcNow)
-            {
+            if (!_directions.TryGetValue(args[0].AsString().ToLower(), out var dir))
+                throw new RunTimeError(null, "Usage: walk ('direction name')");
+
+            var delay = WALK_MS;
+            if (World.Player.GetItemOnLayer(Layer.Mount) != null)
+                delay = MOUNTED_WALK_MS;
+
+            if (ScriptManager.LastMove + delay >= DateTime.UtcNow)
                 return false;
-            }
 
-            ScriptManager.LastWalk = DateTime.UtcNow;
+            ScriptManager.LastMove = DateTime.UtcNow;
 
-            if(_Directions.TryGetValue(args[0].AsString().ToLower(), out Direction dir))
-                Client.Instance?.RequestMove(dir);
+            Client.Instance?.RequestMove(dir);
 
             return true;
         }
 
         private static bool Turn(string command, Argument[] args, bool quiet, bool force)
         {
-            if (args.Length < 1)
-            {
-                ScriptManager.Error("Usage: turn ('direction name')");
-                return true;
-            }
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: turn ('direction name')");
 
-            if (_Directions.TryGetValue(args[0].AsString().ToLower(), out Direction dir))
-            {
-                if(World.Player != null && (World.Player.Direction & Direction.Mask) != dir)
-                    Client.Instance?.RequestMove(dir);
-            }
+            if (!_directions.TryGetValue(args[0].AsString().ToLower(), out var dir))
+                throw new RunTimeError(null, "Usage: turn ('direction name')");
+
+            if ((World.Player.Direction & Direction.Mask) != dir)
+                Client.Instance?.RequestMove(dir);
 
             return true;
         }
 
         private static bool Run(string command, Argument[] args, bool quiet, bool force)
         {
-            if (args.Length < 1)
-            {
-                ScriptManager.Error("Usage: run ('direction name')");
-                return true;
-            }
+            if (args.Length != 1)
+                throw new RunTimeError(null, "Usage: run ('direction name')");
 
-            if (ScriptManager.LastWalk + TimeSpan.FromSeconds(0.2) >= DateTime.UtcNow)
-            {
+            if (!_directions.TryGetValue(args[0].AsString().ToLower(), out var dir))
+                throw new RunTimeError(null, "Usage: run ('direction name')");
+
+            var delay = RUN_MS;
+            if (World.Player.GetItemOnLayer(Layer.Mount) != null)
+                delay = MOUNTED_RUN_MS;
+
+            if (ScriptManager.LastMove + delay >= DateTime.UtcNow)
                 return false;
-            }
 
-            ScriptManager.LastWalk = DateTime.UtcNow;
+            ScriptManager.LastMove = DateTime.UtcNow;
 
-            if (_Directions.TryGetValue(args[0].AsString().ToLower(), out Direction dir))
-            {
-                if(Client.IsOSI)
-                    Client.Instance?.RequestMove(dir);
-                else
-                    Client.Instance?.RequestMove(dir & Direction.Running);
-            }
+            Client.Instance?.RequestMove(dir & Direction.Running);
 
             return true;
         }

@@ -38,7 +38,7 @@ namespace Assistant.Scripts
 
         public static bool Running { get; set; }
 
-        public static DateTime LastWalk { get; set; }
+        public static DateTime LastMove { get; set; }
 
         public static bool SetLastTargetActive { get; set; }
 

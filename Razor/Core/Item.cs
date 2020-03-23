@@ -616,6 +616,20 @@ namespace Assistant
             get { return m_Items; }
         }
 
+        public IEnumerable<Item> Contents(bool recurse = true)
+        {
+            if (m_Items == null)
+                yield break;
+
+            foreach (var item in m_Items)
+            {
+                yield return item;
+
+                foreach (var child in item.Contents(recurse))
+                    yield return child;
+            }
+        }
+
         // possibly 4 bit x/y - 16x16?
         public byte GridNum
         {

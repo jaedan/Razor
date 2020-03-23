@@ -33,7 +33,8 @@ namespace Assistant.Scripts
     {
         private static bool UnimplementedCommand(string command, Argument[] args, bool quiet, bool force)
         {
-            throw new RunTimeError(null, $"Unimplemented command {command}");
+            ScriptManager.Error(quiet, command, "Unimplemented command");
+            return true;
         }
 
         private static bool Deprecated(string command, Argument[] args, bool quiet, bool force)
@@ -299,12 +300,13 @@ namespace Assistant.Scripts
             Serial serial = args[0].AsSerial();
 
             if (!serial.IsValid)
-                throw new RunTimeError(null, "useobject - invalid serial");
-
-            Client.Instance.SendToServer(new DoubleClick(serial));
+                ScriptManager.Error(quiet, command, "Object not found.");
+            else
+                Client.Instance.SendToServer(new DoubleClick(serial));
 
             return true;
         }
+
         private static bool UseOnce(string command, Argument[] args, bool quiet, bool force)
         {
             return true;
@@ -504,9 +506,8 @@ namespace Assistant.Scripts
                 return false;
             }
 
-            // The only way to get here is via timeout.
-            // TODO: False - it comes here regardless. Check that alias is valid before throwing.
-            throw new RunTimeError(null, "Did not respond to target prompt quickly enough");
+            _hasPrompt = false;
+            return true;
         }
 
         private static bool WaitForGump(string command, Argument[] args, bool quiet, bool force)
@@ -731,13 +732,17 @@ namespace Assistant.Scripts
 
         public static bool Msg(string command, Argument[] args, bool quiet, bool force)
         {
-            if (args.Length == 0)
-                throw new RunTimeError(null, "Usage: msg ('text') [color]");
-
-            if (args.Length == 1)
-                World.Player.Say(Config.GetInt("SysColor"), args[0].AsString());
-            else
-                World.Player.Say(Utility.ToInt32(args[1].AsString(), 0), args[0].AsString());
+            switch (args.Length)
+            {
+                case 1:
+                    World.Player.Say(Config.GetInt("SysColor"), args[0].AsString());
+                    break;
+                case 2:
+                    World.Player.Say(args[1].AsInt(), args[0].AsString());
+                    break;
+                default:
+                    throw new RunTimeError(null, "Usage: msg ('text') [color]");
+            }
 
             return true;
         }
@@ -814,7 +819,7 @@ namespace Assistant.Scripts
                 throw new RunTimeError(null, "Usage: target (serial)");
 
             if (!Targeting.HasTarget)
-                ScriptManager.Error(command, "No target cursor available. Consider using waitfortarget.");
+                ScriptManager.Error(quiet, command, "No target cursor available. Consider using waitfortarget.");
             else
                 Targeting.Target(args[0].AsSerial());
 
@@ -828,7 +833,7 @@ namespace Assistant.Scripts
 
             if (!Targeting.HasTarget)
             {
-                ScriptManager.Error(command, "No target cursor available. Consider using waitfortarget.");
+                ScriptManager.Error(quiet, command, "No target cursor available. Consider using waitfortarget.");
                 return true;
             }
 
@@ -896,7 +901,7 @@ namespace Assistant.Scripts
 
             if (!Targeting.HasTarget)
             {
-                ScriptManager.Error(command, "No target cursor available. Consider using waitfortarget.");
+                ScriptManager.Error(quiet, command, "No target cursor available. Consider using waitfortarget.");
                 return true;
             }
 
@@ -939,7 +944,7 @@ namespace Assistant.Scripts
 
             if (!Targeting.HasTarget)
             {
-                ScriptManager.Error(command, "No target cursor available. Consider using waitfortarget.");
+                ScriptManager.Error(quiet, command, "No target cursor available. Consider using waitfortarget.");
                 return true;
             }
 
@@ -960,7 +965,7 @@ namespace Assistant.Scripts
 
             if (!Targeting.HasTarget)
             {
-                ScriptManager.Error(command, "No target cursor available. Consider using waitfortarget.");
+                ScriptManager.Error(quiet, command, "No target cursor available. Consider using waitfortarget.");
                 return true;
             }
 
@@ -972,7 +977,7 @@ namespace Assistant.Scripts
             if (mobile == null)
             {
                 /* TODO: Search items if mobile not found. Although this isn't very useful. */
-                ScriptManager.Error(command, "item or mobile not found.");
+                ScriptManager.Error(quiet, command, "item or mobile not found.");
                 return true;
             }
 
@@ -1017,25 +1022,22 @@ namespace Assistant.Scripts
 
         public static bool HeadMsg(string command, Argument[] args, bool quiet, bool force)
         {
-            if (args.Length == 0)
-                throw new RunTimeError(null, "Usage: headmsg ('text') [color] [serial]");
-
-            if (args.Length == 1)
-                World.Player.OverheadMessage(Config.GetInt("SysColor"), args[0].AsString());
-            else
+            switch (args.Length)
             {
-                int hue = Utility.ToInt32(args[1].AsString(), 0);
-
-                if (args.Length == 3)
-                {
-                    uint serial = args[2].AsSerial();
-                    Mobile m = World.FindMobile((uint)serial);
+                case 1:
+                    World.Player.OverheadMessage(Config.GetInt("SysColor"), args[0].AsString());
+                    break;
+                case 2:
+                    World.Player.OverheadMessage(args[1].AsInt(), args[0].AsString());
+                    break;
+                case 3:
+                    Mobile m = World.FindMobile(args[2].AsSerial());
 
                     if (m != null)
-                        m.OverheadMessage(hue, args[0].AsString());
-                }
-                else
-                    World.Player.OverheadMessage(hue, args[0].AsString());
+                        m.OverheadMessage(args[1].AsInt(), args[0].AsString());
+                    break;
+                default:
+                    throw new RunTimeError(null, "Usage: headmsg (text) [color] [serial]");
             }
 
             return true;
@@ -1043,13 +1045,17 @@ namespace Assistant.Scripts
 
         public static bool SysMsg(string command, Argument[] args, bool quiet, bool force)
         {
-            if (args.Length == 0)
-                throw new RunTimeError(null, "Usage: sysmsg ('text') [color]");
-
-            if (args.Length == 1)
-                World.Player.SendMessage(Config.GetInt("SysColor"), args[0].AsString());
-            else if (args.Length == 2)
-                World.Player.SendMessage(Utility.ToInt32(args[1].AsString(), 0), args[0].AsString());
+            switch (args.Length)
+            {
+                case 1:
+                    World.Player.SendMessage(Config.GetInt("SysColor"), args[0].AsString());
+                    break;
+                case 2:
+                    World.Player.SendMessage(args[1].AsInt(), args[0].AsString());
+                    break;
+                default:
+                    throw new RunTimeError(null, "Usage: sysmsg ('text') [color]");
+            }
 
             return true;
         }

@@ -112,12 +112,10 @@ namespace Assistant.Scripts
 
         private static bool FindAlias(string expression, Argument[] args, bool quiet)
         {
-            if (args.Length < 1)
+            if (args.Length != 1)
                 throw new RunTimeError(null, "Usage: findalias (string)");
 
-            uint serial = Interpreter.GetAlias(args[0].AsString());
-
-            return serial != uint.MaxValue;
+            return Interpreter.GetAlias(args[0].AsString()) != uint.MaxValue;
         }
 
         private static int Contents(string expression, Argument[] args, bool quiet)
@@ -160,7 +158,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return 0;
             }
 
@@ -179,7 +177,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return 0;
             }
 
@@ -198,7 +196,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return 0;
             }
 
@@ -257,7 +255,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return 0;
             }
 
@@ -276,7 +274,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return 0;
             }
 
@@ -295,7 +293,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return 0;
             }
 
@@ -314,7 +312,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return 0;
             }
 
@@ -333,7 +331,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return 0;
             }
 
@@ -352,7 +350,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return 0;
             }
 
@@ -371,7 +369,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return 0;
             }
 
@@ -446,7 +444,7 @@ namespace Assistant.Scripts
 
             if (!serial.IsValid)
             {
-                ScriptManager.Error(expression, "serial invalid");
+                ScriptManager.Error(quiet, expression, "serial invalid");
                 return 0;
             }
 
@@ -456,7 +454,7 @@ namespace Assistant.Scripts
 
                 if (item == null)
                 {
-                    ScriptManager.Error(expression, "item not found");
+                    ScriptManager.Error(quiet, expression, "item not found");
                     return 0;
                 }
 
@@ -468,7 +466,7 @@ namespace Assistant.Scripts
 
                 if (mobile == null)
                 {
-                    ScriptManager.Error(expression, "mobile not found");
+                    ScriptManager.Error(quiet, expression, "mobile not found");
                     return 0;
                 }
  
@@ -485,7 +483,7 @@ namespace Assistant.Scripts
 
             if (!serial.IsValid)
             {
-                ScriptManager.Error(expression, "serial invalid");
+                ScriptManager.Error(quiet, expression, "serial invalid");
                 return 0;
             }
 
@@ -495,7 +493,7 @@ namespace Assistant.Scripts
 
                 if (item == null)
                 {
-                    ScriptManager.Error(expression, "item not found");
+                    ScriptManager.Error(quiet, expression, "item not found");
                     return 0;
                 }
 
@@ -507,7 +505,7 @@ namespace Assistant.Scripts
 
                 if (mobile == null)
                 {
-                    ScriptManager.Error(expression, "mobile not found");
+                    ScriptManager.Error(quiet, expression, "mobile not found");
                     return 0;
                 }
 
@@ -524,7 +522,7 @@ namespace Assistant.Scripts
 
             if (!serial.IsValid || serial.IsMobile)
             {
-                ScriptManager.Error(expression, "serial invalid");
+                ScriptManager.Error(quiet, expression, "serial invalid");
                 return 0;
             }
 
@@ -532,7 +530,7 @@ namespace Assistant.Scripts
 
             if (item == null)
             {
-                ScriptManager.Error(expression, "item not found");
+                ScriptManager.Error(quiet, expression, "item not found");
                 return 0;
             }
 
@@ -550,7 +548,7 @@ namespace Assistant.Scripts
 
             if (!serial.IsValid)
             {
-                ScriptManager.Error(expression, "serial invalid");
+                ScriptManager.Error(quiet, expression, "serial invalid");
                 return string.Empty;
             }
 
@@ -560,7 +558,7 @@ namespace Assistant.Scripts
 
                 if (item == null)
                 {
-                    ScriptManager.Error(expression, "item not found");
+                    ScriptManager.Error(quiet, expression, "item not found");
                     return string.Empty;
                 }
 
@@ -572,7 +570,7 @@ namespace Assistant.Scripts
 
                 if (mobile == null)
                 {
-                    ScriptManager.Error(expression, "mobile not found");
+                    ScriptManager.Error(quiet, expression, "mobile not found");
                     return string.Empty;
                 }
 
@@ -592,7 +590,7 @@ namespace Assistant.Scripts
 
             if (!serial.IsValid || serial.IsItem)
             {
-                ScriptManager.Error(expression, "serial invalid");
+                ScriptManager.Error(quiet, expression, "serial invalid");
                 return false;
             }
 
@@ -600,7 +598,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found");
+                ScriptManager.Error(quiet, expression, "mobile not found");
                 return false;
             }
 
@@ -619,7 +617,7 @@ namespace Assistant.Scripts
 
             if (!serial.IsValid || serial.IsItem)
             {
-                ScriptManager.Error(expression, "serial invalid");
+                ScriptManager.Error(quiet, expression, "serial invalid");
                 return 0;
             }
 
@@ -627,7 +625,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found");
+                ScriptManager.Error(quiet, expression, "mobile not found");
                 return 0;
             }
 
@@ -646,7 +644,7 @@ namespace Assistant.Scripts
 
             if (!serial.IsValid || serial.IsItem)
             {
-                ScriptManager.Error(expression, "serial invalid");
+                ScriptManager.Error(quiet, expression, "serial invalid");
                 return false;
             }
 
@@ -654,7 +652,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found");
+                ScriptManager.Error(quiet, expression, "mobile not found");
                 return false;
             }
 
@@ -673,7 +671,7 @@ namespace Assistant.Scripts
 
             if (!serial.IsValid || serial.IsItem)
             {
-                ScriptManager.Error(expression, "serial invalid");
+                ScriptManager.Error(quiet, expression, "serial invalid");
                 return false;
             }
 
@@ -681,7 +679,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found");
+                ScriptManager.Error(quiet, expression, "mobile not found");
                 return false;
             }
 
@@ -700,7 +698,7 @@ namespace Assistant.Scripts
 
             if (!serial.IsValid || serial.IsItem)
             {
-                ScriptManager.Error(expression, "serial invalid");
+                ScriptManager.Error(quiet, expression, "serial invalid");
                 return false;
             }
 
@@ -708,7 +706,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found");
+                ScriptManager.Error(quiet, expression, "mobile not found");
                 return false;
             }
 
@@ -728,7 +726,7 @@ namespace Assistant.Scripts
 
             if (!serial.IsValid || serial.IsItem)
             {
-                ScriptManager.Error(expression, "serial invalid");
+                ScriptManager.Error(quiet, expression, "serial invalid");
                 return false;
             }
 
@@ -736,7 +734,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found");
+                ScriptManager.Error(quiet, expression, "mobile not found");
                 return false;
             }
 
@@ -755,7 +753,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return false;
             }
 
@@ -774,7 +772,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return false;
             }
 
@@ -793,7 +791,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return false;
             }
 
@@ -812,7 +810,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return false;
             }
 
@@ -831,7 +829,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return false;
             }
 
@@ -850,7 +848,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return false;
             }
 
@@ -869,7 +867,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return false;
             }
 
@@ -1020,7 +1018,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return false;
             }
 
@@ -1046,7 +1044,40 @@ namespace Assistant.Scripts
             return "unknown";
         }
 
-        private static int CountType(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
+        private static int CountType(string expression, Argument[] args, bool quiet)
+        {
+            if (args.Length != 3)
+                throw new RunTimeError(null, "Usage: counttype (graphic) (color) (source) (operator) (value)");
+
+            var graphic = args[0].AsInt();
+
+            int hue = int.MaxValue;
+            if (args[1].AsString().ToLower() != "any")
+                hue = args[1].AsInt();
+
+            var container = World.FindItem(args[2].AsSerial());
+
+            if (container == null)
+            {
+                ScriptManager.Error(quiet, expression, "Unable to find source container");
+                return 0;
+            }
+
+            int count = 0;
+            foreach (var item in container.Contents(true))
+            {
+                if (item.ItemID != graphic)
+                    continue;
+
+                if (hue != int.MaxValue && item.Hue != hue)
+                    continue;
+
+                count++;
+            }
+
+            return count;
+        }
+
         private static int CountTypeGround(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
         private static bool FindWand(string expression, Argument[] args, bool quiet) { throw new RunTimeError(null, $"Expression {expression} not yet supported."); }
 
@@ -1062,7 +1093,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found.");
+                ScriptManager.Error(quiet, expression, "mobile not found.");
                 return false;
             }
 
@@ -1083,7 +1114,7 @@ namespace Assistant.Scripts
 
             if (!serial.IsValid || serial.IsItem)
             {
-                ScriptManager.Error(expression, "serial invalid");
+                ScriptManager.Error(quiet, expression, "serial invalid");
                 return false;
             }
 
@@ -1091,7 +1122,7 @@ namespace Assistant.Scripts
 
             if (mobile == null)
             {
-                ScriptManager.Error(expression, "mobile not found");
+                ScriptManager.Error(quiet, expression, "mobile not found");
                 return false;
             }
 
@@ -1129,7 +1160,7 @@ namespace Assistant.Scripts
         private static int ListLength(string expression, Argument[] args, bool quiet)
         {
             if (args.Length != 1)
-                throw new RunTimeError(null, "Usage: list ('list name') (operator) (value)");
+                throw new RunTimeError(null, "Usage: list (list name) (operator) (value)");
 
             return Interpreter.ListLength(args[0].AsString());
         }
@@ -1137,7 +1168,7 @@ namespace Assistant.Scripts
         private static bool InList(string expression, Argument[] args, bool quiet)
         {
             if (args.Length != 1)
-                throw new RunTimeError(null, "Usage: inlist ('list name')");
+                throw new RunTimeError(null, "Usage: inlist (list name) (element)");
 
             if (Interpreter.ListContains(args[0].AsString(), args[1]))
                 return true;

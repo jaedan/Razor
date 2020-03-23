@@ -207,8 +207,11 @@ namespace Assistant.Scripts
             _queuedScript = script;
         }
 
-        public static void Error(string statement, string message)
+        public static void Error(bool quiet, string statement, string message)
         {
+            if (quiet)
+                return;
+
             World.Player?.SendMessage(MsgLevel.Error, $"{statement}: {message}");
         }
 

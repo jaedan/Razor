@@ -65,7 +65,6 @@ namespace Assistant.Scripts
                     {
                         if (ScriptManager.Running)
                         {
-                            ScriptManager.Running = false;
                             Interpreter.StopScript();
                         }
                         return;
@@ -164,7 +163,6 @@ namespace Assistant.Scripts
 
         public static void StopScript()
         {
-            Running = false;
             Interpreter.StopScript();
         }
 

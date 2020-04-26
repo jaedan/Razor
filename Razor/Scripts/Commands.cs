@@ -515,22 +515,27 @@ namespace Assistant.Scripts
             if (args.Length < 2)
                 throw new RunTimeError(null, "Usage: waitforgump (gump id/'any') (timeout)");
 
+            Interpreter.Timeout(args[1].AsUInt(), () => { return true; });
             bool any = args[0].AsString() == "any";
 
             if (any)
             {
                 if (World.Player.HasGump || World.Player.HasCompressedGump)
+                {
+                    Interpreter.ClearTimeout();
                     return true;
+                }
             }
             else
             {
                 uint gumpId = args[0].AsSerial();
 
                 if (World.Player.CurrentGumpI == gumpId)
+                {
+                    Interpreter.ClearTimeout();
                     return true;
+                }
             }
-
-            Interpreter.Timeout(args[1].AsUInt(), () => { return true; });
             return false;
         }
 
@@ -551,6 +556,8 @@ namespace Assistant.Scripts
                 Interpreter.Timeout(args[1].AsUInt(), () => { return true; });
                 return false;
             }
+            else
+                Interpreter.ClearTimeout();
 
             return true;
         }
@@ -795,10 +802,12 @@ namespace Assistant.Scripts
             if (args.Length != 1)
                 throw new RunTimeError(null, "Usage: waitfortarget (timeout)");
 
-            if (Targeting.HasTarget)
-                return true;
-
             Interpreter.Timeout(args[0].AsUInt(), () => { return true; });
+            if (Targeting.HasTarget)
+            {
+                Interpreter.ClearTimeout();
+                return true;
+            }
             return false;
         }
 

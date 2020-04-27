@@ -6675,5 +6675,42 @@ namespace Assistant
                 }
             }
         }
+
+        public void steamImport_Click(object sender, EventArgs e)
+        {
+            Config.Save();
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            if (fileDialog.ShowDialog(this) == DialogResult.OK && fileDialog.FileName != null)
+            {
+                string profileFilename = Path.GetFileNameWithoutExtension(fileDialog.FileName);
+                if (MessageBox.Show($"Are you sure you want to import the profile \"{profileFilename}\" from steam?", "Import Profile", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                    return;
+
+                var newProfileName = $"{profileFilename}_SteamImport";
+
+                m_ProfileConfirmLoad = false;
+                Config.NewProfile(newProfileName);
+
+                try
+                {
+                    SteamProfile.Import(fileDialog.FileName, Config.CurrentProfile);
+                }
+                catch
+                {
+                    MessageBox.Show(Engine.ActiveWindow, Language.Format(LocString.ProfileCorrupt, newProfileName),
+                        "Steam Profile Import Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    return;
+                }
+
+                profiles.Items.Add(newProfileName);
+                profiles.SelectedIndex = profiles.Items.Count - 1;
+                InitConfig();
+                if (World.Player != null)
+                    Config.SetProfileFor(World.Player);
+
+                m_ProfileConfirmLoad = true;
+                Config.Save();
+            }
+        }
     }
 }

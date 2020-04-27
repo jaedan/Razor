@@ -634,7 +634,7 @@ namespace Assistant
 
         private static Type[] ctorTypes = new Type[] {typeof(string)};
 
-        private object GetObjectFromString(string val, Type type)
+        public object GetObjectFromString(string val, Type type)
         {
             if (type == typeof(string))
             {
@@ -668,6 +668,16 @@ namespace Assistant
             if (!m_Props.ContainsKey(name))
                 throw new Exception(Language.Format(LocString.NoProp, name));
             m_Props[name] = val;
+        }
+
+        public bool HasProperty(string name)
+        {
+            return m_Props.ContainsKey(name);
+        }
+
+        public void RemoveProperty(string name)
+        {
+            m_Props.Remove(name);
         }
 
         public void AddProperty(string name, object val)

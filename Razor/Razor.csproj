@@ -13,8 +13,8 @@
         <AssemblyName>Razor</AssemblyName>
         <RootNamespace>Razor</RootNamespace>
 
-        <OutDir>../../../output</OutDir>
-        <PublishDir>../../../publish</PublishDir>
+        <OutDir>../output</OutDir>
+        <PublishDir>../publish</PublishDir>
 
         <Platforms>x64</Platforms>
     </PropertyGroup>

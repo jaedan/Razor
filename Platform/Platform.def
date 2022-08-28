@@ -1,5 +1,0 @@
-LIBRARY	Platform
-
-EXPORTS
-	CaptureScreen
-	BringToFront

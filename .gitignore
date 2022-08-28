@@ -18,3 +18,5 @@ packages/
 /Razor.sln.DotSettings
 CSharpGuidelines.Layer.DotSettings
 /help/site
+obj/
+output/

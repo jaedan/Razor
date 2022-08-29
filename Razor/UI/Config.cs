@@ -57,10 +57,7 @@ namespace Assistant
             AddProperty("ShowCorpseNames", false);
             AddProperty("DisplaySkillChanges", false);
 
-            if (Client.IsOSI)
-                AddProperty("TitleBarText", @"UO - {char} {crimtime}- {mediumstatbar} {bp} {bm} {gl} {gs} {mr} {ns} {ss} {sa} {aids}");
-            else
-                AddProperty("TitleBarText", @"UO - {char}");
+            AddProperty("TitleBarText", @"UO - {char}");
 
             AddProperty("TitleBarDisplay", true);
             AddProperty("AutoSearch", true);
@@ -234,8 +231,7 @@ namespace Assistant
 
             AddProperty("GrabHotBag", "0");
 
-            // Enable it for OSI client by default, CUO turn it off
-            AddProperty("MacroActionDelay", Client.IsOSI);
+            AddProperty("MacroActionDelay", false);
 
             AddProperty("AutoOpenDoorWhenHidden", false);
 
@@ -727,7 +723,6 @@ namespace Assistant
             m_AppSettings["LastServerId"] = "0";
             m_AppSettings["ClientEncrypted"] = "1";
             m_AppSettings["ServerEncrypted"] = "0";
-            m_AppSettings["ShowWelcome"] = "1";
             m_AppSettings["UId"] = "";
             m_AppSettings["MaxOrganizerAgents"] = "20";
             m_AppSettings["MaxBuyAgents"] = "20";

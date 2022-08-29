@@ -35,7 +35,7 @@ namespace Assistant.Core
         /// <returns></returns>
         public static List<string> GetAllProperties()
         {
-            if (!Client.IsOSI)
+            if (Client.IsClassicUO)
             {
                 if (ProfileProperties.Count == 0)
                 {
@@ -86,7 +86,7 @@ namespace Assistant.Core
         /// </summary>
         public static void ProfilePropertySet(string propertyName, bool enable)
         {
-            if (!Client.IsOSI)
+            if (Client.IsClassicUO)
             {
                 var currentProfileProperty = ClassicUOClient.Assembly?.GetType("ClassicUO.Configuration.ProfileManager")?.GetProperty("CurrentProfile", BindingFlags.Public | BindingFlags.Static);
                 if (currentProfileProperty != null)
@@ -120,7 +120,7 @@ namespace Assistant.Core
         /// </summary>
         public static void ProfilePropertySet(string propertyName, int value)
         {
-            if (!Client.IsOSI)
+            if (Client.IsClassicUO)
             {
                 var currentProfileProperty = ClassicUOClient.Assembly?.GetType("ClassicUO.Configuration.ProfileManager")?.GetProperty("CurrentProfile", BindingFlags.Public | BindingFlags.Static);
                 if (currentProfileProperty != null)
@@ -154,7 +154,7 @@ namespace Assistant.Core
         /// </summary>
         public static void ProfilePropertySet(string propertyName, string value)
         {
-            if (!Client.IsOSI)
+            if (Client.IsClassicUO)
             {
                 var currentProfileProperty = ClassicUOClient.Assembly?.GetType("ClassicUO.Configuration.ProfileManager")?.GetProperty("CurrentProfile", BindingFlags.Public | BindingFlags.Static);
                 if (currentProfileProperty != null)

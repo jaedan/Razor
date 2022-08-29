@@ -252,7 +252,6 @@ namespace Assistant
         private ComboBox langSel;
         private Label label7;
         private Label label11;
-        private CheckBox showWelcome;
         private TrackBar opacity;
         private CheckBox alwaysTop;
         private Label opacityLabel;
@@ -380,7 +379,6 @@ namespace Assistant
             this.langSel = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.showWelcome = new System.Windows.Forms.CheckBox();
             this.opacity = new System.Windows.Forms.TrackBar();
             this.alwaysTop = new System.Windows.Forms.CheckBox();
             this.opacityLabel = new System.Windows.Forms.Label();
@@ -924,7 +922,6 @@ namespace Assistant
             this.subGenTab.Controls.Add(this.langSel);
             this.subGenTab.Controls.Add(this.label7);
             this.subGenTab.Controls.Add(this.label11);
-            this.subGenTab.Controls.Add(this.showWelcome);
             this.subGenTab.Controls.Add(this.opacity);
             this.subGenTab.Controls.Add(this.alwaysTop);
             this.subGenTab.Controls.Add(this.opacityLabel);
@@ -1008,15 +1005,6 @@ namespace Assistant
             this.label11.Size = new System.Drawing.Size(54, 16);
             this.label11.TabIndex = 67;
             this.label11.Text = "Show in:";
-            // 
-            // showWelcome
-            // 
-            this.showWelcome.Location = new System.Drawing.Point(270, 107);
-            this.showWelcome.Name = "showWelcome";
-            this.showWelcome.Size = new System.Drawing.Size(152, 23);
-            this.showWelcome.TabIndex = 66;
-            this.showWelcome.Text = "Show Welcome Screen";
-            this.showWelcome.CheckedChanged += new System.EventHandler(this.showWelcome_CheckedChanged);
             // 
             // opacity
             // 

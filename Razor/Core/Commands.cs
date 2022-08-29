@@ -608,7 +608,7 @@ namespace Assistant
 
             text = text.Trim();
 
-            char commandToggle = Client.IsOSI ? '-' : '>';
+            char commandToggle = '>';
 
             if (text.Length > 0)
             {

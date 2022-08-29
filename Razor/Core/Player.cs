@@ -473,22 +473,15 @@ namespace Assistant
                     s.IsDoor && s.Position.X == x && s.Position.Y == y && s.Position.Z - 15 <= z &&
                     s.Position.Z + 15 >= z))
                 {
-                    if (Client.IsOSI)
+                    // ClassicUO requires a slight pause before attempting to
+                    // open a door after a direction change
+                    if (onDirChange)
                     {
-                        Client.Instance.SendToServer(new OpenDoorMacro());
+                        _doorTimer.Start();
                     }
                     else
                     {
-                        // ClassicUO requires a slight pause before attempting to
-                        // open a door after a direction change
-                        if (onDirChange)
-                        {
-                            _doorTimer.Start();
-                        }
-                        else
-                        {
-                            Client.Instance.SendToServer(new OpenDoorMacro());
-                        }
+                        Client.Instance.SendToServer(new OpenDoorMacro());
                     }
                 }
             }

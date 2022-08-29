@@ -257,6 +257,37 @@ namespace Assistant
 
         public static CultureInfo Culture;
 
+        private static bool LaunchClient()
+        {
+            SplashScreen.Message = LocString.LoadingClient;
+            string clientPath = Ultima.Files.GetFilePath("client.exe");
+            if (clientPath == null || !File.Exists(clientPath))
+            {
+#if DEBUG
+#else
+                MessageBox.Show(SplashScreen.Instance,
+                    $"Unable to find the client specified.\n\"{(clientPath != null ? clientPath : "-null-")}\"", "Could Not Find Client",
+                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return false;
+#endif
+            }
+
+            var result = Client.Instance.LaunchClient(clientPath);
+            if (result != Client.Loader_Error.SUCCESS)
+            {
+#if DEBUG
+#else
+                MessageBox.Show(SplashScreen.Instance,
+                    String.Format("Unable to launch the client specified. (Error: {1})\n \"{0}\"",
+                        clientPath != null ? clientPath : "-null-", result),
+                    "Could Not Start Client", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return false;
+#endif
+            }
+
+            return true;
+        }
+
         public static void Load()
         {
             Culture = new CultureInfo("en-US", false);
@@ -270,27 +301,11 @@ namespace Assistant
                 defLang = "ENU";
             }
 
-            if (Client.IsOSI)
-            {
-                Ultima.Files.ReLoadDirectory();
-                Ultima.Files.LoadMulPath();
-            }
-
-            if (!Language.Load(defLang))
-            {
-                MessageBox.Show(
-                    $"WARNING: Razor was unable to load the file Language/Razor_lang.{defLang}\n.", "Language Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             m_Running = true;
 
             /* Load settings from configuration file */
-            Ultima.Files.SetMulPath(Config.GetAppSetting<string>("UODataDir"));
             Client.Instance.ClientEncrypted = Config.GetAppSetting<int>("ClientEncrypted") == 1;
             Client.Instance.ServerEncrypted = Config.GetAppSetting<int>("ServerEncrypted") == 1;
-
-            Language.LoadCliLoc();
 
             /* Initialize engine */
             SplashScreen.Message = LocString.Initializing;
@@ -306,24 +321,8 @@ namespace Assistant
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             /* Start client */
-            SplashScreen.Message = LocString.LoadingClient;
-            string clientPath = Ultima.Files.GetFilePath("client.exe");
-            if (clientPath == null || !File.Exists(clientPath))
+            if (!LaunchClient())
             {
-                MessageBox.Show(SplashScreen.Instance,
-                    $"Unable to find the client specified.\n\"{(clientPath != null ? clientPath : "-null-")}\"", "Could Not Find Client",
-                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                SplashScreen.End();
-                return;
-            }
-
-            var result = Client.Instance.LaunchClient(clientPath);
-            if (result != Client.Loader_Error.SUCCESS)
-            {
-                MessageBox.Show(SplashScreen.Instance,
-                    String.Format("Unable to launch the client specified. (Error: {1})\n \"{0}\"",
-                        clientPath != null ? clientPath : "-null-", result),
-                    "Could Not Start Client", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 SplashScreen.End();
                 return;
             }
@@ -384,33 +383,6 @@ namespace Assistant
             }
 
             Client.Init(true);
-
-            if (Client.IsOSI)
-            {
-                Ultima.Files.ReLoadDirectory();
-                Ultima.Files.LoadMulPath();
-            }
-
-            if (!Language.Load(defLang))
-            {
-                MessageBox.Show(
-                    $"WARNING: Razor was unable to load the file Language/Razor_lang.{defLang}\n.", "Language Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            /* Show welcome screen */
-            if (Config.GetAppSetting<int>("ShowWelcome") != 0)
-            {
-                SplashScreen.End();
-
-                WelcomeForm welcome = new WelcomeForm();
-                m_ActiveWnd = welcome;
-                if (welcome.ShowDialog() == DialogResult.Cancel)
-                    return;
-
-                SplashScreen.Start();
-                m_ActiveWnd = SplashScreen.Instance;
-            }
 
             Load();
             RunUI();

@@ -115,8 +115,6 @@ namespace Assistant
             Config.SetupProfilesList(profiles, Config.CurrentProfile.Name);
             m_ProfileConfirmLoad = true;
 
-            showWelcome.Checked = Config.GetAppSetting<int>("ShowWelcome") == 1;
-
             m_Tip.Active = true;
             m_Tip.SetToolTip(titleStr, Language.GetString(LocString.TitleBarTip));
 
@@ -524,7 +522,7 @@ namespace Assistant
             // Disable SmartCPU in case it was enabled before the feature was removed
             Client.Instance.SetSmartCPU(false);
 
-            if (!Client.IsOSI)
+            if (Client.IsClassicUO)
                 DisableCUOFeatures();
 
             m_Initializing = false;
@@ -2309,11 +2307,6 @@ namespace Assistant
         private void corpseRange_TextChanged(object sender, System.EventArgs e)
         {
             Config.SetProperty("CorpseRange", Utility.ToInt32(corpseRange.Text, 2));
-        }
-
-        private void showWelcome_CheckedChanged(object sender, System.EventArgs e)
-        {
-            Config.SetAppSetting("ShowWelcome", (showWelcome.Checked ? 1 : 0).ToString());
         }
 
         private ContextMenuStrip m_DressItemsMenu = null;
@@ -5653,12 +5646,6 @@ namespace Assistant
             });
 
             titlebarImages.SafeAction(s =>
-            {
-                s.Enabled = false;
-                s.Checked = false;
-            });
-
-            showWelcome.SafeAction(s =>
             {
                 s.Enabled = false;
                 s.Checked = false;

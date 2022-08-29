@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Library</OutputType>
+        <OutputType>WinExe</OutputType>
         <UseWindowsForms>true</UseWindowsForms>
         <TargetFramework>net6.0-windows</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

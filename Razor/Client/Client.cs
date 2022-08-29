@@ -61,14 +61,13 @@ namespace Assistant
     public abstract class Client
     {
         public static Client Instance;
-        public static bool IsOSI;
 
-        internal static void Init(bool isOSI)
+        public static bool IsClassicUO => Instance is ClassicUOClient;
+
+        internal static void Init(bool fake)
         {
-            IsOSI = isOSI;
-
-            if (isOSI)
-                Instance = new OSIClient();
+            if (fake)
+                Instance = new FakeClient();
             else
                 Instance = new ClassicUOClient();
         }
@@ -271,36 +270,6 @@ namespace Assistant
             sb.Replace(@"{maxdamagetaken}", DamageTracker.Running ? $"{DamageTracker.MaxSingleDamageTaken}" : "-");
             sb.Replace(@"{totaldamagedealt}", DamageTracker.Running ? $"{DamageTracker.TotalDamageDealt}" : "-");
             sb.Replace(@"{totaldamagetaken}", DamageTracker.Running ? $"{DamageTracker.TotalDamageTaken}" : "-");
-
-            if (IsOSI)
-            {
-                if (World.Player.BuffsDebuffs.Count > 0)
-                {
-                    StringBuilder buffs = new StringBuilder();
-                    foreach (BuffDebuff buff in World.Player.BuffsDebuffs)
-                    {
-                        int timeLeft = 0;
-
-                        if (buff.Duration > 0)
-                        {
-                            TimeSpan diff = DateTime.UtcNow - buff.Timestamp;
-                            timeLeft = buff.Duration - (int)diff.TotalSeconds;
-                        }
-
-                        buffs.Append(timeLeft <= 0
-                            ? $"{buff.ClilocMessage1}, "
-                            : $"{buff.ClilocMessage1} ({timeLeft}), ");
-                    }
-
-                    buffs.Length = Math.Max(0, buffs.Length - 2);
-                    string buffList = buffs.ToString();
-                    sb.Replace(@"{buffsdebuffs}", buffList);
-                }
-                else
-                {
-                    sb.Replace(@"{buffsdebuffs}", "-");
-                }
-            }
 
             SetTitleStr(sb.ToString());
         }

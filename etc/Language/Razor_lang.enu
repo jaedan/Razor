@@ -3,22 +3,6 @@
 ::CliLoc=ENU
 
 [controls]
-WelcomeForm::Text=Welcome to Razor!
-WelcomeForm::dataBrowse=Browse...
-WelcomeForm::label5=Language:
-WelcomeForm::groupBox2=Server
-WelcomeForm::selectServerLbl=Select Server:
-WelcomeForm::serverHostLbl=Server Host/IP:
-WelcomeForm::serverNameLbl=Server Name:
-WelcomeForm::portLabel=Port:
-WelcomeForm::groupBox1=Client Options
-WelcomeForm::browse=Browse...
-WelcomeForm::label1=Load UO Client:
-WelcomeForm::patchEncy=Patch client encryption
-WelcomeForm::showAtStart=Show this when Razor starts
-WelcomeForm::quit=&Quit
-WelcomeForm::okay=&Launch UO
-
 MainForm::Text=Razor v{0}
 MainForm::generalTab=General
 MainForm::btnMap=UOPS

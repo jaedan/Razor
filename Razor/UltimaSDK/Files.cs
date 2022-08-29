@@ -340,7 +340,7 @@ namespace Ultima
             string dir = Config.GetAppSetting<string>("UODataDir");
 
             // If they're using the ClassicUO client, pull the UO data dir from the plugin
-            if (!Assistant.Client.IsOSI)
+            if (Assistant.Client.IsClassicUO)
             {
                 dir = Assistant.Client.Instance.GetUoFilePath();
             }

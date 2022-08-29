@@ -27,6 +27,8 @@ using System.Net;
 using System.Security.Principal;
 using Assistant.Core;
 using Assistant.UI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Assistant
 {
@@ -363,6 +365,17 @@ namespace Assistant
             Application.Run(m_MainWnd);
         }
 
+        public static IServiceProvider? Services { get; private set; }
+
+        private static void WireupServices(HostBuilderContext context, IServiceCollection services)
+        {
+            services.AddWindowsFormsBlazorWebView();
+
+    #if DEBUG
+            services.AddBlazorWebViewDeveloperTools();
+    #endif
+        }
+
         [STAThread]
         public static void Main(string[] Args)
         {
@@ -374,6 +387,11 @@ namespace Assistant
  new UnhandledExceptionEventHandler( CurrentDomain_UnhandledException );
 			Directory.SetCurrentDirectory( Config.GetInstallDirectory() );
 #endif
+
+            var host = Host.CreateDefaultBuilder()
+                        .ConfigureServices(WireupServices)
+                        .Build();
+            Services = host.Services;
 
             /* Load localization files */
             string defLang = Config.GetAppSetting<string>("DefaultLanguage");

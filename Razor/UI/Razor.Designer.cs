@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components.WebView.WindowsForms;
+using Razor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -507,8 +509,8 @@ namespace Assistant
             this.checkNewConts = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.counters = new System.Windows.Forms.ListView();
-            this.cntName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.cntCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cntName = new System.Windows.Forms.ColumnHeader();
+            this.cntCount = new System.Windows.Forms.ColumnHeader();
             this.delCounter = new System.Windows.Forms.Button();
             this.addCounter = new System.Windows.Forms.Button();
             this.recount = new System.Windows.Forms.Button();
@@ -536,15 +538,15 @@ namespace Assistant
             this.overheadFormat = new System.Windows.Forms.TextBox();
             this.setOverheadMessage = new System.Windows.Forms.Button();
             this.cliLocOverheadView = new System.Windows.Forms.ListView();
-            this.cliLocOriginal = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.cliLocOverheadMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.cliLocSound = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cliLocOriginal = new System.Windows.Forms.ColumnHeader();
+            this.cliLocOverheadMessage = new System.Windows.Forms.ColumnHeader();
+            this.cliLocSound = new System.Windows.Forms.ColumnHeader();
             this.cliLocSearch = new System.Windows.Forms.Button();
             this.cliLocTextSearch = new System.Windows.Forms.TextBox();
             this.lblOhSearch = new System.Windows.Forms.Label();
             this.cliLocSearchView = new System.Windows.Forms.ListView();
-            this.cliLocSearchNumber = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.cliLocSearchText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cliLocSearchNumber = new System.Windows.Forms.ColumnHeader();
+            this.cliLocSearchText = new System.Windows.Forms.ColumnHeader();
             this.showOverheadMessages = new System.Windows.Forms.CheckBox();
             this.subWaypoints = new System.Windows.Forms.TabPage();
             this.waypointOnDeath = new System.Windows.Forms.CheckBox();
@@ -594,12 +596,12 @@ namespace Assistant
             this.setlocks = new System.Windows.Forms.Button();
             this.resetDelta = new System.Windows.Forms.Button();
             this.skillList = new System.Windows.Forms.ListView();
-            this.skillHDRName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.skillHDRvalue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.skillHDRbase = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.skillHDRdelta = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.skillHDRcap = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.skillHDRlock = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.skillHDRName = new System.Windows.Forms.ColumnHeader();
+            this.skillHDRvalue = new System.Windows.Forms.ColumnHeader();
+            this.skillHDRbase = new System.Windows.Forms.ColumnHeader();
+            this.skillHDRdelta = new System.Windows.Forms.ColumnHeader();
+            this.skillHDRcap = new System.Windows.Forms.ColumnHeader();
+            this.skillHDRlock = new System.Windows.Forms.ColumnHeader();
             this.agentsTab = new System.Windows.Forms.TabPage();
             this.agentSetHotKey = new System.Windows.Forms.Button();
             this.agentB6 = new System.Windows.Forms.Button();
@@ -763,6 +765,8 @@ namespace Assistant
             this.screenPrev = new System.Windows.Forms.PictureBox();
             this.dispTime = new System.Windows.Forms.CheckBox();
             this.advancedTab = new System.Windows.Forms.TabPage();
+            this.fontDecrease = new System.Windows.Forms.Button();
+            this.fontIncrease = new System.Windows.Forms.Button();
             this.groupBox16 = new System.Windows.Forms.GroupBox();
             this.lastBackup = new System.Windows.Forms.Label();
             this.openBackupFolder = new System.Windows.Forms.Button();
@@ -788,8 +792,8 @@ namespace Assistant
             this.linkMain = new System.Windows.Forms.LinkLabel();
             this.label21 = new System.Windows.Forms.Label();
             this.aboutVer = new System.Windows.Forms.Label();
-            this.fontIncrease = new System.Windows.Forms.Button();
-            this.fontDecrease = new System.Windows.Forms.Button();
+            this.webViewTab = new System.Windows.Forms.TabPage();
+            this.blazorWebView = new Microsoft.AspNetCore.Components.WebView.WindowsForms.BlazorWebView();
             this.tabs.SuspendLayout();
             this.generalTab.SuspendLayout();
             this.subGeneralTab.SuspendLayout();
@@ -853,6 +857,7 @@ namespace Assistant
             this.advancedTab.SuspendLayout();
             this.groupBox16.SuspendLayout();
             this.aboutTab.SuspendLayout();
+            this.webViewTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // m_NotifyIcon
@@ -880,7 +885,8 @@ namespace Assistant
             this.tabs.Controls.Add(this.screenshotTab);
             this.tabs.Controls.Add(this.advancedTab);
             this.tabs.Controls.Add(this.aboutTab);
-            this.tabs.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabs.Controls.Add(this.webViewTab);
+            this.tabs.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.tabs.Location = new System.Drawing.Point(2, 0);
             this.tabs.Multiline = true;
             this.tabs.Name = "tabs";
@@ -1103,7 +1109,7 @@ namespace Assistant
             this.profiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.profiles.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.profiles.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.profiles.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.profiles.ItemHeight = 20;
             this.profiles.Location = new System.Drawing.Point(6, 22);
             this.profiles.MaxDropDownItems = 5;
@@ -1190,7 +1196,7 @@ namespace Assistant
             // 
             // buffDebuffOptions
             // 
-            this.buffDebuffOptions.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buffDebuffOptions.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.buffDebuffOptions.Location = new System.Drawing.Point(438, 209);
             this.buffDebuffOptions.Name = "buffDebuffOptions";
             this.buffDebuffOptions.Size = new System.Drawing.Size(33, 19);
@@ -1201,7 +1207,7 @@ namespace Assistant
             // 
             // damageTakenOverhead
             // 
-            this.damageTakenOverhead.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.damageTakenOverhead.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.damageTakenOverhead.Location = new System.Drawing.Point(394, 185);
             this.damageTakenOverhead.Name = "damageTakenOverhead";
             this.damageTakenOverhead.Size = new System.Drawing.Size(77, 19);
@@ -1212,7 +1218,7 @@ namespace Assistant
             // 
             // showDamageTaken
             // 
-            this.showDamageTaken.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.showDamageTaken.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.showDamageTaken.Location = new System.Drawing.Point(260, 185);
             this.showDamageTaken.Name = "showDamageTaken";
             this.showDamageTaken.Size = new System.Drawing.Size(139, 19);
@@ -1223,7 +1229,7 @@ namespace Assistant
             // 
             // damageDealtOverhead
             // 
-            this.damageDealtOverhead.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.damageDealtOverhead.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.damageDealtOverhead.Location = new System.Drawing.Point(394, 160);
             this.damageDealtOverhead.Name = "damageDealtOverhead";
             this.damageDealtOverhead.Size = new System.Drawing.Size(77, 19);
@@ -1293,7 +1299,7 @@ namespace Assistant
             // 
             // containerLabels
             // 
-            this.containerLabels.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.containerLabels.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.containerLabels.Location = new System.Drawing.Point(438, 63);
             this.containerLabels.Name = "containerLabels";
             this.containerLabels.Size = new System.Drawing.Size(33, 19);
@@ -1522,10 +1528,10 @@ namespace Assistant
             this.subOptionsTargetTab.Controls.Add(this.label6);
             this.subOptionsTargetTab.Controls.Add(this.queueTargets);
             this.subOptionsTargetTab.Controls.Add(this.lblTargetFormat);
-            this.subOptionsTargetTab.Location = new System.Drawing.Point(4, 22);
+            this.subOptionsTargetTab.Location = new System.Drawing.Point(4, 24);
             this.subOptionsTargetTab.Name = "subOptionsTargetTab";
             this.subOptionsTargetTab.Padding = new System.Windows.Forms.Padding(3);
-            this.subOptionsTargetTab.Size = new System.Drawing.Size(502, 288);
+            this.subOptionsTargetTab.Size = new System.Drawing.Size(502, 286);
             this.subOptionsTargetTab.TabIndex = 1;
             this.subOptionsTargetTab.Text = "Targeting & Queues  ";
             // 
@@ -1624,7 +1630,7 @@ namespace Assistant
             // 
             // showAttackTargetNewOnly
             // 
-            this.showAttackTargetNewOnly.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showAttackTargetNewOnly.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.showAttackTargetNewOnly.Location = new System.Drawing.Point(195, 196);
             this.showAttackTargetNewOnly.Name = "showAttackTargetNewOnly";
             this.showAttackTargetNewOnly.Size = new System.Drawing.Size(121, 44);
@@ -1788,9 +1794,9 @@ namespace Assistant
             this.subOptionsMiscTab.Controls.Add(this.label4);
             this.subOptionsMiscTab.Controls.Add(this.openCorpses);
             this.subOptionsMiscTab.Controls.Add(this.blockDis);
-            this.subOptionsMiscTab.Location = new System.Drawing.Point(4, 22);
+            this.subOptionsMiscTab.Location = new System.Drawing.Point(4, 24);
             this.subOptionsMiscTab.Name = "subOptionsMiscTab";
-            this.subOptionsMiscTab.Size = new System.Drawing.Size(502, 288);
+            this.subOptionsMiscTab.Size = new System.Drawing.Size(502, 286);
             this.subOptionsMiscTab.TabIndex = 2;
             this.subOptionsMiscTab.Text = "Additional Options  ";
             // 
@@ -1807,7 +1813,7 @@ namespace Assistant
             // 
             // reequipHandsPotion
             // 
-            this.reequipHandsPotion.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.reequipHandsPotion.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.reequipHandsPotion.Location = new System.Drawing.Point(423, 140);
             this.reequipHandsPotion.Name = "reequipHandsPotion";
             this.reequipHandsPotion.Size = new System.Drawing.Size(69, 20);
@@ -1817,7 +1823,7 @@ namespace Assistant
             // 
             // autoOpenDoorWhenHidden
             // 
-            this.autoOpenDoorWhenHidden.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.autoOpenDoorWhenHidden.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.autoOpenDoorWhenHidden.Location = new System.Drawing.Point(393, 88);
             this.autoOpenDoorWhenHidden.Name = "autoOpenDoorWhenHidden";
             this.autoOpenDoorWhenHidden.Size = new System.Drawing.Size(95, 20);
@@ -1866,7 +1872,7 @@ namespace Assistant
             // showStaticWallLabels
             // 
             this.showStaticWallLabels.AutoSize = true;
-            this.showStaticWallLabels.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showStaticWallLabels.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.showStaticWallLabels.Location = new System.Drawing.Point(421, 220);
             this.showStaticWallLabels.Name = "showStaticWallLabels";
             this.showStaticWallLabels.Size = new System.Drawing.Size(55, 17);
@@ -1877,7 +1883,7 @@ namespace Assistant
             // 
             // stealthOverhead
             // 
-            this.stealthOverhead.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.stealthOverhead.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.stealthOverhead.Location = new System.Drawing.Point(393, 37);
             this.stealthOverhead.Name = "stealthOverhead";
             this.stealthOverhead.Size = new System.Drawing.Size(99, 20);
@@ -1949,7 +1955,7 @@ namespace Assistant
             // 
             // label18
             // 
-            this.label18.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label18.Location = new System.Drawing.Point(427, 193);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(10, 18);
@@ -2060,7 +2066,7 @@ namespace Assistant
             // 
             // blockOpenCorpsesTwice
             // 
-            this.blockOpenCorpsesTwice.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.blockOpenCorpsesTwice.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.blockOpenCorpsesTwice.Location = new System.Drawing.Point(9, 91);
             this.blockOpenCorpsesTwice.Name = "blockOpenCorpsesTwice";
             this.blockOpenCorpsesTwice.Size = new System.Drawing.Size(209, 20);
@@ -2203,7 +2209,7 @@ namespace Assistant
             // 
             this.razorTitleBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.razorTitleBar.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.razorTitleBar.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.razorTitleBar.Location = new System.Drawing.Point(6, 42);
             this.razorTitleBar.Name = "razorTitleBar";
             this.razorTitleBar.Size = new System.Drawing.Size(478, 22);
@@ -2338,7 +2344,7 @@ namespace Assistant
             this.titleStr.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.titleStr.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.titleStr.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.titleStr.Location = new System.Drawing.Point(6, 48);
             this.titleStr.Multiline = true;
             this.titleStr.Name = "titleStr";
@@ -2365,10 +2371,10 @@ namespace Assistant
             this.subCountersTab.Controls.Add(this.titlebarImages);
             this.subCountersTab.Controls.Add(this.checkNewConts);
             this.subCountersTab.Controls.Add(this.groupBox2);
-            this.subCountersTab.Location = new System.Drawing.Point(4, 22);
+            this.subCountersTab.Location = new System.Drawing.Point(4, 24);
             this.subCountersTab.Name = "subCountersTab";
             this.subCountersTab.Padding = new System.Windows.Forms.Padding(3);
-            this.subCountersTab.Size = new System.Drawing.Size(502, 288);
+            this.subCountersTab.Size = new System.Drawing.Size(502, 286);
             this.subCountersTab.TabIndex = 1;
             this.subCountersTab.Text = "Counters";
             // 
@@ -2428,7 +2434,7 @@ namespace Assistant
             this.groupBox2.Controls.Add(this.recount);
             this.groupBox2.Location = new System.Drawing.Point(6, 6);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(284, 274);
+            this.groupBox2.Size = new System.Drawing.Size(284, 272);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Counters";
@@ -2443,12 +2449,11 @@ namespace Assistant
             this.cntCount});
             this.counters.GridLines = true;
             this.counters.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.counters.HideSelection = false;
             this.counters.LabelWrap = false;
             this.counters.Location = new System.Drawing.Point(6, 18);
             this.counters.MultiSelect = false;
             this.counters.Name = "counters";
-            this.counters.Size = new System.Drawing.Size(272, 207);
+            this.counters.Size = new System.Drawing.Size(272, 205);
             this.counters.TabIndex = 11;
             this.counters.UseCompatibleStateImageBehavior = false;
             this.counters.View = System.Windows.Forms.View.Details;
@@ -2467,7 +2472,7 @@ namespace Assistant
             // delCounter
             // 
             this.delCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.delCounter.Location = new System.Drawing.Point(108, 231);
+            this.delCounter.Location = new System.Drawing.Point(108, 229);
             this.delCounter.Name = "delCounter";
             this.delCounter.Size = new System.Drawing.Size(71, 37);
             this.delCounter.TabIndex = 4;
@@ -2477,7 +2482,7 @@ namespace Assistant
             // addCounter
             // 
             this.addCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.addCounter.Location = new System.Drawing.Point(6, 231);
+            this.addCounter.Location = new System.Drawing.Point(6, 229);
             this.addCounter.Name = "addCounter";
             this.addCounter.Size = new System.Drawing.Size(70, 37);
             this.addCounter.TabIndex = 3;
@@ -2487,7 +2492,7 @@ namespace Assistant
             // recount
             // 
             this.recount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.recount.Location = new System.Drawing.Point(208, 231);
+            this.recount.Location = new System.Drawing.Point(208, 229);
             this.recount.Name = "recount";
             this.recount.Size = new System.Drawing.Size(70, 37);
             this.recount.TabIndex = 2;
@@ -2508,9 +2513,9 @@ namespace Assistant
             this.subBandageTimerTab.Controls.Add(this.bandageTimerFormat);
             this.subBandageTimerTab.Controls.Add(this.showBandageTimer);
             this.subBandageTimerTab.Controls.Add(this.lblBandageCountFormat);
-            this.subBandageTimerTab.Location = new System.Drawing.Point(4, 22);
+            this.subBandageTimerTab.Location = new System.Drawing.Point(4, 24);
             this.subBandageTimerTab.Name = "subBandageTimerTab";
-            this.subBandageTimerTab.Size = new System.Drawing.Size(502, 288);
+            this.subBandageTimerTab.Size = new System.Drawing.Size(502, 286);
             this.subBandageTimerTab.TabIndex = 2;
             this.subBandageTimerTab.Text = "Bandage Timer";
             // 
@@ -2644,16 +2649,16 @@ namespace Assistant
             this.subOverheadTab.Controls.Add(this.lblOhSearch);
             this.subOverheadTab.Controls.Add(this.cliLocSearchView);
             this.subOverheadTab.Controls.Add(this.showOverheadMessages);
-            this.subOverheadTab.Location = new System.Drawing.Point(4, 22);
+            this.subOverheadTab.Location = new System.Drawing.Point(4, 24);
             this.subOverheadTab.Name = "subOverheadTab";
-            this.subOverheadTab.Size = new System.Drawing.Size(502, 288);
+            this.subOverheadTab.Size = new System.Drawing.Size(502, 286);
             this.subOverheadTab.TabIndex = 3;
             this.subOverheadTab.Text = "Overhead Messages";
             // 
             // setSound
             // 
             this.setSound.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.setSound.Location = new System.Drawing.Point(8, 257);
+            this.setSound.Location = new System.Drawing.Point(8, 255);
             this.setSound.Name = "setSound";
             this.setSound.Size = new System.Drawing.Size(84, 28);
             this.setSound.TabIndex = 103;
@@ -2697,7 +2702,7 @@ namespace Assistant
             // editOverheadMessage
             // 
             this.editOverheadMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.editOverheadMessage.Location = new System.Drawing.Point(8, 155);
+            this.editOverheadMessage.Location = new System.Drawing.Point(8, 153);
             this.editOverheadMessage.Name = "editOverheadMessage";
             this.editOverheadMessage.Size = new System.Drawing.Size(84, 28);
             this.editOverheadMessage.TabIndex = 97;
@@ -2708,7 +2713,7 @@ namespace Assistant
             // setColorHue
             // 
             this.setColorHue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.setColorHue.Location = new System.Drawing.Point(8, 223);
+            this.setColorHue.Location = new System.Drawing.Point(8, 221);
             this.setColorHue.Name = "setColorHue";
             this.setColorHue.Size = new System.Drawing.Size(84, 28);
             this.setColorHue.TabIndex = 96;
@@ -2719,7 +2724,7 @@ namespace Assistant
             // removeOverheadMessage
             // 
             this.removeOverheadMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.removeOverheadMessage.Location = new System.Drawing.Point(8, 189);
+            this.removeOverheadMessage.Location = new System.Drawing.Point(8, 187);
             this.removeOverheadMessage.Name = "removeOverheadMessage";
             this.removeOverheadMessage.Size = new System.Drawing.Size(84, 28);
             this.removeOverheadMessage.TabIndex = 95;
@@ -2766,10 +2771,9 @@ namespace Assistant
             this.cliLocOriginal,
             this.cliLocOverheadMessage,
             this.cliLocSound});
-            this.cliLocOverheadView.HideSelection = false;
             this.cliLocOverheadView.Location = new System.Drawing.Point(98, 156);
             this.cliLocOverheadView.Name = "cliLocOverheadView";
-            this.cliLocOverheadView.Size = new System.Drawing.Size(401, 129);
+            this.cliLocOverheadView.Size = new System.Drawing.Size(401, 127);
             this.cliLocOverheadView.TabIndex = 91;
             this.cliLocOverheadView.UseCompatibleStateImageBehavior = false;
             this.cliLocOverheadView.View = System.Windows.Forms.View.Details;
@@ -2825,7 +2829,6 @@ namespace Assistant
             this.cliLocSearchView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.cliLocSearchNumber,
             this.cliLocSearchText});
-            this.cliLocSearchView.HideSelection = false;
             this.cliLocSearchView.Location = new System.Drawing.Point(98, 39);
             this.cliLocSearchView.Name = "cliLocSearchView";
             this.cliLocSearchView.Size = new System.Drawing.Size(401, 111);
@@ -2875,9 +2878,9 @@ namespace Assistant
             this.subWaypoints.Controls.Add(this.lblWaypoint);
             this.subWaypoints.Controls.Add(this.btnAddWaypoint);
             this.subWaypoints.Controls.Add(this.waypointList);
-            this.subWaypoints.Location = new System.Drawing.Point(4, 22);
+            this.subWaypoints.Location = new System.Drawing.Point(4, 24);
             this.subWaypoints.Name = "subWaypoints";
-            this.subWaypoints.Size = new System.Drawing.Size(502, 288);
+            this.subWaypoints.Size = new System.Drawing.Size(502, 286);
             this.subWaypoints.TabIndex = 4;
             this.subWaypoints.Text = "Waypoints";
             // 
@@ -3055,7 +3058,7 @@ namespace Assistant
             this.waypointList.ItemHeight = 15;
             this.waypointList.Location = new System.Drawing.Point(11, 12);
             this.waypointList.Name = "waypointList";
-            this.waypointList.Size = new System.Drawing.Size(164, 259);
+            this.waypointList.Size = new System.Drawing.Size(164, 244);
             this.waypointList.TabIndex = 0;
             this.waypointList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listWaypoints_MouseDoubleClick);
             this.waypointList.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listWaypoints_MouseDown);
@@ -3113,7 +3116,7 @@ namespace Assistant
             // undressBag
             // 
             this.undressBag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.undressBag.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.undressBag.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.undressBag.Location = new System.Drawing.Point(209, 208);
             this.undressBag.Name = "undressBag";
             this.undressBag.Size = new System.Drawing.Size(96, 40);
@@ -3268,7 +3271,7 @@ namespace Assistant
             // 
             this.dispDeltaOverhead.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.dispDeltaOverhead.AutoSize = true;
-            this.dispDeltaOverhead.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dispDeltaOverhead.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.dispDeltaOverhead.Location = new System.Drawing.Point(441, 207);
             this.dispDeltaOverhead.Name = "dispDeltaOverhead";
             this.dispDeltaOverhead.Size = new System.Drawing.Size(71, 17);
@@ -3321,7 +3324,7 @@ namespace Assistant
             // baseTotal
             // 
             this.baseTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.baseTotal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.baseTotal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.baseTotal.Location = new System.Drawing.Point(428, 290);
             this.baseTotal.Name = "baseTotal";
             this.baseTotal.ReadOnly = true;
@@ -3386,7 +3389,6 @@ namespace Assistant
             this.skillHDRcap,
             this.skillHDRlock});
             this.skillList.FullRowSelect = true;
-            this.skillList.HideSelection = false;
             this.skillList.Location = new System.Drawing.Point(8, 5);
             this.skillList.Name = "skillList";
             this.skillList.Size = new System.Drawing.Size(342, 307);
@@ -3496,7 +3498,7 @@ namespace Assistant
             this.agentSubList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.agentSubList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.agentSubList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.agentSubList.IntegralHeight = false;
             this.agentSubList.ItemHeight = 15;
             this.agentSubList.Location = new System.Drawing.Point(6, 22);
@@ -3695,9 +3697,9 @@ namespace Assistant
             this.subFilterText.BackColor = System.Drawing.SystemColors.Control;
             this.subFilterText.Controls.Add(this.gbFilterText);
             this.subFilterText.Controls.Add(this.gbFilterMessages);
-            this.subFilterText.Location = new System.Drawing.Point(4, 22);
+            this.subFilterText.Location = new System.Drawing.Point(4, 24);
             this.subFilterText.Name = "subFilterText";
-            this.subFilterText.Size = new System.Drawing.Size(498, 287);
+            this.subFilterText.Size = new System.Drawing.Size(498, 285);
             this.subFilterText.TabIndex = 4;
             this.subFilterText.Text = "Text && Messages  ";
             // 
@@ -3711,7 +3713,7 @@ namespace Assistant
             this.gbFilterText.Controls.Add(this.enableTextFilter);
             this.gbFilterText.Location = new System.Drawing.Point(3, 3);
             this.gbFilterText.Name = "gbFilterText";
-            this.gbFilterText.Size = new System.Drawing.Size(229, 281);
+            this.gbFilterText.Size = new System.Drawing.Size(229, 279);
             this.gbFilterText.TabIndex = 134;
             this.gbFilterText.TabStop = false;
             this.gbFilterText.Text = "Text Filter";
@@ -3719,7 +3721,7 @@ namespace Assistant
             // removeFilterText
             // 
             this.removeFilterText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.removeFilterText.Location = new System.Drawing.Point(148, 246);
+            this.removeFilterText.Location = new System.Drawing.Point(148, 244);
             this.removeFilterText.Name = "removeFilterText";
             this.removeFilterText.Size = new System.Drawing.Size(75, 29);
             this.removeFilterText.TabIndex = 2;
@@ -3730,7 +3732,7 @@ namespace Assistant
             // addFilterText
             // 
             this.addFilterText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.addFilterText.Location = new System.Drawing.Point(67, 246);
+            this.addFilterText.Location = new System.Drawing.Point(67, 244);
             this.addFilterText.Name = "addFilterText";
             this.addFilterText.Size = new System.Drawing.Size(75, 29);
             this.addFilterText.TabIndex = 1;
@@ -3746,7 +3748,7 @@ namespace Assistant
             this.textFilterList.ItemHeight = 15;
             this.textFilterList.Location = new System.Drawing.Point(6, 48);
             this.textFilterList.Name = "textFilterList";
-            this.textFilterList.Size = new System.Drawing.Size(217, 169);
+            this.textFilterList.Size = new System.Drawing.Size(217, 154);
             this.textFilterList.TabIndex = 0;
             // 
             // enableTextFilter
@@ -3774,7 +3776,7 @@ namespace Assistant
             this.gbFilterMessages.Controls.Add(this.filterSnoop);
             this.gbFilterMessages.Location = new System.Drawing.Point(238, 3);
             this.gbFilterMessages.Name = "gbFilterMessages";
-            this.gbFilterMessages.Size = new System.Drawing.Size(257, 281);
+            this.gbFilterMessages.Size = new System.Drawing.Size(257, 279);
             this.gbFilterMessages.TabIndex = 133;
             this.gbFilterMessages.TabStop = false;
             this.gbFilterMessages.Text = "Filter Messages";
@@ -3854,9 +3856,9 @@ namespace Assistant
             this.subFilterSoundMusic.Controls.Add(this.playSound);
             this.subFilterSoundMusic.Controls.Add(this.soundFilterEnabled);
             this.subFilterSoundMusic.Controls.Add(this.soundFilterList);
-            this.subFilterSoundMusic.Location = new System.Drawing.Point(4, 22);
+            this.subFilterSoundMusic.Location = new System.Drawing.Point(4, 24);
             this.subFilterSoundMusic.Name = "subFilterSoundMusic";
-            this.subFilterSoundMusic.Size = new System.Drawing.Size(498, 287);
+            this.subFilterSoundMusic.Size = new System.Drawing.Size(498, 285);
             this.subFilterSoundMusic.TabIndex = 3;
             this.subFilterSoundMusic.Text = "Sound & Music  ";
             // 
@@ -3950,7 +3952,7 @@ namespace Assistant
             this.soundFilterList.FormattingEnabled = true;
             this.soundFilterList.Location = new System.Drawing.Point(8, 14);
             this.soundFilterList.Name = "soundFilterList";
-            this.soundFilterList.Size = new System.Drawing.Size(201, 256);
+            this.soundFilterList.Size = new System.Drawing.Size(201, 238);
             this.soundFilterList.TabIndex = 0;
             this.soundFilterList.SelectedIndexChanged += new System.EventHandler(this.soundFilterList_SelectedIndexChanged);
             // 
@@ -3963,10 +3965,10 @@ namespace Assistant
             this.subFilterTargets.Controls.Add(this.targetFilterAdd);
             this.subFilterTargets.Controls.Add(this.targetFilter);
             this.subFilterTargets.Controls.Add(this.targetFilterEnabled);
-            this.subFilterTargets.Location = new System.Drawing.Point(4, 22);
+            this.subFilterTargets.Location = new System.Drawing.Point(4, 24);
             this.subFilterTargets.Name = "subFilterTargets";
             this.subFilterTargets.Padding = new System.Windows.Forms.Padding(3);
-            this.subFilterTargets.Size = new System.Drawing.Size(498, 287);
+            this.subFilterTargets.Size = new System.Drawing.Size(498, 285);
             this.subFilterTargets.TabIndex = 1;
             this.subFilterTargets.Text = "Target Filter";
             // 
@@ -3982,7 +3984,7 @@ namespace Assistant
             // targetFilterClear
             // 
             this.targetFilterClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.targetFilterClear.Location = new System.Drawing.Point(415, 243);
+            this.targetFilterClear.Location = new System.Drawing.Point(415, 241);
             this.targetFilterClear.Name = "targetFilterClear";
             this.targetFilterClear.Size = new System.Drawing.Size(77, 29);
             this.targetFilterClear.TabIndex = 17;
@@ -3993,7 +3995,7 @@ namespace Assistant
             // targetFilterRemove
             // 
             this.targetFilterRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.targetFilterRemove.Location = new System.Drawing.Point(335, 243);
+            this.targetFilterRemove.Location = new System.Drawing.Point(335, 241);
             this.targetFilterRemove.Name = "targetFilterRemove";
             this.targetFilterRemove.Size = new System.Drawing.Size(74, 29);
             this.targetFilterRemove.TabIndex = 16;
@@ -4004,7 +4006,7 @@ namespace Assistant
             // targetFilterAdd
             // 
             this.targetFilterAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.targetFilterAdd.Location = new System.Drawing.Point(247, 243);
+            this.targetFilterAdd.Location = new System.Drawing.Point(247, 241);
             this.targetFilterAdd.Name = "targetFilterAdd";
             this.targetFilterAdd.Size = new System.Drawing.Size(82, 29);
             this.targetFilterAdd.TabIndex = 15;
@@ -4020,7 +4022,7 @@ namespace Assistant
             this.targetFilter.ItemHeight = 15;
             this.targetFilter.Location = new System.Drawing.Point(247, 6);
             this.targetFilter.Name = "targetFilter";
-            this.targetFilter.Size = new System.Drawing.Size(245, 229);
+            this.targetFilter.Size = new System.Drawing.Size(245, 214);
             this.targetFilter.TabIndex = 14;
             // 
             // targetFilterEnabled
@@ -4070,7 +4072,7 @@ namespace Assistant
             // hkStatus
             // 
             this.hkStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.hkStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.hkStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.hkStatus.Location = new System.Drawing.Point(337, 226);
             this.hkStatus.Name = "hkStatus";
             this.hkStatus.Size = new System.Drawing.Size(175, 64);
@@ -4393,10 +4395,10 @@ namespace Assistant
             this.subMacrosOptionsTab.Controls.Add(this.stepThroughMacro);
             this.subMacrosOptionsTab.Controls.Add(this.targetByTypeDifferent);
             this.subMacrosOptionsTab.Controls.Add(this.macroVariableGroup);
-            this.subMacrosOptionsTab.Location = new System.Drawing.Point(4, 22);
+            this.subMacrosOptionsTab.Location = new System.Drawing.Point(4, 24);
             this.subMacrosOptionsTab.Name = "subMacrosOptionsTab";
             this.subMacrosOptionsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.subMacrosOptionsTab.Size = new System.Drawing.Size(502, 288);
+            this.subMacrosOptionsTab.Size = new System.Drawing.Size(502, 286);
             this.subMacrosOptionsTab.TabIndex = 1;
             this.subMacrosOptionsTab.Text = "Options";
             // 
@@ -4489,7 +4491,7 @@ namespace Assistant
             this.macroVariableGroup.Controls.Add(this.macroVariables);
             this.macroVariableGroup.Location = new System.Drawing.Point(6, 6);
             this.macroVariableGroup.Name = "macroVariableGroup";
-            this.macroVariableGroup.Size = new System.Drawing.Size(240, 271);
+            this.macroVariableGroup.Size = new System.Drawing.Size(240, 269);
             this.macroVariableGroup.TabIndex = 6;
             this.macroVariableGroup.TabStop = false;
             this.macroVariableGroup.Text = "Macro Variables:";
@@ -4648,7 +4650,7 @@ namespace Assistant
             // 
             this.scriptFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.scriptFilter.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.scriptFilter.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.scriptFilter.Location = new System.Drawing.Point(0, 0);
             this.scriptFilter.Name = "scriptFilter";
             this.scriptFilter.Size = new System.Drawing.Size(110, 25);
@@ -4671,7 +4673,7 @@ namespace Assistant
         '\"',
         '\'',
         '\''};
-            this.scriptEditor.AutoScrollMinSize = new System.Drawing.Size(25, 15);
+            this.scriptEditor.AutoScrollMinSize = new System.Drawing.Size(2, 15);
             this.scriptEditor.BackBrush = null;
             this.scriptEditor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(37)))), ((int)(((byte)(56)))));
             this.scriptEditor.CaretColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
@@ -4679,7 +4681,7 @@ namespace Assistant
             this.scriptEditor.CharWidth = 7;
             this.scriptEditor.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.scriptEditor.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.scriptEditor.Font = new System.Drawing.Font("Consolas", 9.75F);
+            this.scriptEditor.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.scriptEditor.ForeColor = System.Drawing.Color.White;
             this.scriptEditor.IsReplaceMode = false;
             this.scriptEditor.LeftBracket = '(';
@@ -4693,7 +4695,7 @@ namespace Assistant
             this.scriptEditor.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
             this.scriptEditor.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("scriptEditor.ServiceColors")));
             this.scriptEditor.ShowCaretWhenInactive = false;
-            this.scriptEditor.Size = new System.Drawing.Size(287, 272);
+            this.scriptEditor.Size = new System.Drawing.Size(281, 272);
             this.scriptEditor.TabIndex = 21;
             this.scriptEditor.Zoom = 100;
             this.scriptEditor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.scriptEditor_KeyDown);
@@ -4780,10 +4782,10 @@ namespace Assistant
             this.subScriptOptions.Controls.Add(this.autoSaveScriptPlay);
             this.subScriptOptions.Controls.Add(this.autoSaveScript);
             this.subScriptOptions.Controls.Add(this.scriptVariablesBox);
-            this.subScriptOptions.Location = new System.Drawing.Point(4, 22);
+            this.subScriptOptions.Location = new System.Drawing.Point(4, 24);
             this.subScriptOptions.Name = "subScriptOptions";
             this.subScriptOptions.Padding = new System.Windows.Forms.Padding(3);
-            this.subScriptOptions.Size = new System.Drawing.Size(498, 287);
+            this.subScriptOptions.Size = new System.Drawing.Size(498, 285);
             this.subScriptOptions.TabIndex = 1;
             this.subScriptOptions.Text = "Options";
             // 
@@ -5329,6 +5331,26 @@ namespace Assistant
             this.advancedTab.TabIndex = 12;
             this.advancedTab.Text = "Advanced";
             // 
+            // fontDecrease
+            // 
+            this.fontDecrease.Location = new System.Drawing.Point(242, 156);
+            this.fontDecrease.Name = "fontDecrease";
+            this.fontDecrease.Size = new System.Drawing.Size(36, 23);
+            this.fontDecrease.TabIndex = 82;
+            this.fontDecrease.Text = "-";
+            this.fontDecrease.UseVisualStyleBackColor = true;
+            this.fontDecrease.Click += new System.EventHandler(this.fontDecrease_Click);
+            // 
+            // fontIncrease
+            // 
+            this.fontIncrease.Location = new System.Drawing.Point(284, 156);
+            this.fontIncrease.Name = "fontIncrease";
+            this.fontIncrease.Size = new System.Drawing.Size(36, 23);
+            this.fontIncrease.TabIndex = 81;
+            this.fontIncrease.Text = "+";
+            this.fontIncrease.UseVisualStyleBackColor = true;
+            this.fontIncrease.Click += new System.EventHandler(this.fontIncrease_Click);
+            // 
             // groupBox16
             // 
             this.groupBox16.Controls.Add(this.lastBackup);
@@ -5464,7 +5486,7 @@ namespace Assistant
             // 
             this.statusBox.BackColor = System.Drawing.SystemColors.Control;
             this.statusBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.statusBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.statusBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.statusBox.HideSelection = false;
             this.statusBox.Location = new System.Drawing.Point(10, 8);
             this.statusBox.Multiline = true;
@@ -5509,7 +5531,7 @@ namespace Assistant
             // linkGitHub
             // 
             this.linkGitHub.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkGitHub.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkGitHub.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.linkGitHub.Location = new System.Drawing.Point(9, 157);
             this.linkGitHub.Name = "linkGitHub";
             this.linkGitHub.Size = new System.Drawing.Size(506, 20);
@@ -5522,7 +5544,7 @@ namespace Assistant
             // lblCredits3
             // 
             this.lblCredits3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCredits3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCredits3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblCredits3.Location = new System.Drawing.Point(8, 259);
             this.lblCredits3.Name = "lblCredits3";
             this.lblCredits3.Size = new System.Drawing.Size(503, 20);
@@ -5533,7 +5555,7 @@ namespace Assistant
             // linkHelp
             // 
             this.linkHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkHelp.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkHelp.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.linkHelp.Location = new System.Drawing.Point(434, 10);
             this.linkHelp.Name = "linkHelp";
             this.linkHelp.Size = new System.Drawing.Size(78, 20);
@@ -5546,7 +5568,7 @@ namespace Assistant
             // lblCredits2
             // 
             this.lblCredits2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCredits2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCredits2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblCredits2.Location = new System.Drawing.Point(9, 239);
             this.lblCredits2.Name = "lblCredits2";
             this.lblCredits2.Size = new System.Drawing.Size(503, 20);
@@ -5558,7 +5580,7 @@ namespace Assistant
             // 
             this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label20.Location = new System.Drawing.Point(96, 120);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(343, 17);
@@ -5568,7 +5590,7 @@ namespace Assistant
             // lblCredits1
             // 
             this.lblCredits1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCredits1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCredits1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblCredits1.Location = new System.Drawing.Point(6, 219);
             this.lblCredits1.Name = "lblCredits1";
             this.lblCredits1.Size = new System.Drawing.Size(506, 20);
@@ -5579,7 +5601,7 @@ namespace Assistant
             // aboutSubInfo
             // 
             this.aboutSubInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.aboutSubInfo.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.aboutSubInfo.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.aboutSubInfo.Location = new System.Drawing.Point(6, 75);
             this.aboutSubInfo.Name = "aboutSubInfo";
             this.aboutSubInfo.Size = new System.Drawing.Size(506, 19);
@@ -5590,7 +5612,7 @@ namespace Assistant
             // linkMain
             // 
             this.linkMain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkMain.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkMain.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.linkMain.Location = new System.Drawing.Point(9, 137);
             this.linkMain.Name = "linkMain";
             this.linkMain.Size = new System.Drawing.Size(506, 20);
@@ -5603,7 +5625,7 @@ namespace Assistant
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
             this.label21.Location = new System.Drawing.Point(52, 98);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(0, 15);
@@ -5613,7 +5635,7 @@ namespace Assistant
             // aboutVer
             // 
             this.aboutVer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.aboutVer.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.aboutVer.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.aboutVer.Location = new System.Drawing.Point(6, 40);
             this.aboutVer.Name = "aboutVer";
             this.aboutVer.Size = new System.Drawing.Size(506, 35);
@@ -5621,32 +5643,36 @@ namespace Assistant
             this.aboutVer.Text = "Razor v{0}";
             this.aboutVer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // fontIncrease
+            // tabPage1
             // 
-            this.fontIncrease.Location = new System.Drawing.Point(284, 156);
-            this.fontIncrease.Name = "fontIncrease";
-            this.fontIncrease.Size = new System.Drawing.Size(36, 23);
-            this.fontIncrease.TabIndex = 81;
-            this.fontIncrease.Text = "+";
-            this.fontIncrease.UseVisualStyleBackColor = true;
-            this.fontIncrease.Click += new System.EventHandler(this.fontIncrease_Click);
+            this.webViewTab.Controls.Add(this.blazorWebView);
+            this.webViewTab.Location = new System.Drawing.Point(4, 44);
+            this.webViewTab.Name = "webView";
+            this.webViewTab.Padding = new System.Windows.Forms.Padding(3);
+            this.webViewTab.Size = new System.Drawing.Size(519, 322);
+            this.webViewTab.TabIndex = 16;
+            this.webViewTab.Text = "Web View Tab";
+            this.webViewTab.UseVisualStyleBackColor = true;
             // 
-            // fontDecrease
+            // blazorWebView1
             // 
-            this.fontDecrease.Location = new System.Drawing.Point(242, 156);
-            this.fontDecrease.Name = "fontDecrease";
-            this.fontDecrease.Size = new System.Drawing.Size(36, 23);
-            this.fontDecrease.TabIndex = 82;
-            this.fontDecrease.Text = "-";
-            this.fontDecrease.UseVisualStyleBackColor = true;
-            this.fontDecrease.Click += new System.EventHandler(this.fontDecrease_Click);
+            this.blazorWebView.AutoScroll = true;
+            this.blazorWebView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.blazorWebView.Location = new System.Drawing.Point(3, 3);
+            this.blazorWebView.Name = "blazorWebView1";
+            this.blazorWebView.Size = new System.Drawing.Size(513, 316);
+            this.blazorWebView.TabIndex = 0;
+            this.blazorWebView.Text = "blazorWebView1";
+            this.blazorWebView.HostPage = "wwwroot/index.html";
+            this.blazorWebView.Services = Assistant.Engine.Services;
+            this.blazorWebView.RootComponents.Add<App>("#app");
             // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(6, 16);
             this.ClientSize = new System.Drawing.Size(530, 372);
             this.Controls.Add(this.tabs);
-            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(546, 411);
             this.Name = "MainForm";
@@ -5753,6 +5779,7 @@ namespace Assistant
             this.groupBox16.ResumeLayout(false);
             this.aboutTab.ResumeLayout(false);
             this.aboutTab.PerformLayout();
+            this.webViewTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -5892,5 +5919,7 @@ namespace Assistant
         private Button setSound;
         private Button fontDecrease;
         private Button fontIncrease;
+        private TabPage webViewTab;
+        private Microsoft.AspNetCore.Components.WebView.WindowsForms.BlazorWebView blazorWebView;
     }
 }

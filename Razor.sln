@@ -1,8 +1,9 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Razor", "Razor\Razor.csproj", "{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Razor", "Razor\Razor.csproj", "{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{44ADAD77-7431-41DE-871C-F122478D39B2}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,42 +15,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastColoredTextBox", "FastColoredTextBox\FastColoredTextBox.csproj", "{6DD14A85-CCFC-4774-BD26-0F5772512319}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastColoredTextBox", "FastColoredTextBox\FastColoredTextBox.csproj", "{6DD14A85-CCFC-4774-BD26-0F5772512319}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Debug|Any CPU.Build.0 = Debug|x86
 		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Debug|x64.ActiveCfg = Debug|x64
 		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Debug|x64.Build.0 = Debug|x64
-		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Debug|x86.ActiveCfg = Debug|x86
-		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Debug|x86.Build.0 = Debug|x86
-		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Release|Any CPU.ActiveCfg = Release|x86
-		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Release|Any CPU.Build.0 = Release|x86
 		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Release|x64.ActiveCfg = Release|x64
 		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Release|x64.Build.0 = Release|x64
-		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Release|x86.ActiveCfg = Release|x86
-		{B24E4FB1-4936-4544-9E88-F3FF9B04FDBA}.Release|x86.Build.0 = Release|x86
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|x64.ActiveCfg = Debug|x64
 		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|x64.Build.0 = Debug|x64
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Debug|x86.Build.0 = Debug|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release|x64.ActiveCfg = Release|x64
 		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release|x64.Build.0 = Release|x64
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release|x86.ActiveCfg = Release|Any CPU
-		{6DD14A85-CCFC-4774-BD26-0F5772512319}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

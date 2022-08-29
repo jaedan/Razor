@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
@@ -26,6 +26,8 @@
 
     <ItemGroup>
         <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="6.0.400" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -40,14 +42,17 @@
 
   <ItemGroup>
     <DataFiles_etc Include="..\etc\**" />
+    <DataFiles_www Include="wwwroot\**" />
   </ItemGroup>
 
   <Target Name="CopyExternalDeps_build" AfterTargets="Build">
     <Copy SourceFiles="@(DataFiles_etc)" DestinationFiles="@(DataFiles_etc->'$(OutDir)/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(DataFiles_www)" DestinationFiles="@(DataFiles_www->'$(OutDir)/wwwroot/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
   </Target>
 
   <Target Name="CopyExternalDeps_publish" AfterTargets="Publish">
     <Copy SourceFiles="@(DataFiles_etc)" DestinationFiles="@(DataFiles_etc->'$(PublishDir)/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(DataFiles_www)" DestinationFiles="@(DataFiles_www->'$(PublishDir)/wwwroot/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
   </Target>
 
 </Project>

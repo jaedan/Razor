@@ -1,11 +1,46 @@
 @page "/about"
 
-<h1>About</h1>
-
-<div>
-	<p>About Page</p>
+<div class="row">
+	<div class="col">
+		<a href="https://razorce.com/help/" style="display:flex; justify-content:right; margin:5px">Need Help?</a>
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<h1 class="center-content" style="font-weight:bold; font-size:24px; margin-top:10px">Razor @razorVersion</h1>
+		
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<p class="center-content" style="font-size:15px">Community Edition</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<span class="center-content" >For Feedback, support and the latest releases please vist:</span>
+		<a class="center-content" href="https://razorce.com/">https://razorce.com</a>
+		<a class="center-content" href="https://github.com/markdwags/Razor">https://github.com/markdwags/Razor</a>
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<span class="center-content" style="margin-top:20px; font-weight:bold"> Razor was designed by Zippy, modified and maintained by Quick</span>
+		<span class="center-content" style="font-weight:bold">Major design changes including ClassicUO integration by Jaedan</span>
+		<span class="center-content" style="font-weight:bold">Cross-platform implementation by DarkLotus</span>
+		<span class="center-content" style="font-weight:bold">UI Revamp by Jaeden and Greens</span>
+	</div>
 </div>
 
 @code {
 
+	System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+	System.Diagnostics.FileVersionInfo fvi;
+	string razorVersion;
+
+	protected override void OnInitialized()
+	{
+		fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+		razorVersion = fvi.FileVersion;
+	}
 }

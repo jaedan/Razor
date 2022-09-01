@@ -32,3 +32,13 @@ html, body {
     padding: 2px;
     margin: 0px;
 }
+
+.blazor-content {
+    background: #F0F0F0;
+    font-size: 13px;
+}
+
+.center-content {
+    display: flex;
+    justify-content: center;
+}

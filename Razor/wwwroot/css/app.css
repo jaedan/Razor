@@ -3,7 +3,17 @@ html, body {
     background-color: #FAFAFA;
 }
 
-.window {
+.container-fluid {
+    padding: 0px;
+    margin: 0px;
+}
+
+.row {
+    margin: 0px;
+    padding: 0px;
+}
+
+.col {
     margin: 0px;
     padding: 0px;
 }

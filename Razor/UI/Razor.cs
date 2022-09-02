@@ -3873,8 +3873,6 @@ namespace Assistant
                 Text = str;
             }
 
-            aboutVer.Text = str;
-
             UpdateSystray();
         }
 

@@ -3681,9 +3681,36 @@ namespace Assistant
             }
         }
 
+        private static void AddFiles(ListBox list, string path, string ext)
+        {
+            if (list.Items.Count >= 500)
+                return;
+
+            string[] files = Directory.GetFiles(path, $"*.{ext}");
+            for (int i = 0; i < files.Length && list.Items.Count < 500; i++)
+                list.Items.Add(Path.GetFileName(files[i]));
+        }
+
         public void ReloadScreenShotsList()
         {
-            ScreenCapManager.DisplayTo(screensList);
+            string path = Config.GetString("CapPath");
+            Engine.EnsureDirectory(path);
+
+            screensList.BeginUpdate();
+            screensList.Items.Clear();
+
+            AddFiles(screensList, path, "jpeg");
+            AddFiles(screensList, path, "jpg");
+            AddFiles(screensList, path, "png");
+            AddFiles(screensList, path, "bmp");
+            AddFiles(screensList, path, "gif");
+            AddFiles(screensList, path, "tiff");
+            AddFiles(screensList, path, "tif");
+            AddFiles(screensList, path, "wmf");
+            AddFiles(screensList, path, "exif");
+            AddFiles(screensList, path, "emf");
+            screensList.EndUpdate();
+
             if (screenPrev.Image != null)
             {
                 screenPrev.Image.Dispose();

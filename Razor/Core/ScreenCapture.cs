@@ -18,7 +18,6 @@
 
 using System;
 using System.IO;
-using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -136,38 +135,6 @@ namespace Assistant
             else
                 return ImageFormat.Jpeg;
         }
-
-        public static void DisplayTo(ListBox list)
-        {
-            string path = Config.GetString("CapPath");
-            Engine.EnsureDirectory(path);
-
-            //list.BeginUpdate();
-            list.Items.Clear();
-
-            AddFiles(list, path, "jpeg");
-            AddFiles(list, path, "jpg");
-            AddFiles(list, path, "png");
-            AddFiles(list, path, "bmp");
-            AddFiles(list, path, "gif");
-            AddFiles(list, path, "tiff");
-            AddFiles(list, path, "tif");
-            AddFiles(list, path, "wmf");
-            AddFiles(list, path, "exif");
-            AddFiles(list, path, "emf");
-            //list.EndUpdate();
-        }
-
-        public static void AddFiles(ListBox list, string path, string ext)
-        {
-            if (list.Items.Count >= 500)
-                return;
-
-            string[] files = Directory.GetFiles(path, $"*.{ext}");
-            for (int i = 0; i < files.Length && list.Items.Count < 500; i++)
-                list.Items.Add(Path.GetFileName(files[i]));
-        }
-
 
         public static Image CaptureWindow(IntPtr handle)
         {

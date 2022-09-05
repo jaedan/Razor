@@ -29,7 +29,6 @@ using Assistant.Filters;
 using Assistant.Macros;
 using System.Diagnostics;
 using System.Xml;
-using Assistant.Boat;
 using Assistant.Agents;
 using Assistant.Core;
 using Assistant.Scripts;
@@ -4756,21 +4755,6 @@ namespace Assistant
                 lightLevel.Text = $"Light: {percent}%";
 
                 Config.SetProperty("LightLevel", (int) selectedLightLevel);
-            }
-        }
-
-        private BoatWindow _boatWindowForm = null;
-
-        private void boatControl_Click(object sender, EventArgs e)
-        {
-            if (_boatWindowForm != null)
-            {
-                _boatWindowForm.Show();
-            }
-            else
-            {
-                _boatWindowForm = new BoatWindow();
-                _boatWindowForm.Show();
             }
         }
 

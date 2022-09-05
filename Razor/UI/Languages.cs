@@ -585,7 +585,7 @@ namespace Assistant
         GumpInfo,
         GumpSysMsg,
         GumpHotKeys,
-        GumpBoatControl,
+        GumpUnused0,
         BuyAgentAttempt,
         NextTargetFriendly,
         PrevTargetFriendly,

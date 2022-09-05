@@ -263,7 +263,6 @@ namespace Assistant
         private CheckBox dispDeltaOverhead;
         private GroupBox groupBox15;
         private Button btnMap;
-        private Button boatControl;
         private CheckBox captureMibs;
         private CheckBox macroActionDelay;
         private CheckBox autoOpenDoorWhenHidden;
@@ -364,7 +363,6 @@ namespace Assistant
             this.subGeneralTab = new System.Windows.Forms.TabControl();
             this.subGenTab = new System.Windows.Forms.TabPage();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
-            this.boatControl = new System.Windows.Forms.Button();
             this.btnMap = new System.Windows.Forms.Button();
             this.systray = new System.Windows.Forms.RadioButton();
             this.taskbar = new System.Windows.Forms.RadioButton();
@@ -918,24 +916,13 @@ namespace Assistant
             // 
             // groupBox15
             // 
-            this.groupBox15.Controls.Add(this.boatControl);
             this.groupBox15.Controls.Add(this.btnMap);
             this.groupBox15.Location = new System.Drawing.Point(14, 232);
             this.groupBox15.Name = "groupBox15";
             this.groupBox15.Size = new System.Drawing.Size(223, 48);
             this.groupBox15.TabIndex = 77;
             this.groupBox15.TabStop = false;
-            this.groupBox15.Text = "Map / Boat";
-            // 
-            // boatControl
-            // 
-            this.boatControl.Location = new System.Drawing.Point(119, 16);
-            this.boatControl.Name = "boatControl";
-            this.boatControl.Size = new System.Drawing.Size(96, 26);
-            this.boatControl.TabIndex = 70;
-            this.boatControl.Text = "Boat Control";
-            this.boatControl.UseVisualStyleBackColor = true;
-            this.boatControl.Click += new System.EventHandler(this.boatControl_Click);
+            this.groupBox15.Text = "Map";
             // 
             // btnMap
             // 

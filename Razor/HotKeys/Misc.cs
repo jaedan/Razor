@@ -87,7 +87,6 @@ namespace Assistant.HotKeys
             HotKey.Add(HKCategory.Misc, LocString.GumpInfo, GetInfoGump);
             HotKey.Add(HKCategory.Misc, LocString.GumpSysMsg, GetSysMsgGump);
             HotKey.Add(HKCategory.Misc, LocString.GumpHotKeys, GetHotKeysGump);
-            HotKey.Add(HKCategory.Misc, LocString.GumpBoatControl, GetBoatControlGump);
         }
 
         private static void ToggleGoldPer()

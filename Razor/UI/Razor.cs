@@ -125,6 +125,28 @@ namespace Assistant
             SplashScreen.End();
         }
 
+        private class CounterLVIComparer : IComparer
+        {
+            private static CounterLVIComparer m_Instance;
+
+            public static CounterLVIComparer Instance {
+                get {
+                    if (m_Instance == null)
+                        m_Instance = new CounterLVIComparer();
+                    return m_Instance;
+                }
+            }
+
+            public CounterLVIComparer()
+            {
+            }
+
+            public int Compare(object a, object b)
+            {
+                return ((IComparable)(((ListViewItem)a).Tag)).CompareTo(((ListViewItem)b).Tag);
+            }
+        }
+
         private bool m_Initializing = false;
 
         public void InitConfig()
@@ -662,8 +684,7 @@ namespace Assistant
             }
             else if (tabs.SelectedTab == displayTab)
             {
-                Counter.Redraw(counters);
-
+                RedrawCounters();
                 titleBarParams.SelectedIndex = 0;
             }
             else if (tabs.SelectedTab == dressTab)
@@ -1182,7 +1203,7 @@ namespace Assistant
                 switch (ac.ShowDialog(this))
                 {
                     case DialogResult.Abort:
-                        counters.Items.Remove(c.ViewItem);
+                        counters.Items.Remove(counters.SelectedItems[0]);
                         Counter.List.Remove(c);
                         break;
 
@@ -1201,7 +1222,7 @@ namespace Assistant
             {
                 Counter.Register(new Counter(dlg.NameStr, dlg.FmtStr, (ushort) dlg.ItemID, (int) dlg.Hue,
                     dlg.DisplayImage));
-                Counter.Redraw(counters);
+                RedrawCounters();
             }
         }
 
@@ -1221,18 +1242,28 @@ namespace Assistant
 
         private void counters_ItemCheck(object sender, System.Windows.Forms.ItemCheckEventArgs e)
         {
-            if (e.Index >= 0 && e.Index < Counter.List.Count && !Counter.SupressChecks)
+            if (e.Index >= 0 && e.Index < Counter.List.Count)
             {
-                ((Counter) (counters.Items[e.Index].Tag)).SetEnabled(e.NewValue == CheckState.Checked);
+                ((Counter) (counters.Items[e.Index].Tag)).Enabled = (e.NewValue == CheckState.Checked);
                 Client.Instance.RequestTitlebarUpdate();
                 counters.Sort();
-                //counters.Refresh();
             }
         }
 
         public void RedrawCounters()
         {
-            Counter.Redraw(counters);
+            counters.BeginUpdate();
+            counters.Items.Clear();
+            for (int i = 0; i < Counter.List.Count; i++)
+            {
+                var lvi = new ListViewItem(new string[2]);
+                lvi.SubItems[0].Text = Counter.List[i].ToString();
+                lvi.SubItems[1].Text = $"{Counter.List[i].Amount}";
+                lvi.Tag = Counter.List[i];
+                lvi.Checked = Counter.List[i].Enabled;
+                counters.Items.Add(lvi);
+            }
+            counters.EndUpdate();
         }
 
         private void checkNewConts_CheckedChanged(object sender, System.EventArgs e)

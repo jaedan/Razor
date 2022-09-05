@@ -16,41 +16,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using Assistant.UI;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Xml;
-using Assistant.UI;
 
 namespace Assistant
 {
-    public class CounterLVIComparer : IComparer
-    {
-        private static CounterLVIComparer m_Instance;
-
-        public static CounterLVIComparer Instance
-        {
-            get
-            {
-                if (m_Instance == null)
-                    m_Instance = new CounterLVIComparer();
-                return m_Instance;
-            }
-        }
-
-        public CounterLVIComparer()
-        {
-        }
-
-        public int Compare(object a, object b)
-        {
-            return ((IComparable) (((ListViewItem) a).Tag)).CompareTo(((ListViewItem) b).Tag);
-        }
-    }
-
     public class ItemCountCache
     {
         private Dictionary<Item, ulong> _cache = new Dictionary<Item, ulong>();
@@ -254,7 +228,6 @@ namespace Assistant
         private DateTime m_LastWarning;
         private bool m_Flag;
         private bool m_DispImg;
-        private ListViewItem m_LVI;
 
         public Counter(string name, string fmt, ushort iid, int hue, bool dispImg)
         {
@@ -262,10 +235,7 @@ namespace Assistant
             m_Fmt = fmt;
             m_ItemID = iid;
             m_Hue = hue;
-            m_LVI = new ListViewItem(new string[2]);
-            m_LVI.SubItems[0].Text = ToString();
-            m_LVI.Tag = this;
-            m_LVI.Checked = m_Enabled = false;
+            m_Enabled = false;
             m_Count = 0;
             m_DispImg = dispImg;
 
@@ -279,10 +249,7 @@ namespace Assistant
             m_ItemID = (ushort) GetInt(GetText(node["itemid"], "0"), 0);
             m_Hue = GetInt(GetText(node["hue"], "-1"), -1);
 
-            m_LVI = new ListViewItem(new string[2] {this.ToString(), ""});
-            m_LVI.Tag = this;
-            m_LVI.Checked = m_Enabled = false;
-
+            m_Enabled = false;
             m_DispImg = true;
         }
 
@@ -335,11 +302,6 @@ namespace Assistant
             set { m_Flag = value; }
         }
 
-        public ListViewItem ViewItem
-        {
-            get { return m_LVI; }
-        }
-
         public void Set(ushort iid, int hue, string name, string fmt, bool dispImg)
         {
             m_ItemID = iid;
@@ -348,7 +310,6 @@ namespace Assistant
             m_Fmt = fmt;
             m_DispImg = dispImg;
 
-            m_LVI.SubItems[0].Text = ToString();
             m_NeedXMLSave = true;
         }
 
@@ -460,8 +421,6 @@ namespace Assistant
                     //Engine.MainWindow.RefreshCounters();
                     Client.Instance.RequestTitlebarUpdate();
                 }
-
-                m_LVI.SubItems[1].Text = m_Count.ToString();
             }
         }
 
@@ -470,30 +429,15 @@ namespace Assistant
             get => m_Count;
         }
 
-        public void SetEnabled(bool value)
-        {
-            m_Enabled = value;
-            if (m_Enabled)
-            {
-                if (!SupressChecks)
-                    QuickRecount();
-                m_LVI.SubItems[1].Text = m_Count.ToString();
-            }
-            else
-            {
-                m_LVI.SubItems[1].Text = "";
-            }
-        }
-
         public bool Enabled
         {
             get { return m_Enabled; }
             set
             {
-                if (m_Enabled != value)
+                m_Enabled = value;
+                if (m_Enabled)
                 {
-                    m_LVI.Checked = value;
-                    SetEnabled(value);
+                    QuickRecount();
                 }
             }
         }
@@ -527,7 +471,7 @@ namespace Assistant
 
         private static bool m_NeedXMLSave = false;
         private static List<Counter> m_List = new List<Counter>();
-        private static bool m_SupressWarn, m_SupressChecks;
+        private static bool m_SupressWarn;
         private static ItemTypeCounter m_PackCounter = new ItemTypeCounter();
 
         public static List<Counter> List
@@ -545,11 +489,6 @@ namespace Assistant
         {
             get { return m_SupressWarn; }
             set { m_SupressWarn = value; }
-        }
-
-        public static bool SupressChecks
-        {
-            get { return m_SupressChecks; }
         }
 
         private static void Load()
@@ -804,17 +743,6 @@ namespace Assistant
                 c.OnUpdate();
             }
             SupressWarnings = false;
-        }
-
-        public static void Redraw(ListView list)
-        {
-            m_SupressChecks = true;
-            list.BeginUpdate();
-            list.Items.Clear();
-            for (int i = 0; i < m_List.Count; i++)
-                list.Items.Add(m_List[i].ViewItem);
-            list.EndUpdate();
-            m_SupressChecks = false;
         }
     }
 }

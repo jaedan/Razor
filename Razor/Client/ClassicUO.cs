@@ -411,8 +411,6 @@ namespace Assistant
             BuffsTimer.Stop();
             StealthSteps.Unhide();
             Engine.MainWindow.OnLogout();
-            if (Engine.MainWindow.MapWindow != null)
-                Engine.MainWindow.MapWindow.Close();
             PacketHandlers.Party.Clear();
             PacketHandlers.IgnoreGumps.Clear();
             Agents.BuyAgent.OnDisconnected();
@@ -629,19 +627,6 @@ namespace Assistant
                     });
                 }
             }
-
-            // always use smartness for the map window
-            if (Engine.MainWindow.MapWindow != null && Engine.MainWindow.MapWindow.Visible)
-            {
-                if (!Engine.MainWindow.MapWindow.TopMost)
-                {
-                    Engine.MainWindow.MapWindow.SafeAction(s =>
-                    {
-                        s.TopMost = true;
-                        s.BringToFront();
-                    });
-                }
-            }
         }
 
         public void OnFocusLost()
@@ -649,25 +634,12 @@ namespace Assistant
             if (Engine.MainWindow == null)
                 return;
 
-            bool razorfocus = Form.ActiveForm == Engine.MainWindow || Form.ActiveForm == Engine.MainWindow.MapWindow;
+            bool razorfocus = Form.ActiveForm == Engine.MainWindow;
             if (Config.GetBool("AlwaysOnTop"))
             {
                 if (Engine.MainWindow.TopMost && !razorfocus)
                 {
                     Engine.MainWindow.SafeAction(s =>
-                    {
-                        s.TopMost = false;
-                        s.SendToBack();
-                    });
-                }
-            }
-
-            // always use smartness for the map window
-            if (Engine.MainWindow.MapWindow != null && Engine.MainWindow.MapWindow.Visible && !razorfocus)
-            {
-                if (Engine.MainWindow.MapWindow.TopMost)
-                {
-                    Engine.MainWindow.MapWindow.SafeAction(s =>
                     {
                         s.TopMost = false;
                         s.SendToBack();

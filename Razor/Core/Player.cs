@@ -527,9 +527,6 @@ namespace Assistant
 
             ilist = null;
 
-            if (Engine.MainWindow != null && Engine.MainWindow.MapWindow != null)
-                Engine.MainWindow.SafeAction(f => f.MapWindow.PlayerMoved());
-
             base.OnPositionChanging(oldPos);
         }
 
@@ -563,23 +560,7 @@ namespace Assistant
                 PlayerData.DoubleClick(Backpack);
 
             UOAssist.PostMapChange(cur);
-
-            if (Engine.MainWindow != null && Engine.MainWindow.MapWindow != null)
-                Engine.MainWindow.SafeAction(s => s.MapWindow.PlayerMoved());
         }
-
-        /*public override void OnMapChange( byte old, byte cur )
-        {
-             World.Mobiles.Clear();
-             World.Items.Clear();
-             Counter.Reset();
-
-             Contains.Clear();
-
-             World.AddMobile( this );
-
-             UOAssist.PostMapChange( cur );
-        }*/
 
         protected override void OnNotoChange(byte old, byte cur)
         {

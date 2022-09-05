@@ -261,8 +261,6 @@ namespace Assistant
         private Label lblStealthFormat;
         private TextBox stealthStepsFormat;
         private CheckBox dispDeltaOverhead;
-        private GroupBox groupBox15;
-        private Button btnMap;
         private CheckBox captureMibs;
         private CheckBox macroActionDelay;
         private CheckBox autoOpenDoorWhenHidden;
@@ -362,8 +360,6 @@ namespace Assistant
             this.generalTab = new System.Windows.Forms.TabPage();
             this.subGeneralTab = new System.Windows.Forms.TabControl();
             this.subGenTab = new System.Windows.Forms.TabPage();
-            this.groupBox15 = new System.Windows.Forms.GroupBox();
-            this.btnMap = new System.Windows.Forms.Button();
             this.systray = new System.Windows.Forms.RadioButton();
             this.taskbar = new System.Windows.Forms.RadioButton();
             this.langSel = new System.Windows.Forms.ComboBox();
@@ -775,7 +771,6 @@ namespace Assistant
             this.generalTab.SuspendLayout();
             this.subGeneralTab.SuspendLayout();
             this.subGenTab.SuspendLayout();
-            this.groupBox15.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.opacity)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.moreOptTab.SuspendLayout();
@@ -897,7 +892,6 @@ namespace Assistant
             // subGenTab
             // 
             this.subGenTab.BackColor = System.Drawing.SystemColors.Control;
-            this.subGenTab.Controls.Add(this.groupBox15);
             this.subGenTab.Controls.Add(this.systray);
             this.subGenTab.Controls.Add(this.taskbar);
             this.subGenTab.Controls.Add(this.langSel);
@@ -913,25 +907,6 @@ namespace Assistant
             this.subGenTab.Size = new System.Drawing.Size(502, 286);
             this.subGenTab.TabIndex = 0;
             this.subGenTab.Text = "General";
-            // 
-            // groupBox15
-            // 
-            this.groupBox15.Controls.Add(this.btnMap);
-            this.groupBox15.Location = new System.Drawing.Point(14, 232);
-            this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(223, 48);
-            this.groupBox15.TabIndex = 77;
-            this.groupBox15.TabStop = false;
-            this.groupBox15.Text = "Map";
-            // 
-            // btnMap
-            // 
-            this.btnMap.Location = new System.Drawing.Point(6, 16);
-            this.btnMap.Name = "btnMap";
-            this.btnMap.Size = new System.Drawing.Size(107, 26);
-            this.btnMap.TabIndex = 67;
-            this.btnMap.Text = "UOPS";
-            this.btnMap.Click += new System.EventHandler(this.btnMap_Click);
             // 
             // systray
             // 
@@ -5524,7 +5499,6 @@ namespace Assistant
             this.generalTab.ResumeLayout(false);
             this.subGeneralTab.ResumeLayout(false);
             this.subGenTab.ResumeLayout(false);
-            this.groupBox15.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.opacity)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();

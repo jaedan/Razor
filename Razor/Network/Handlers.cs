@@ -2440,9 +2440,6 @@ namespace Assistant
                             mobile.Position = Point3D.Zero;
                     }
 
-                    if (Engine.MainWindow.MapWindow != null)
-                        Engine.MainWindow.SafeAction(s => s.MapWindow.UpdateMap());
-
                     break;
                 }
 
@@ -2555,10 +2552,6 @@ namespace Assistant
                     break;
                 }
             }
-
-
-            if (Engine.MainWindow.MapWindow != null)
-                Engine.MainWindow.SafeAction(s => s.MapWindow.UpdateMap());
         }
 
         private static void PartyAutoDecline()

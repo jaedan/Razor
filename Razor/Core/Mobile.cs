@@ -467,14 +467,6 @@ namespace Assistant
             return null;
         }
 
-        public override void OnPositionChanging(Point3D oldPos)
-        {
-            if (this != World.Player && Engine.MainWindow.MapWindow != null)
-                Engine.MainWindow.SafeAction(s => s.MapWindow.CheckLocalUpdate(this));
-
-            base.OnPositionChanging(oldPos);
-        }
-
         public virtual void OnDirectionChanging(Direction oldDir)
         {
         }

@@ -4394,26 +4394,6 @@ namespace Assistant
             }
         }
 
-        public Assistant.MapUO.MapWindow MapWindow;
-
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern IntPtr SetParent(IntPtr child, IntPtr newParent);
-
-        private void btnMap_Click(object sender, System.EventArgs e)
-        {
-            if (World.Player != null)
-            {
-                if (MapWindow == null)
-                    MapWindow = new MapUO.MapWindow();
-
-                MapWindow.SafeAction(s =>
-                {
-                    s.Show();
-                    s.BringToFront();
-                });
-            }
-        }
-
         private void showHealthOH_CheckedChanged(object sender, System.EventArgs e)
         {
             Config.SetProperty("ShowHealth", healthFmt.Enabled = showHealthOH.Checked);
@@ -4761,23 +4741,6 @@ namespace Assistant
         private void showTargetMessagesOverChar_CheckedChanged(object sender, EventArgs e)
         {
             Config.SetProperty("ShowTargetSelfLastClearOverhead", showTargetMessagesOverChar.Checked);
-        }
-
-        private void openUOPS_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Soon(tm)");
-
-            return;
-
-            /*if (World.Player != null)
-            {
-                if (MapWindow == null)
-                    MapWindow = new Assistant.MapUO.MapWindow();
-                //SetParent( MapWindow.Handle, Client.FindUOWindow() );
-                //MapWindow.Owner = (Form)Form.FromHandle( Client.FindUOWindow() );
-                MapWindow.Show();
-                MapWindow.BringToFront();
-            }*/
         }
 
         private void logSkillChanges_CheckedChanged(object sender, EventArgs e)

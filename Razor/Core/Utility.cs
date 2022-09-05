@@ -17,12 +17,10 @@
 #endregion
 
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace Assistant
 {
@@ -441,8 +439,7 @@ namespace Assistant
             }
             catch (Exception ex)
             {
-                MessageBox.Show(null, ex.Message, "Unable to open directory", MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning);
+                Engine.ErrorMessage(ex.Message);
             }
         }
     }

@@ -268,8 +268,7 @@ namespace Assistant
             }
             else
             {
-                MessageBox.Show(this, Language.GetString(LocString.InvalidAbrev), "Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                Engine.ErrorMessage(Language.GetString(LocString.InvalidAbrev));
                 return;
             }
 
@@ -287,8 +286,7 @@ namespace Assistant
 
             if (ItemID == 0)
             {
-                MessageBox.Show(this, Language.GetString(LocString.InvalidIID), "Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                Engine.ErrorMessage(Language.GetString(LocString.InvalidIID));
                 return;
             }
 
@@ -296,8 +294,7 @@ namespace Assistant
 
             if (Hue < -1 || Hue > 0xFFFF)
             {
-                MessageBox.Show(this, Language.GetString(LocString.InvalidHue), "Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                Engine.ErrorMessage(Language.GetString(LocString.InvalidHue));
                 Hue = 0;
                 return;
             }

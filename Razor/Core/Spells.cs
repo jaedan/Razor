@@ -17,9 +17,8 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using System.IO;
 
 namespace Assistant
 {
@@ -292,8 +291,7 @@ namespace Assistant
 
             if (!File.Exists(filename))
             {
-                MessageBox.Show(Engine.ActiveWindow, Language.GetString(LocString.NoSpells), "Spells.def",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Engine.ErrorMessage(Language.GetString(LocString.NoSpells));
                 return;
             }
 

@@ -743,9 +743,7 @@ namespace Assistant
 
                         if (encoding == null)
                         {
-                            MessageBox.Show(
-                                "Error: The encoding specified in the language file was not valid.  Using ASCII.",
-                                "Invalid Encoding", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Engine.ErrorMessage("Error: The encoding specified in the language file was not valid.  Using ASCII.");
                             encoding = Encoding.ASCII;
                         }
 
@@ -870,8 +868,7 @@ namespace Assistant
                 }
                 else
                 {
-                    MessageBox.Show(Engine.ActiveWindow, Language.GetString(LocString.NoCliLocMsg),
-                        Language.GetString(LocString.NoCliLoc), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Engine.ErrorMessage(GetString(LocString.NoCliLocMsg));
                 }
             }
         }

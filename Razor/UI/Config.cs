@@ -381,8 +381,7 @@ namespace Assistant
             }
             catch
             {
-                MessageBox.Show(Engine.ActiveWindow, Language.Format(LocString.ProfileCorrupt, file),
-                    "Profile Load Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Engine.ErrorMessage(Language.Format(LocString.ProfileCorrupt, file));
                 return false;
             }
 
@@ -425,8 +424,7 @@ namespace Assistant
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(Engine.ActiveWindow, Language.Format(LocString.ProfileLoadEx, e.ToString()),
-                        "Profile Load Exception", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Engine.ErrorMessage(Language.Format(LocString.ProfileLoadEx, e.ToString()));
                 }
             }
 
@@ -516,9 +514,6 @@ namespace Assistant
                 }
             }
 
-            //if ( !Language.Load( GetString( "Language" ) ) )
-            //	MessageBox.Show( Engine.ActiveWindow, "Warning: Could not load language from profile, using current language instead.", "Language Error", MessageBoxButtons.OK, MessageBoxIcon.Warning );
-
             return true;
         }
 
@@ -554,8 +549,6 @@ namespace Assistant
                 }
                 catch
                 {
-                    //MessageBox.Show( Engine.ActiveWindow, Language.Format( LocString.ProfileInUse, m_Name ), "Profile In Use", MessageBoxButtons.OK, MessageBoxIcon.Warning );
-                    //m_Warned = true;
                     return; // refuse to overwrite profiles that we don't own.
                 }
             }

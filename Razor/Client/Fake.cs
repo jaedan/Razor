@@ -19,7 +19,6 @@
 using System;
 using System.Diagnostics;
 using System.Net;
-using System.Windows.Forms;
 
 namespace Assistant
 {
@@ -89,10 +88,6 @@ namespace Assistant
             {
                 return true;
             }
-        }
-
-        public override void SetMapWndHandle(Form mapWnd)
-        {
         }
 
         public override void RequestStatbarPatch(bool preAOS)

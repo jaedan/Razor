@@ -26,9 +26,9 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Windows.Forms;
 using Assistant.Core;
 using Assistant.Scripts;
+using System.Windows.Forms;
 
 namespace Assistant
 {
@@ -36,9 +36,6 @@ namespace Assistant
     {
         public static unsafe void Install(PluginHeader* plugin)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
             AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
             {
                 string[] fields = e.Name.Split(',');
@@ -87,9 +84,7 @@ namespace Assistant
             if (!Language.Load("ENU"))
             {
                 SplashScreen.End();
-                MessageBox.Show(
-                    "WARNING: Razor was unable to load the file Language/Razor_lang.ENU\n.",
-                    "Language Load Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ErrorMessage("WARNING: Razor was unable to load the file Language/Razor_lang.ENU\n.");
                 return;
             }
 
@@ -106,9 +101,7 @@ namespace Assistant
             Config.LoadCharList();
             Overrides.Load();
             if (!Config.LoadLastProfile())
-                MessageBox.Show(
-                    "The selected profile could not be loaded, using default instead.", "Profile Load Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ErrorMessage("The selected profile could not be loaded, using default instead.");
 
             SplashScreen.Message = LocString.WaitingForClient;
 
@@ -155,10 +148,6 @@ namespace Assistant
         private static OnFocusGained _onFocusGained;
         private static OnFocusLost _onFocusLost;
         private IntPtr m_ClientWindow;
-
-        public override void SetMapWndHandle(Form mapWnd)
-        {
-        }
 
         public override void RequestStatbarPatch(bool preAOS)
         {

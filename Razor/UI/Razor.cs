@@ -69,6 +69,11 @@ namespace Assistant
             new StatsTimer(this).Start();
             Language.LoadControlNames(this);
 
+            Engine.ErrorMessageHandler = (m) =>
+            {
+                MessageBox.Show(m, "Runtime Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            };
+
             FriendsManager.SetControls(friendsGroup, friendsList);
             DressList.SetControls(dressList, dressItems);
             TargetFilterManager.SetControls(targetFilter);

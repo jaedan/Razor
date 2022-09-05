@@ -48,6 +48,16 @@ namespace Assistant
             LogCrash(e.ExceptionObject as Exception);
         }
 
+        public static Action<string> ErrorMessageHandler;
+
+        public static void ErrorMessage(string message)
+        {
+            if (ErrorMessageHandler != null)
+            {
+                ErrorMessageHandler(message);
+            }
+        }
+
         public static void LogCrash(object exception)
         {
             if (exception == null || (exception is ThreadAbortException))
@@ -318,9 +328,7 @@ namespace Assistant
             Config.LoadCharList();
             Overrides.Load();
             if (!Config.LoadLastProfile())
-                MessageBox.Show(
-                    "The selected profile could not be loaded, using default instead.", "Profile Load Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ErrorMessage("The selected profile could not be loaded, using default instead.");
 
             /* Start client */
             if (!LaunchClient())
@@ -360,6 +368,9 @@ namespace Assistant
         {
             Thread.CurrentThread.Name = "Razor UI Thread";
 
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
             m_MainWnd = new MainForm();
             m_MainWnd.Show();
             Application.Run(m_MainWnd);
@@ -379,9 +390,6 @@ namespace Assistant
         [STAThread]
         public static void Main(string[] Args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
 #if !DEBUG
 			AppDomain.CurrentDomain.UnhandledException +=
  new UnhandledExceptionEventHandler( CurrentDomain_UnhandledException );

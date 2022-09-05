@@ -572,8 +572,7 @@ namespace Assistant
             }
             catch
             {
-                MessageBox.Show(Engine.ActiveWindow, Language.GetString(LocString.CounterFux),
-                    "Counters.xml Load Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Engine.ErrorMessage("Counters.xml Load Error");
             }
 
             m_NeedXMLSave = false;

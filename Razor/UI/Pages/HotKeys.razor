@@ -1,11 +1,17 @@
 @page "/hotkeys"
+@using Assistant
 
 <h1>Hot Keys</h1>
 
 <div>
 	<p>Hot Keys Page</p>
+	<ul>
+	@foreach (var keyData in HotKey.List)
+	{
+		<li>@keyData</li>
+	}
+	</ul>
 </div>
 
 @code {
-
 }

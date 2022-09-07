@@ -108,6 +108,7 @@ namespace Assistant
 
         public override Loader_Error LaunchClient(string client)
         {
+            Language.Load("ENU");
             return Loader_Error.SUCCESS;
         }
 

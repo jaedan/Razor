@@ -105,7 +105,7 @@ namespace Assistant
         private bool _sendToUO;
         private int _key;
         private ModKeys _mod;
-        private TreeNode _node;
+        private RazorTreeNode _node;
         private object _state;
         private string _command;
 
@@ -286,12 +286,14 @@ namespace Assistant
             
             return $"{this.DisplayName} ({Language.GetString(LocString.NotAssigned)})";
         }
+
+        public RazorTreeNode Node => _node;
     }
 
     public class HotKey
     {
         private static List<KeyData> m_List = new List<KeyData>();
-        private static TreeNode m_Root = new TreeNode("Hot Keys");
+        private static RazorTreeNode m_Root = new RazorTreeNode("Hot Keys");
         private static bool m_Enabled;
         private static System.Windows.Forms.Label m_Status;
         private static KeyData m_HK_En;
@@ -304,7 +306,7 @@ namespace Assistant
             get { return m_List; }
         }
 
-        public static TreeNode RootNode
+        public static RazorTreeNode RootNode
         {
             get { return m_Root; }
         }
@@ -453,11 +455,11 @@ namespace Assistant
 
             m_Root.Tag = (int) LocString.HotKeys;
 
-            TreeNode items = MakeNode("Items", HKCategory.Items);
+            RazorTreeNode items = MakeNode("Items", HKCategory.Items);
 
             MakeNode(items, "Potions", HKSubCat.Potions);
 
-            TreeNode targets = MakeNode("Targets", HKCategory.Targets);
+            RazorTreeNode targets = MakeNode("Targets", HKCategory.Targets);
 
             MakeNode(targets, "Criminal Targets", HKSubCat.SubTargetCriminal);
             MakeNode(targets, "Enemy Targets", HKSubCat.SubTargetEnemy);
@@ -473,7 +475,7 @@ namespace Assistant
 
             MakeNode("Macros", HKCategory.Macros);
 
-            TreeNode spells = MakeNode("Spells", HKCategory.Spells);
+            RazorTreeNode spells = MakeNode("Spells", HKCategory.Spells);
             MakeNode(spells, "1st", HKSubCat.FirstC);
             MakeNode(spells, "2nd", HKSubCat.SecondC);
             MakeNode(spells, "3rd", HKSubCat.ThirdC);
@@ -492,7 +494,7 @@ namespace Assistant
 
             MakeNode("Skills", HKCategory.Skills);
 
-            TreeNode misc = MakeNode("Misc", HKCategory.Misc);
+            RazorTreeNode misc = MakeNode("Misc", HKCategory.Misc);
             MakeNode(misc, "Special Moves", HKSubCat.SpecialMoves);
             MakeNode(misc, "Pet Commands", HKSubCat.PetCommands);
 
@@ -502,16 +504,16 @@ namespace Assistant
 
         public static void RebuildList(TreeView tree)
         {
-            tree.BeginUpdate();
+            //tree.BeginUpdate();
             UpdateNode(m_Root);
 
-            tree.Nodes.Clear();
-            tree.Nodes.Add(m_Root);
-            m_Root.Expand();
-            tree.EndUpdate();
+            //tree.Nodes.Clear();
+            //tree.Nodes.Add(m_Root);
+            //m_Root.Expand();
+            //tree.EndUpdate();
         }
 
-        private static void UpdateNode(TreeNode node)
+        private static void UpdateNode(RazorTreeNode node)
         {
             if (node != null)
             {
@@ -613,15 +615,15 @@ namespace Assistant
             return null;
         }
 
-        public static TreeNode FindParent(TreeNode root, HKCategory cat, HKSubCat sub)
+        public static RazorTreeNode FindParent(RazorTreeNode root, HKCategory cat, HKSubCat sub)
         {
-            TreeNode parent = root;
+            RazorTreeNode parent = root;
             if (cat != HKCategory.None)
             {
                 parent = FindNode(root, cat);
                 if (sub != HKSubCat.None && parent != null)
                 {
-                    TreeNode subNode = FindNode(parent, sub);
+                    RazorTreeNode subNode = FindNode(parent, sub);
                     if (subNode != null)
                         parent = subNode;
                 }
@@ -630,30 +632,30 @@ namespace Assistant
             return parent;
         }
 
-        public static TreeNode FindParent(HKCategory cat, HKSubCat sub)
+        public static RazorTreeNode FindParent(HKCategory cat, HKSubCat sub)
         {
             return FindParent(m_Root, cat, sub);
         }
 
-        public static TreeNode MakeNode(TreeNode parent, string text, object tag)
+        public static RazorTreeNode MakeNode(RazorTreeNode parent, string text, object tag)
         {
-            TreeNode n = new TreeNode(text);
+            RazorTreeNode n = new RazorTreeNode(text);
             n.Tag = tag;
-            parent.Nodes.Add(n);
+            parent?.Nodes.Add(n);
             return n;
         }
 
-        public static TreeNode MakeNode(string text, object tag)
+        public static RazorTreeNode MakeNode(string text, object tag)
         {
             return MakeNode(m_Root, text, tag);
         }
 
-        public static TreeNode FindNode(TreeNode parent, object tag, bool recurse)
+        public static RazorTreeNode FindNode(RazorTreeNode parent, object tag, bool recurse)
         {
             if (tag == null)
                 return null;
 
-            TreeNode n = parent.FirstNode;
+            RazorTreeNode n = parent.FirstNode;
             while (n != null)
             {
                 if (tag.ToString() == n.Tag.ToString())
@@ -661,7 +663,7 @@ namespace Assistant
 
                 if (recurse)
                 {
-                    TreeNode r = FindNode(n, tag, true);
+                    RazorTreeNode r = FindNode(n, tag, true);
                     if (r != null)
                         return r;
                 }
@@ -672,7 +674,7 @@ namespace Assistant
             return n;
         }
 
-        public static TreeNode FindNode(TreeNode parent, object tag)
+        public static RazorTreeNode FindNode(RazorTreeNode parent, object tag)
         {
             return FindNode(parent, tag, false);
         }
